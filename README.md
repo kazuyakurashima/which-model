@@ -1,7 +1,8 @@
 # model-router
 
 Claude Code で、指示内容に応じて最適な Claude モデル（Fable 5 / Opus 4.8 / Sonnet 5）と
-effort レベルを提示し、選んだモデル向けにプロンプトを最適化して実行する skill です。
+effort レベルを提示し、選んだモデル向けに最適化したプロンプトを表示する skill です
+（表示でいったん止まり、ユーザーが確認して `y` を送ると実行。skill 自身は勝手に実行しません）。
 
 > このファイルは人間向けの説明書です。Claude Code は読み込みません（トークンを消費しません）。
 > Claude への動作指示は `SKILL.md` に、判断材料は `docs/ai-model-guides/` にあります。
@@ -15,10 +16,11 @@ VS Code などの Claude Code で開発していると、指示のたびに「�
 1. あなたが `/model-router <指示>` と入力する
 2. skill が指示内容（設計・実装・リファクタ等）と複雑さを判定し、推奨モデルと effort を理由つきで提示して停止する
 3. あなたは必要なら `/model` でモデルを切り替える（不要ならそのまま）
-4. 実行合図を送ると、そのモデル向けにプロンプトを最適化して即実行する
+4. 実行合図を送ると、確定したモデル向けに最適化したプロンプトを表示して**いったん停止する**
    - 推奨モデルのまま → `y`
    - 代替モデルに切り替えた → `y opus` / `y fable` / `y sonnet` とモデル名を添える
-   - 最適化内容を見たい → `-v` を付ける（例：`y -v`、`y opus -v`）
+5. 中身を確認し、よければ**もう一度 `y`** を送ると実行される（コピペ不要）。直したいときは
+   表示されたプロンプトを編集して送る。この「表示 → 確認 → `y` で実行」の一拍が暴走を防ぐ
 
 ## 仕組み（料理人とレシピ本）
 
@@ -90,18 +92,31 @@ SKILL.md を編集するときは必ずリポジトリ側を直し、`./install.
 ```
 
 推奨が提示され停止したら、必要に応じて `/model claude-fable-5` などで切り替え、実行合図を
-送ります（推奨のまま `y`、代替に変えたら `y opus` / `y fable` / `y sonnet`、最適化内容も見るなら
-`-v` を付ける）。普段の軽い作業では呼ばず、設定済みのモデルでそのまま指示すれば十分です。
+送ります（推奨のまま `y`、代替に変えたら `y opus` / `y fable` / `y sonnet`）。すると最適化された
+プロンプトが表示されて停止するので、中身を確認して**もう一度 `y`** を送れば実行されます。普段の
+軽い作業では呼ばず、設定済みのモデルでそのまま指示すれば十分です。
 
 CLAUDE.md には登録しないことを推奨します。登録すると毎回自動で判定が走り、日々の開発テンポを
 損なうためです（それでも常時参照させたい場合のスニペットは付録を参照）。
+
+## 呼び方のコツ（重要）
+
+- **必ず行頭に `/model-router` を付けて呼ぶ。** うしろは、やりたいことを普段どおり書くだけでよい
+  （自分でプロンプトを整える必要はない。整えるのが skill の仕事）。
+  - 例：`/model-router 認証まわりを大規模リファクタして`
+  - 「リファクタして」のような実行命令のままでよい。skill が起動していれば、実行はせず
+    「推奨モデル＋最適化プロンプト」を返して止まる（稼働中は読み取り専用なので、そもそも実行できない）。
+- **提案が出ず、いきなり作業（ファイル編集など）が始まったら、skill が起動していないサイン。**
+  一度止めて、`/model-router …` を行頭単独で打ち直す。
+- スラッシュを使わず自然文で呼ぶときは、「どのモデルがいい？」「〜用のプロンプトにして」のように
+  “実行” ではなく “提案・最適化” を求める言い回しにすると起動しやすい。
 
 ## 設計上の割り切り（既知の制約）
 
 現状の Claude Code の仕様上、以下は実現できません。理解した上で使ってください。
 
 - **モデルの自動切替はできない**。skill は推奨を提示するのみで、`/model` での切替はユーザーが
-  手動で行います（公式の現状）。
+  手動で行います（2026-07 時点の Claude Code の仕様。公式ドキュメントの明文根拠は未確認）。
 - **現在のモデルを skill 側から知る手段がない**ため、モデル不一致の自動警告はできません。
 - **提示後にポップアップ（AskUserQuestion）を出さない設計**にしています。ポップアップが出ると
   入力欄が塞がれ、モデル切替ができなくなるためです。代わりに一度停止し、`y` を実行の合図とします。
@@ -119,8 +134,9 @@ CLAUDE.md には登録しないことを推奨します。登録すると毎回�
 
 上記の通り本運用では CLAUDE.md への登録は推奨しませんが、skill を使わず常時参照させたい
 場合は以下を CLAUDE.md に貼ってください。各行は `02_model_selection_matrix.md` の
-`[Official]` 記述の要約です（根拠：S1, S6, S7, S9, S10, S16, S29, S65。タグ・source_id は
-ランタイムのノイズになるため省略。裏付けは `01_sources_evidence.md` を参照）。
+記述の要約です（根拠：S1, S6, S7, S9, S10, S16, S25, S29, S65。うち「速い対話・高頻度は Sonnet 5 /
+Fable 5 不使用」と「ZDR 前提の代替モデル選択」は公式事実から導く運用判断（`[Heuristic]`）。
+タグ・source_id はランタイムのノイズになるため省略。裏付けは `01_sources_evidence.md` を参照）。
 
 ```md
 ## Model routing & prompt optimization
@@ -141,7 +157,7 @@ Quick defaults:
 - Long, ambiguous, hours-to-weeks, end-to-end → Fable 5 (start at effort=high). Set up timeouts,
   progress, and refusal fallback first (Claude Code falls back automatically).
 - Adjust effort before switching models.
-- Sensitive data under ZDR → avoid Fable 5 (ZDR-ineligible); use Opus 4.8.
+- Sensitive data under ZDR → avoid Fable 5 (ZDR-ineligible); use Opus 4.8 or Sonnet 5.
 
 All `[Official]` claims are backed by docs/ai-model-guides/01_sources_evidence.md.
 ```

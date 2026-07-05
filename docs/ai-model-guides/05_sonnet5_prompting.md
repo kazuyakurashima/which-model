@@ -1,6 +1,6 @@
 # 05. Sonnet 5 プロンプティングガイド（Claude Code 用）
 
-Last verified: 2026-07-05
+Last verified: 2026-07-06
 API model string: `claude-sonnet-5`（Claude Code の Anthropic API では `sonnet` エイリアスが Sonnet 5 に解決 — S49）
 
 タグ：`[Official]`（source_id 付き）／`[Heuristic]`（Confidence 付き）
@@ -13,7 +13,7 @@ API model string: `claude-sonnet-5`（Claude Code の Anthropic API では `sonn
 - effort の既定は high（Claude API / Claude Code とも）。Sonnet ティアで xhigh に対応するのは Sonnet 5 のみで、最難のコーディング/エージェントタスクは xhigh へ（S7）。medium ≈ Sonnet 4.6 の high、high ≈ Sonnet 4.6 の max が目安（S57）。
 - 価格 $3/$15 per MTok（2026-08-31 まで導入価格 $2/$10）、1M コンテキスト（既定）、最大出力 128k（S15）。
 - 新トークナイザで同じテキストが約 30% 多くトークン化される（S42）。
-- 初の Sonnet ティアのリアルタイム・サイバーセキュリティ保護あり（S44）。初の Sonnet ティアの高解像度視覚対応（長辺 2576px、従来 1568px）（S60）。
+- 初の Sonnet ティアのリアルタイム・サイバーセキュリティ保護あり（S44）。computer use は最大 2576px / 3.75MP に対応（S60）。
 
 ## 2. このプロジェクトでの最適タスク
 

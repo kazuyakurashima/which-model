@@ -1,6 +1,6 @@
 # 04. Opus 4.8 プロンプティングガイド（Claude Code 用）
 
-Last verified: 2026-07-05
+Last verified: 2026-07-06
 API model string: `claude-opus-4-8`（Claude Code の Anthropic API では `opus` エイリアスが Opus 4.8 に解決 — S49）
 
 タグ：`[Official]`（source_id 付き）／`[Heuristic]`（Confidence 付き）
@@ -11,7 +11,7 @@ API model string: `claude-opus-4-8`（Claude Code の Anthropic API では `opus
 - 長時間エージェント作業・ナレッジワーク・視覚・メモリタスクに特に強み（S64）。
 - adaptive thinking。manual extended thinking（budget_tokens）は削除済みで 400（S17）。thinking は明示的に `{type:"adaptive"}` を設定しない限り off。
 - effort の既定は high（Claude API・Claude Code・claude.ai すべて）。**コーディング・高自律作業は xhigh の明示指定が公式推奨（最良設定）**（S7）。
-- 価格 $5/$25 per MTok、1M コンテキスト（既定）、最大出力 128k（S14）。ZDR 利用可（S16）。
+- 価格 $5/$25 per MTok、1M コンテキスト（既定）、最大出力 128k（S14）。ZDR 利用可（S16 — ただし Opus 4.8 の ZDR 可は要原文再確認。01 の検証状態注記を参照）。
 
 ## 2. このプロジェクトでの最適タスク
 
@@ -29,7 +29,7 @@ API model string: `claude-opus-4-8`（Claude Code の Anthropic API では `opus
 
 ## 4. 良いプロンプトパターン `[Official]`
 
-- 「ゴール／制約／対象ファイル／完了定義」を第一ターンでまとめて渡し、報告前に検証させる（S64）。字義的なのでパスは正確に書く。
+- 「ゴール／制約／対象ファイル／完了定義」を第一ターンでまとめて渡す（S64）。報告前に検証させるのは運用上の推奨（S64 の裏付け範囲外）。字義的なのでパスは正確に書く。
 - max/xhigh effort で走らせるなら max output を 64k から始めて調整（サブエージェント・ツール呼び出しの余地を確保）（S34）。
 - ツールを使ってほしいのに使わないときは「なぜ・どう使うべきか」を明示（S32）。
 - コードレビューで「高severityのみ報告」等の絞り込みを使うなら、全件報告＋信頼度/深刻度を添えさせ、フィルタは下流で行う設計にする（S54）。
