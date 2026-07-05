@@ -1,0 +1,3 @@
+# SKILL.md はネストした番号付きリスト（手順 7 の a〜e）を含み、
+# Prettier の Markdown 整形がリスト構造を破壊するため除外する。
+SKILL.md

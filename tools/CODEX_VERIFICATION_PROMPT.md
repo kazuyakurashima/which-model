@@ -13,13 +13,14 @@ Claude とは独立した「別の目」で、Anthropic 公式ドキュメント
 
 ### 検証対象
 
-リポジトリ `docs/ai-model-guides/` 配下の 7 ファイル：
+リポジトリ `docs/ai-model-guides/` 配下の 6 ファイル：
 
 - `00_index.md` … 全体の使い方
-- `01_sources_evidence.md` … **根拠台帳**。全 `[Official]` 記述の source_id（S1〜S64）と公式出典（P1〜P13）の対応表。ここが正の起点。
+- `01_sources_evidence.md` … **根拠台帳**。全 `[Official]` 記述の source_id（S1〜S66。欠番：S4, S5, S52, S53）と公式出典（P1〜P13）の対応表。ここが正の起点。
 - `02_model_selection_matrix.md` … タスク×モデル×effort の判断表
 - `03_fable5_prompting.md` / `04_opus48_prompting.md` / `05_sonnet5_prompting.md` … モデル別プロンプティングガイド
-- `99_CLAUDE_md_snippet.md` … CLAUDE.md 追記用スニペット
+
+（補助として、リポジトリ README.md 末尾の CLAUDE.md 追記スニペットも同じタグ規律に従う。）
 
 この知識ベースは 2 層構造で、各記述に必ずタグが付く：
 - `[Official]` … Anthropic 公式で確認できる事実。必ず `01` の source_id に紐づく。
@@ -46,7 +47,7 @@ Claude とは独立した「別の目」で、Anthropic 公式ドキュメント
 
 ### 実施する検証（5 観点）
 
-1. **`[Official]` 記述の事実性。** `01` の各 source_id（S1〜S64）の主張が、記載された出典ページ
+1. **`[Official]` 記述の事実性。** `01` の各 source_id（S1〜S66。欠番：S4, S5, S52, S53）の主張が、記載された出典ページ
    （P1〜P13）の内容と一致するかを確認する。古い・誤り・過大/過小表現があれば指摘する。
    特に価格・コンテキスト長・最大出力・effort 既定値・thinking 仕様・データ保持要件・
    refusal の対象領域は、公式の逐語表現と厳密に照合する。
@@ -65,7 +66,7 @@ Claude とは独立した「別の目」で、Anthropic 公式ドキュメント
 
 ### 併せて必ず確認する整合性チェック（機械的に実施可能）
 
-- **S-id の参照整合性**：`00,02,03,04,05,99` の各ファイルが参照する `S<数字>` が、すべて `01` に
+- **S-id の参照整合性**：`00,02,03,04,05` の各ファイルが参照する `S<数字>` が、すべて `01` に
   定義されているか。定義のない参照（ダングリング）、および定義済みだがどこからも参照されない
   source_id（欠番の意図的宣言を除く）を洗い出す。
 - **タグ規律**：`[Official]` の記述に source_id が付いているか。`[Official]` と `[Heuristic]` の
