@@ -2,6 +2,10 @@
 
 以下を `CLAUDE.md` に貼る。**全文をコンテキストに載せず、必要時に該当ファイルだけを参照させる**のが狙い。
 
+> **タグ・出典について**：スニペット内の各行は `02_model_selection_matrix.md` の `[Official]` 記述の要約
+> （根拠：S1, S6, S7, S9, S10, S16, S29, S65）。貼り付け先の CLAUDE.md ではタグ・source_id を省略する
+> （ランタイムのコンテキストにはノイズになるため）。裏付けを確認するときは 01 の台帳を参照。
+
 ```md
 ## Model routing & prompt optimization
 
@@ -15,9 +19,11 @@ do not load all of them.
 - Prompting Sonnet 5 (claude-sonnet-5) → docs/ai-model-guides/05_sonnet5_prompting.md
 
 Quick defaults:
-- Unsure / complex agentic coding → Opus 4.8 (default). Try effort=high, xhigh for hard work.
-- Fast, high-frequency, or simple → Sonnet 5. Do not use Fable 5 for these.
-- Long, ambiguous, hours-to-weeks, end-to-end → Fable 5. Set up timeouts, progress, and refusal fallback first.
+- Unsure / complex agentic coding → Opus 4.8 (default). Effort defaults to high;
+  set xhigh explicitly for coding and high-autonomy work (official guidance).
+- Fast, high-frequency, or simple → Sonnet 5 (effort=low for simple lookups). Do not use Fable 5 for these.
+- Long, ambiguous, hours-to-weeks, end-to-end → Fable 5 (start at effort=high). Set up timeouts,
+  progress, and refusal fallback first (Claude Code falls back automatically).
 - Adjust effort before switching models.
 - Sensitive data under ZDR → avoid Fable 5 (ZDR-ineligible); use Opus 4.8.
 

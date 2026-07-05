@@ -7,13 +7,13 @@ API model string: `claude-sonnet-5`（Claude Code の Anthropic API では `sonn
 
 ## 1. 公式ポジショニング `[Official]`
 
-- Sonnet ティアで速度と知性の最良の組み合わせ。コーディング・エージェント作業で Opus に迫る品質（S11）。
+- Sonnet ティアで速度と知性の最良の組み合わせ。特に強いのはコーディング・エージェント作業で、Opus 級に移らずにより高い能力が必要なワークロードの選択肢（S11）。
 - Sonnet 4.6 に対する能力向上版で同価格。最大の向上はコーディングとエージェント作業（S12）。
 - adaptive thinking が既定 on（4.6 は off だった）。off にするには `thinking:{type:"disabled"}`（S18）。manual extended thinking は 400（S17）。
-- effort 既定は high（Claude API / Claude Code）（S7）。
+- effort の既定は high（Claude API / Claude Code とも）。Sonnet ティアで xhigh に対応するのは Sonnet 5 のみで、最難のコーディング/エージェントタスクは xhigh へ（S7）。medium ≈ Sonnet 4.6 の high、high ≈ Sonnet 4.6 の max が目安（S57）。
 - 価格 $3/$15 per MTok（2026-08-31 まで導入価格 $2/$10）、1M コンテキスト（既定）、最大出力 128k（S15）。
 - 新トークナイザで同じテキストが約 30% 多くトークン化される（S42）。
-- 初の Sonnet ティアのリアルタイム・サイバーセキュリティ保護あり（S44）。
+- 初の Sonnet ティアのリアルタイム・サイバーセキュリティ保護あり（S44）。初の Sonnet ティアの高解像度視覚対応（長辺 2576px、従来 1568px）（S60）。
 
 ## 2. このプロジェクトでの最適タスク
 
@@ -27,13 +27,17 @@ API model string: `claude-sonnet-5`（Claude Code の Anthropic API では `sonn
 - **浅い推論が見えたら effort を上げる。** プロンプトで回避せず high/xhigh に。低 effort を保つなら「多段推論を要する。慎重に考えてから答えよ」と的を絞る（S40）。
 - **既定でエージェント的。** ツールに手を伸ばし自己検証ループを回しやすい。ただし thinking off だとツールに手を伸ばしにくいので、off で使うなら明示的に促す（S41）。
 - **進捗更新を既定で高品質に出す。** 「3 ツール毎に要約」等の強制スキャフォールドは外して試す（S45）。
+- **対話型コーディングでは最初のターンで前倒しに指定する。** タスク・意図・制約をまとめて渡すと自律性・性能が最大化。曖昧・小出しの指示は複数ターンで効率と性能を下げうる（S58）。
+- **「高severityのみ報告」等の指示は字義通り守られる。** コードレビューでは全件報告＋信頼度/深刻度を添えさせ、フィルタは下流で行う（S54）。
 
 ## 4. 良いプロンプトパターン `[Official]`
 
 - 望む簡潔さ・粒度を正の例で示す（否定指示より効く）（S39）。
-- high/xhigh/max では max_tokens に余裕を持たせる。予算が厳しいと応答がほぼ thinking で埋まり本文が truncate され `stop_reason:"max_tokens"` になる（S43）。
+- high/xhigh/max では max_tokens に余裕を持たせる。予算が厳しいと応答がほぼ thinking で埋まり本文が truncate され `stop_reason:"max_tokens"` になる。max_tokens を上げるか medium に落とす（S43）。
 - max_tokens は新トークナイザ（約 +30%）を見込んで見直す（Sonnet 4.6 向けだと切り詰められうる）（S42）。
 - thinking off でツールを使わせたいときはシステムプロンプトで明示的に促す（S41）。
+- 対話型コーディングでは、タスク・意図・制約を最初のターンでまとめて渡す（S58）。
+- 開放的な UI/デザイン依頼では、具体的な配色・タイポを指定するか「4方向を提案させてから選ぶ」形にする（既定スタイルへの収束を避ける）（S59）。
 
 ## 5. 悪いパターン（避ける） `[Official]`
 
@@ -41,7 +45,8 @@ API model string: `claude-sonnet-5`（Claude Code の Anthropic API では `sonn
 - **Sonnet 4.6 向けの max_tokens をそのまま流用** → 約 30% 増で truncate されうる（S42）。
 - **強制的な進捗要約スキャフォールドの残置** → 既定で高品質更新を出すので外す（S45）。
 - **budget_tokens で thinking 制御** → 400。effort を使う（S17）。
-- **禁止・高リスクのサイバー話題** → refusal を返しうる（S44）。
+- **禁止・高リスクのサイバー話題** → refusal（HTTP 200, stop_reason:"refusal"）を返しうる（S44）。
+- **汎用的なデザイン否定（「クリーンにして」等）** → 別の固定パレットに移るだけ。具体的方向の指定か複数案提示にする（S59）。
 
 ## 6. 再利用テンプレート
 
@@ -96,6 +101,10 @@ API model string: `claude-sonnet-5`（Claude Code の Anthropic API では `sonn
 - [ ] high 以上なら max_tokens に余裕があるか。（S43）
 - [ ] 強制進捗スキャフォールドを外したか。（S45）
 - [ ] thinking off で使うならツール使用を明示的に促したか。（S41）
+- [ ] 対話型コーディングなら、タスク・意図・制約を最初のターンでまとめて渡したか。（S58）
+- [ ] コードレビューなら全件報告＋下流フィルタの設計にしたか。（S54）
+- [ ] UI/デザイン依頼なら具体的方向か複数案提示にしたか。（S59）
+- [ ] セキュリティ関連タスクで refusal のリスクを踏まえたか。（S44）
 
 ## 8. 出典
-S7, S11, S12, S15, S17, S18, S38, S39, S40, S41, S42, S43, S44, S45, S49 → `01_sources_evidence.md`
+S7, S11, S12, S15, S17, S18, S38, S39, S40, S41, S42, S43, S44, S45, S49, S54, S57, S58, S59, S60 → `01_sources_evidence.md`
