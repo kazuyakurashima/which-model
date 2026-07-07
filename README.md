@@ -181,4 +181,9 @@ All `[Official]` claims are backed by docs/ai-model-guides/01_sources_evidence.m
 
 ## ライセンス
 
-（公開時に記載）
+このプロジェクトは [Apache License 2.0](./LICENSE) で公開されています。無料で利用・改変・
+再配布・商用利用ができます（詳細は `LICENSE` を参照）。
+
+"Claude" は Anthropic の商標です。本ライセンスは商標の使用権を付与しません（Apache-2.0 §6）。
+このプロジェクトは Anthropic 非公式の個人プロジェクトであり、Anthropic 社およびその公式製品とは
+関係ありません。
