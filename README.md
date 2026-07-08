@@ -151,8 +151,8 @@ CLAUDE.md には登録しないことを推奨します。登録すると毎回�
 
 上記の通り本運用では CLAUDE.md への登録は推奨しませんが、skill を使わず常時参照させたい
 場合は以下を CLAUDE.md に貼ってください。各行は `02_model_selection_matrix.md` の
-記述の要約です（根拠：S1, S6, S7, S9, S10, S16, S25, S29, S65。うち「速い対話・高頻度は Sonnet 5 /
-Fable 5 不使用」と「ZDR 前提の代替モデル選択」は公式事実から導く運用判断（`[Heuristic]`）。
+記述の要約です（根拠：S1, S6, S7, S9, S10, S16, S25, S29, S65, S67, S68。うち「速い対話・高頻度は
+Sonnet 5 / Fable 5 不使用」と「ZDR 前提の代替モデル選択」は公式事実から導く運用判断（`[Heuristic]`）。
 タグ・source_id はランタイムのノイズになるため省略。裏付けは `01_sources_evidence.md` を参照）。
 
 ```md
@@ -173,7 +173,10 @@ Quick defaults:
 - Fast, high-frequency, or simple → Sonnet 5 (effort=low for simple lookups). Do not use Fable 5 for these.
 - Long, ambiguous, hours-to-weeks, end-to-end → Fable 5 (start at effort=high). Set up timeouts,
   progress, and refusal fallback first (Claude Code falls back automatically).
-- Adjust effort before switching models.
+- If something goes wrong, check context first (prompt clarity, CLAUDE.md, task scope) before
+  touching model/effort — the fix is often upstream, not a knob.
+- Still not working? Diagnose: skipped a file / didn't run tests / didn't double-check → raise
+  effort. Had all the context and clearly tried, still wrong → switch to a larger model.
 - Sensitive data under ZDR → avoid Fable 5 (ZDR-ineligible); use Opus 4.8 or Sonnet 5.
 
 All `[Official]` claims are backed by docs/ai-model-guides/01_sources_evidence.md.
