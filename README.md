@@ -4,6 +4,27 @@ Claude Code で、指示内容に応じて最適な Claude モデル（Fable 5 /
 effort レベルを提示し、選んだモデル向けに最適化したプロンプトを表示する skill です
 （表示でいったん止まり、ユーザーが確認して `y` を送ると実行。skill 自身は勝手に実行しません）。
 
+## Summary (English)
+
+**model-router** is an unofficial Claude Code skill that recommends a model and effort level
+for each coding task, then hands you a model-tuned prompt — you stay in control of the switch
+and the run. It works in two stages: first it classifies the task and proposes a model + effort
+with a one-line rationale, then **stops**. When you confirm with `y`, it rewrites your request
+into a prompt optimized for the chosen model and shows it — it never switches models or executes
+on its own. You perform the `/model` switch (only when needed) and send `y` again to run.
+
+The recommendations are grounded in a small evidence base under `docs/ai-model-guides/`, where
+every claim carries one of two tags: **`[Official]`** (backed by Anthropic's public docs via a
+`source_id` ledger in `01_sources_evidence.md`) or **`[Heuristic]`** (this project's operating
+assumptions, with a stated confidence and no official backing). Keeping "what Anthropic says"
+strictly separate from "what we decided to do" is the core design idea — adopters are expected
+to rewrite the `[Heuristic]` parts for their own use.
+
+> **Unofficial.** This is a personal project, not affiliated with or endorsed by Anthropic
+> ("Claude" is a trademark of Anthropic). Model specs and prices cited under `[Official]` follow
+> the public docs, but the skill itself is not official. Despite the name, it does **not** switch
+> models automatically — the switch is always a manual step you take.
+
 > **これは Anthropic 非公式の個人プロジェクトです。** Anthropic 社およびその公式製品とは
 > 関係ありません（"Claude" は Anthropic の商標です）。掲載する各モデルの仕様・価格は
 > `[Official]` タグの範囲で公式ドキュメントに基づきますが、本 skill 自体は公式のものでは
@@ -37,6 +58,26 @@ VS Code などの Claude Code で開発していると、指示のたびに「�
 モデル切替を実行直前の1回だけにしているのは、切替先モデル（特に長時間実行向けの Fable 5）を
 プロンプト整形という軽作業のためだけに使わないため。プロンプト最適化は常に、今起動している
 （切替前の）モデルが行う。
+
+## 動作例（デモ）
+
+「ログインの仕組みを、壊れないように少しずつ確認しながら全部作り直したい」と依頼した実際の流れです。
+
+**1. 依頼する（`/model-router` に、やりたいことを普段どおり書くだけ）**
+
+![/model-router に「ログインの仕組みを、壊れないように少しずつ確認しながら全部作り直したい」と入力している様子](docs/images/demo-1-input.png)
+
+**2. フェーズ1：推奨モデルと effort が理由つきで提示され、いったん停止する**
+
+![推奨 Fable 5 / effort=high、理由（大規模リファクタ・移行に該当）、代替 Opus 4.8、確定合図の説明が表示されている](docs/images/demo-2-phase1.png)
+
+**3. `y` を送ると、フェーズ2：確定モデル向けに最適化したプロンプトが表示される（まだ実行はしない）**
+
+![確定モデル Fable 5 向けに、Fixed instruction / Variables / Output format / Verification 構成の最適化プロンプトが表示されている](docs/images/demo-3-phase2.png)
+
+このあと、確定モデルが今のモデルと違えば `/model claude-fable-5` で切り替え、**もう一度 `y`**（または表示された
+プロンプトを編集して送信）で初めてリファクタが実行されます。ポイントは **「提示 → （必要なら）切替 → `y` で実行」
+の一拍**。skill は稼働中は読み取り専用で、勝手にコードを触りません。
 
 ## 仕組み（料理人とレシピ本）
 
