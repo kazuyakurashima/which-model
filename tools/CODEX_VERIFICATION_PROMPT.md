@@ -16,7 +16,7 @@ Claude とは独立した「別の目」で、Anthropic 公式ドキュメント
 リポジトリ `docs/ai-model-guides/` 配下の 6 ファイル：
 
 - `00_index.md` … 全体の使い方
-- `01_sources_evidence.md` … **根拠台帳**。全 `[Official]` 記述の source_id（S1〜S66。欠番：S4, S5, S52, S53）と公式出典（P1〜P14。欠番：P10）の対応表。ここが正の起点。
+- `01_sources_evidence.md` … **根拠台帳**。全 `[Official]` 記述の source_id（S1〜S70。欠番：S4, S5, S52, S53）と公式出典（P1〜P15。欠番：P10）の対応表。ここが正の起点。
 - `02_model_selection_matrix.md` … タスク×モデル×effort の判断表
 - `03_fable5_prompting.md` / `04_opus48_prompting.md` / `05_sonnet5_prompting.md` … モデル別プロンプティングガイド
 
@@ -29,7 +29,7 @@ Claude とは独立した「別の目」で、Anthropic 公式ドキュメント
 対象モデルは Claude Fable 5 / Opus 4.8 / Sonnet 5 の 3 つ（いずれも 2026 年のモデル。
 あなたの学習データより新しい可能性が高いが、実在する）。
 
-### 公式一次情報（`01` の P1〜P14。P10 は欠番・未参照。ここだけを事実の根拠にする）
+### 公式一次情報（`01` の P1〜P15。P10 は欠番・未参照。ここだけを事実の根拠にする）
 
 - P1  Models overview — https://platform.claude.com/docs/en/about-claude/models/overview
 - P2  Choosing the right model — https://platform.claude.com/docs/en/about-claude/models/choosing-a-model
@@ -45,11 +45,14 @@ Claude とは独立した「別の目」で、Anthropic 公式ドキュメント
 - P12 Migration guide — https://platform.claude.com/docs/en/about-claude/models/migration-guide
 - P13 Effort — https://platform.claude.com/docs/en/build-with-claude/effort
 - P14 Refusals and fallback — https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback
+- P15 Choosing a Claude model and effort level in Claude Code（公式ブログ、2026-07-07 公開） — https://claude.com/blog/claude-model-and-effort-level-in-claude-code
+
+**P15 の検証上の注意**：S65 / S67 / S68 / S69 / S70 は P15 を出典とする。`01` の「引用の逐語検証の情報源」注記のとおり、これらの英文キーフレーズは公式ページの直接取得ではなく**メンテナが照合した P15 本文**に基づく。可能なら P15 の恒久 URL を取得して逐語を再照合し、取得不能なら「確認不能」と明示すること（憶測で「一致」と判定しない）。
 
 ### 実施する検証（5 観点）
 
-1. **`[Official]` 記述の事実性。** `01` の各 source_id（S1〜S66。欠番：S4, S5, S52, S53）の主張が、記載された出典ページ
-   （P1〜P14。P10 は欠番）の内容と一致するかを確認する。古い・誤り・過大/過小表現があれば指摘する。
+1. **`[Official]` 記述の事実性。** `01` の各 source_id（S1〜S70。欠番：S4, S5, S52, S53）の主張が、記載された出典ページ
+   （P1〜P15。P10 は欠番）の内容と一致するかを確認する。古い・誤り・過大/過小表現があれば指摘する。
    特に価格・コンテキスト長・最大出力・effort 既定値・thinking 仕様・データ保持要件・
    refusal の対象領域は、公式の逐語表現と厳密に照合する。
 
@@ -93,7 +96,7 @@ Claude とは独立した「別の目」で、Anthropic 公式ドキュメント
 
 ### 制約
 
-- 事実判定は **P1〜P14（P10 は欠番）の実ページ内容のみ** を根拠にする。あなたの記憶や訓練データの一般知識で
+- 事実判定は **P1〜P15（P10 は欠番）の実ページ内容のみ** を根拠にする。あなたの記憶や訓練データの一般知識で
   「こうだろう」と補完しない。
 - Web 取得ができない環境の場合：事実性（観点 1・2）は「確認不能」と明示し、代わりに観点 3・4・5
   と整合性チェック（S-id 参照・タグ規律・内部数値整合）を漏れなく実施する。憶測で「一致」と
