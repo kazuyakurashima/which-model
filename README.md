@@ -61,20 +61,21 @@ cd claude-model-router
 ./install.sh <導入先プロジェクトのパス>
 ```
 
-これで **`SKILL.md`（skill の動作指示）** が `~/.claude/skills/model-router/` に（1回で全プロジェクト共通）、
-**`docs/ai-model-guides/`（モデル選定の判断材料）** が導入先プロジェクトに（プロジェクトごと）配置されます。
-あとは Claude Code でそのプロジェクトを開き、`/model-router <やりたいこと>` と打つだけです。
-
 <details>
-<summary>コマンドの意味を詳しく（ターミナルに不慣れな方へ）</summary>
+<summary><b>これで設置完了。</b>あとは Claude Code で <code>/model-router &lt;やりたいこと&gt;</code> と打つだけ（設置場所・コマンドの意味を詳しく）</summary>
 
-上の3行は、ターミナル（Mac の「ターミナル」／ Windows の PowerShell など）に1行ずつ貼り付けて実行します。
+`install.sh` は次の2つを配置します。
+
+- **`SKILL.md`（skill の動作指示）** → `~/.claude/skills/model-router/`（1回で全プロジェクト共通）
+- **`docs/ai-model-guides/`（モデル選定の判断材料）** → 導入先プロジェクトの `docs/`（プロジェクトごと）
+
+上の3行のコマンドの意味（ターミナルに不慣れな方へ）：
 
 - **`git clone https://github.com/...`** … このプロジェクト一式を、あなたの PC にコピー（複製）します。`git`
   というバージョン管理ツールが必要です（未導入なら「Git インストール」で検索）。GitHub の「Code ▾ →
   Download ZIP」でダウンロードしても代用できます。
 - **`cd claude-model-router`** … `cd` は "change directory"（フォルダの移動）の意味。いまコピーした
-  フォルダの中に入ります。次の行のコマンドは、この中で実行します。
+  フォルダの中に入ります。
 - **`./install.sh <導入先プロジェクトのパス>`** … 付属のセットアップスクリプトを実行します。
   `<導入先プロジェクトのパス>` は、この skill を使いたい自分のプロジェクトのフォルダ
   （例：`~/dev/my-app`）に置き換えます。
