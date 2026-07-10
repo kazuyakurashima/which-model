@@ -1,15 +1,29 @@
+<div align="center">
+
 # claude-model-router
 
-Claude Code で、**指示内容に応じて最適な Claude モデル（Fable 5 / Opus 4.8 / Sonnet 5）と
-effort を提示し、そのモデル向けに最適化したプロンプトを渡す** skill です。提示でいったん止まり、
-あなたが `y` を送ると実行——**モデルの切替と実行は常にあなたの手に残ります**（skill は勝手に
-切り替えも実行もしません）。
+**やりたいことを Claude に伝えると、次の2つを提案する Claude Code 用 skill。**
 
-**▶ すぐ試す：** [クイックスタート](#クイックスタート)（clone して `./install.sh <project>` するだけ）
+</div>
+
+**①** タスクに最適なモデルと effort を“理由つき”で<br>
+**②** そのモデルに最適化したプロンプト
+
+<div align="center">
+
+提示で止まり <kbd>y</kbd> で実行——切替も実行も、**常にあなたの手に**。
+
+**[▶ すぐ試す](#クイックスタート)** ・ [これは何をするか](#これは何をするか) ・ [仕組み](#仕組み料理人とレシピ本)
+
+</div>
 
 ![概要図：/model-router に指示を打つと、タスク判定・モデル選定・effort・プロンプト最適化を行い、①推奨モデルと②最適化プロンプトを提示する。モデルの切替と実行は常にユーザーが行う](docs/images/hero-overview.png)
 
-※ Anthropic 非公式の個人プロジェクトです。名前に反しモデルの自動切替はしません（[詳細](#免責非公式について)）。
+<div align="center">
+
+※ Anthropic 非公式の個人プロジェクト。自動切替はしません（[詳細](#免責非公式について)）。
+
+</div>
 
 <details>
 <summary><b>Summary (English)</b> — click to expand</summary>
@@ -315,3 +329,13 @@ All `[Official]` claims are backed by docs/ai-model-guides/01_sources_evidence.m
 > Claude Code の仕様上それはできず、また設計としても切替はユーザーの手動操作に委ねています。
 > この skill がするのは「どのモデルが最適かの提示」と「そのモデル向けプロンプトの最適化」まで
 > で、`/model` での切替と実行はあなたが行います。
+
+---
+
+<div align="center">
+
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
+[![Status](https://img.shields.io/badge/status-unofficial-lightgrey.svg)](#免責非公式について)
+![Version](https://img.shields.io/badge/version-3.8.0-informational.svg)
+
+</div>
