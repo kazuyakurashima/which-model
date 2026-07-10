@@ -13,7 +13,7 @@
 
 提示で止まり <kbd>y</kbd> で実行——切替も実行も、**常にあなたの手に**。
 
-**[▶ すぐ試す](#クイックスタート)** ・ [これは何をするか](#これは何をするか) ・ [仕組み](#仕組み料理人とレシピ本)
+**[すぐ試す](#クイックスタート)** ・ [これは何をするか](#これは何をするか) ・ [仕組み](#仕組み料理人とレシピ本)
 
 </div>
 
@@ -24,29 +24,6 @@
 ※ Anthropic 非公式の個人プロジェクト。自動切替はしません（[詳細](#免責非公式について)）。
 
 </div>
-
-<details>
-<summary><b>Summary (English)</b> — click to expand</summary>
-
-**model-router** is an unofficial Claude Code skill that recommends a model and effort level
-for each coding task, then hands you a model-tuned prompt — you stay in control of the switch
-and the run. It works in two stages: first it classifies the task and proposes a model + effort
-with a one-line rationale, then **stops**. When you confirm with `y`, it rewrites your request
-into a prompt optimized for the chosen model and shows it — it never switches models or executes
-on its own. You perform the `/model` switch (only when needed) and send `y` again to run.
-
-The recommendations are grounded in a small evidence base under `docs/ai-model-guides/`, where
-every claim carries one of two tags: **`[Official]`** (backed by Anthropic's public docs via a
-`source_id` ledger in `01_sources_evidence.md`) or **`[Heuristic]`** (this project's operating
-assumptions, with a stated confidence and no official backing). Keeping "what Anthropic says"
-strictly separate from "what we decided to do" is the core design idea — adopters are expected
-to rewrite the `[Heuristic]` parts for their own use.
-
-This is a personal project, not affiliated with or endorsed by Anthropic ("Claude" is a
-trademark of Anthropic). Despite the name, it does **not** switch models automatically — the
-switch is always a manual step you take.
-
-</details>
 
 <details>
 <summary><b>動作例（デモ）を見る</b> — 実際の3ステップのスクリーンショット（クリックで展開）</summary>
@@ -84,6 +61,10 @@ cd claude-model-router
 ./install.sh <導入先プロジェクトのパス>
 ```
 
+これで **`SKILL.md`（skill の動作指示）** が `~/.claude/skills/model-router/` に（1回で全プロジェクト共通）、
+**`docs/ai-model-guides/`（モデル選定の判断材料）** が導入先プロジェクトに（プロジェクトごと）配置されます。
+あとは Claude Code でそのプロジェクトを開き、`/model-router <やりたいこと>` と打つだけです。
+
 <details>
 <summary>コマンドの意味を詳しく（ターミナルに不慣れな方へ）</summary>
 
@@ -94,21 +75,13 @@ cd claude-model-router
   Download ZIP」でダウンロードしても代用できます。
 - **`cd claude-model-router`** … `cd` は "change directory"（フォルダの移動）の意味。いまコピーした
   フォルダの中に入ります。次の行のコマンドは、この中で実行します。
-- **`./install.sh <導入先プロジェクトのパス>`** … 付属のセットアップスクリプトを実行し、下の2つ
-  （動作指示と判断材料）を配置します。`<導入先プロジェクトのパス>` は、この skill を使いたい自分の
-  プロジェクトのフォルダ（例：`~/dev/my-app`）に置き換えます。
+- **`./install.sh <導入先プロジェクトのパス>`** … 付属のセットアップスクリプトを実行します。
+  `<導入先プロジェクトのパス>` は、この skill を使いたい自分のプロジェクトのフォルダ
+  （例：`~/dev/my-app`）に置き換えます。
 
-Windows で `./install.sh` が使えない場合は、下の[セットアップ（詳細）](#セットアップ詳細)の手動手順を参照してください。
+手動設置・Windows（`./install.sh` が使えない場合）・引数なし実行などは、下の[セットアップ（詳細）](#セットアップ詳細)を参照してください。
 
 </details>
-
-これで2つが済みます：
-
-- **`SKILL.md`（skill の動作指示）** を `~/.claude/skills/model-router/` へ同期（1回で全プロジェクト共通）
-- **`docs/ai-model-guides/`（モデル選定の判断材料）** を `<導入先プロジェクト>/docs/` へコピー（プロジェクトごと）
-
-あとは Claude Code でそのプロジェクトを開き、`/model-router <やりたいこと>` と打つだけです。
-手動設置・Windows・引数なし実行などは下の[セットアップ（詳細）](#セットアップ詳細)を参照してください。
 
 ## 目次
 
