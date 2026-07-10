@@ -45,7 +45,9 @@ switch is always a manual step you take.
 
 **3. `y` を送ると、フェーズ2：確定モデル向けに最適化したプロンプトが表示される（まだ実行はしない）**
 
-![確定モデル Fable 5 向けに、Fixed instruction / Variables / Output format / Verification 構成の最適化プロンプトが表示されている](docs/images/demo-3-phase2.png)
+![最適化プロンプトの冒頭。確定モデル・元の指示に続き、Fixed instruction / Variables / Output format / Verification の構成でプロンプトが生成される（画像は冒頭のみ）](docs/images/demo-3-phase2.png)
+
+*（上は冒頭のみ。実際は `Fixed instruction` / `Variables` / `Output format` / `Verification` の全文が続きます。）*
 
 このあと、確定モデルが今のモデルと違えば `/model claude-fable-5` で切り替え、**もう一度 `y`**（または表示された
 プロンプトを編集して送信）で初めて実行されます。ポイントは **「提示 → （必要なら）切替 → `y` で実行」
