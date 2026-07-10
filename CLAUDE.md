@@ -1,7 +1,7 @@
 # CLAUDE.md
 
-このファイルは **このリポジトリ（claude-model-router）を開発するときの規約** です。
-model-router skill 自体の動作指示（SKILL.md）とは別物です。
+このファイルは **このリポジトリ（which-model）を開発するときの規約** です。
+which-model skill 自体の動作指示（SKILL.md）とは別物です。
 
 > 注記：README.md 付録の「CLAUDE.md 追記スニペット」は、この skill を導入した*先*の
 > プロジェクトでモデルルーティングを常時参照させるための任意スニペットであり、非推奨とされています。
@@ -9,7 +9,7 @@ model-router skill 自体の動作指示（SKILL.md）とは別物です。
 
 ## 正本と同期
 
-- `SKILL.md` が正本。リポジトリ側を編集したら、`~/.claude/skills/model-router/SKILL.md`
+- `SKILL.md` が正本。リポジトリ側を編集したら、`~/.claude/skills/which-model/SKILL.md`
   へ必ず同期する。同期の手段は2通り：
   - Claude Code が `SKILL.md` を編集したときは、`.claude/settings.json` の PostToolUse hook が
     即時 `cp` で自動同期する（差分確認なし。hook は `jq` に依存する）。

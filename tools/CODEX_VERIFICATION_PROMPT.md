@@ -1,4 +1,4 @@
-# Codex 独立検証プロンプト（model-router 知識ベース用）
+# Codex 独立検証プロンプト（which-model 知識ベース用）
 
 以下の本文を Codex にそのまま渡す。目的は、`docs/ai-model-guides/` の知識ベースを、
 Claude とは独立した「別の目」で、Anthropic 公式ドキュメントに照らして検証させること。

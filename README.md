@@ -1,6 +1,6 @@
 <div align="center">
 
-# claude-model-router
+# which-model
 
 **やりたいことを Claude に伝えると、次の2つを提案する Claude Code 用 skill。**
 
@@ -17,7 +17,7 @@
 
 </div>
 
-![概要図：/model-router に指示を打つと、タスク判定・モデル選定・effort・プロンプト最適化を行い、①推奨モデルと②最適化プロンプトを提示する。モデルの切替と実行は常にユーザーが行う](docs/images/hero-overview.png)
+![概要図：/which-model に指示を打つと、タスク判定・モデル選定・effort・プロンプト最適化を行い、①推奨モデルと②最適化プロンプトを提示する。モデルの切替と実行は常にユーザーが行う](docs/images/hero-overview.png)
 
 <div align="center">
 
@@ -30,9 +30,9 @@
 
 「ログインの仕組みを、壊れないように少しずつ確認しながら全部作り直したい」と依頼した実際の流れです。
 
-**1. 依頼する（`/model-router` に、やりたいことを普段どおり書くだけ）**
+**1. 依頼する（`/which-model` に、やりたいことを普段どおり書くだけ）**
 
-![/model-router に「ログインの仕組みを、壊れないように少しずつ確認しながら全部作り直したい」と入力している様子](docs/images/demo-1-input.png)
+![/which-model に「ログインの仕組みを、壊れないように少しずつ確認しながら全部作り直したい」と入力している様子](docs/images/demo-1-input.png)
 
 **2. フェーズ1：推奨モデルと effort が理由つきで提示され、いったん停止する**
 
@@ -56,17 +56,17 @@
 実行するだけです。
 
 ```sh
-git clone https://github.com/kazuyakurashima/claude-model-router.git
-cd claude-model-router
+git clone https://github.com/kazuyakurashima/which-model.git
+cd which-model
 ./install.sh <導入先プロジェクトのパス>
 ```
 
 <details>
-<summary><b>これで設置完了。</b>あとは Claude Code で <code>/model-router &lt;やりたいこと&gt;</code> と打つだけ（設置場所・コマンドの意味を詳しく）</summary>
+<summary><b>これで設置完了。</b>あとは Claude Code で <code>/which-model &lt;やりたいこと&gt;</code> と打つだけ（設置場所・コマンドの意味を詳しく）</summary>
 
 `install.sh` は次の2つを配置します。
 
-- **`SKILL.md`（skill の動作指示）** → `~/.claude/skills/model-router/`（1回で全プロジェクト共通）
+- **`SKILL.md`（skill の動作指示）** → `~/.claude/skills/which-model/`（1回で全プロジェクト共通）
 - **`docs/ai-model-guides/`（モデル選定の判断材料）** → 導入先プロジェクトの `docs/`（プロジェクトごと）
 
 上の3行のコマンドの意味（ターミナルに不慣れな方へ）：
@@ -74,7 +74,7 @@ cd claude-model-router
 - **`git clone https://github.com/...`** … このプロジェクト一式を、あなたの PC にコピー（複製）します。`git`
   というバージョン管理ツールが必要です（未導入なら「Git インストール」で検索）。GitHub の「Code ▾ →
   Download ZIP」でダウンロードしても代用できます。
-- **`cd claude-model-router`** … `cd` は "change directory"（フォルダの移動）の意味。いまコピーした
+- **`cd which-model`** … `cd` は "change directory"（フォルダの移動）の意味。いまコピーした
   フォルダの中に入ります。
 - **`./install.sh <導入先プロジェクトのパス>`** … 付属のセットアップスクリプトを実行します。
   `<導入先プロジェクトのパス>` は、この skill を使いたい自分のプロジェクトのフォルダ
@@ -103,7 +103,7 @@ cd claude-model-router
 Claude Code で開発していると、指示のたびに「どのモデルが最適か」「プロンプトをそのモデル向けに
 どう書くか」で迷い、選定を誤ると手戻りが起きます。この skill は、その2つを半自動化します。
 
-1. あなたが `/model-router <指示>` と入力する
+1. あなたが `/which-model <指示>` と入力する
 2. skill が指示内容（設計・実装・リファクタ等）と複雑さを判定し、推奨モデルと effort を理由つきで提示して停止する
 3. 確定合図を送る（**この時点ではまだモデルを切り替えない**）
    - 推奨モデルのまま → `y`
@@ -166,11 +166,11 @@ Confidence 付き）です。使う人は `[Heuristic]` を自分の使い方に
 ### SKILL.md（料理人）
 
 **このリポジトリの `SKILL.md` が正本**です。`./install.sh`（引数なし）を実行すると
-`~/.claude/skills/model-router/SKILL.md` へ同期されます（既存と差分があれば表示して確認）。
+`~/.claude/skills/which-model/SKILL.md` へ同期されます（既存と差分があれば表示して確認）。
 手動で置く場合の場所：
 
-- **Mac**：`~/.claude/skills/model-router/SKILL.md`
-- **Windows**：`%USERPROFILE%\.claude\skills\model-router\SKILL.md`
+- **Mac**：`~/.claude/skills/which-model/SKILL.md`
+- **Windows**：`%USERPROFILE%\.claude\skills\which-model\SKILL.md`
 
 SKILL.md を編集するときは必ずリポジトリ側を直し、`./install.sh` で反映してください。
 （`.prettierignore` で SKILL.md を除外しています。Markdown 自動整形が手順のネスト構造を壊すためです。）
@@ -211,7 +211,7 @@ Copy-Item -Recurse <this-repo>\docs\ai-model-guides <your-project>\docs\
 設定済みのモデルでそのまま指示すれば十分です。
 
 ```
-/model-router 複数ユーザー対応のタスク管理アプリを設計して
+/which-model 複数ユーザー対応のタスク管理アプリを設計して
 ```
 
 推奨が提示され停止したら、モデルはまだ切り替えずに確定合図を送ります（推奨のまま `y`、
@@ -221,12 +221,12 @@ Copy-Item -Recurse <this-repo>\docs\ai-model-guides <your-project>\docs\
 
 呼び方のコツ：
 
-- **必ず行頭に `/model-router` を付けて呼ぶ。** うしろは、やりたいことを普段どおり書くだけでよい
-  （例：`/model-router 認証まわりを大規模リファクタして`）。「リファクタして」のような実行命令の
+- **必ず行頭に `/which-model` を付けて呼ぶ。** うしろは、やりたいことを普段どおり書くだけでよい
+  （例：`/which-model 認証まわりを大規模リファクタして`）。「リファクタして」のような実行命令の
   ままでよく、skill が起動していれば実行はせず「推奨モデル＋最適化プロンプト」を返して止まります
   （稼働中は読み取り専用なので、そもそも実行できません）。
 - **提案が出ず、いきなり作業（ファイル編集など）が始まったら、skill が起動していないサイン。**
-  一度止めて、`/model-router …` を行頭単独で打ち直します。
+  一度止めて、`/which-model …` を行頭単独で打ち直します。
 - スラッシュを使わず自然文で呼ぶときは、「どのモデルがいい？」「〜用のプロンプトにして」のように
   “実行” ではなく “提案・最適化” を求める言い回しにすると起動しやすいです。
 

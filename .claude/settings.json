@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "FILE=$(jq -r '.tool_input.file_path // empty'); if [ \"$FILE\" = \"$CLAUDE_PROJECT_DIR/SKILL.md\" ]; then mkdir -p \"$HOME/.claude/skills/model-router\" && cp \"$CLAUDE_PROJECT_DIR/SKILL.md\" \"$HOME/.claude/skills/model-router/SKILL.md\" && echo 'model-router: SKILL.md synced to ~/.claude/skills/model-router/SKILL.md'; fi"
+            "command": "FILE=$(jq -r '.tool_input.file_path // empty'); if [ \"$FILE\" = \"$CLAUDE_PROJECT_DIR/SKILL.md\" ]; then mkdir -p \"$HOME/.claude/skills/which-model\" && cp \"$CLAUDE_PROJECT_DIR/SKILL.md\" \"$HOME/.claude/skills/which-model/SKILL.md\" && echo 'which-model: SKILL.md synced to ~/.claude/skills/which-model/SKILL.md'; fi"
           }
         ]
       }

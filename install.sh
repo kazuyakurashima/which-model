@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# model-router セットアップスクリプト。
-# 1) 料理人（SKILL.md）を ~/.claude/skills/model-router/ へ同期する（常に実行）。
+# which-model セットアップスクリプト。
+# 1) 料理人（SKILL.md）を ~/.claude/skills/which-model/ へ同期する（常に実行）。
 # 2) 第1引数に導入先プロジェクトを渡すと、レシピ本（docs/ai-model-guides/）も
 #    そのプロジェクトへコピーする（省略時は SKILL.md 同期のみ）。
 # このリポジトリの SKILL.md / docs/ai-model-guides/ が正本。
@@ -9,7 +9,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 SRC="${SCRIPT_DIR}/SKILL.md"
 SRC_RECIPE="${SCRIPT_DIR}/docs/ai-model-guides"
-DEST_DIR="${HOME}/.claude/skills/model-router"
+DEST_DIR="${HOME}/.claude/skills/which-model"
 DEST="${DEST_DIR}/SKILL.md"
 
 TARGET="${1:-}"
