@@ -64,8 +64,8 @@ cd claude-model-router
 
 これで2つが済みます：
 
-- **料理人（`SKILL.md`）** を `~/.claude/skills/model-router/` へ同期（1回で全プロジェクト共通）
-- **レシピ本（`docs/ai-model-guides/`）** を `<導入先プロジェクト>/docs/` へコピー（プロジェクトごと）
+- **`SKILL.md`（skill の動作指示）** を `~/.claude/skills/model-router/` へ同期（1回で全プロジェクト共通）
+- **`docs/ai-model-guides/`（モデル選定の判断材料）** を `<導入先プロジェクト>/docs/` へコピー（プロジェクトごと）
 
 あとは Claude Code でそのプロジェクトを開き、`/model-router <やりたいこと>` と打つだけです。
 手動設置・Windows・引数なし実行などは下の[セットアップ（詳細）](#セットアップ詳細)を参照してください。
@@ -90,13 +90,15 @@ Claude Code で開発していると、指示のたびに「どのモデルが�
 
 ## 仕組み（料理人とレシピ本）
 
-この skill は2つの部品でできています。
+この skill は2つの部品でできています。**料理にたとえると分かりやすい**ので、以降はこの
+「料理人」「レシピ本」という呼び方も使います。
 
-- **SKILL.md（料理人）**：動作の段取りだけを書いた、Claude への指示書。PC 本体に1つ置く。
-- **docs/ai-model-guides/（レシピ本）**：判断材料。各プロジェクトに置く。
+- **SKILL.md（＝料理人）**：動作の段取りだけを書いた、Claude への指示書。PC 本体に1つ置く。
+- **docs/ai-model-guides/（＝レシピ本）**：判断材料。各プロジェクトに置く。
 
-料理人は判断材料を自分で持たず、開いているプロジェクトのレシピ本を読んで判断します。だから
-プロジェクトごとに判断基準を微調整でき、モデル仕様の更新にも追従できます。
+料理人（SKILL.md）は判断材料を自分で持たず、開いているプロジェクトのレシピ本
+（docs/ai-model-guides/）を読んで判断します。だからプロジェクトごとに判断基準を微調整でき、
+モデル仕様の更新にも追従できます。
 
 レシピ本は6ファイル構成です。
 
@@ -104,7 +106,7 @@ Claude Code で開発していると、指示のたびに「どのモデルが�
 | --- | --- |
 | `00_index.md` | 全体の使い方・読み込みルール |
 | `01_sources_evidence.md` | 根拠台帳（公式主張を source_id で管理） |
-| `02_model_selection_matrix.md` | タスク別のモデル/effort 判断表（料理人が毎回読む中核） |
+| `02_model_selection_matrix.md` | タスク別のモデル/effort 判断表（SKILL.md が毎回読む中核） |
 | `03_fable5_prompting.md` | Fable 5 向けプロンプト最適化ガイド |
 | `04_opus48_prompting.md` | Opus 4.8 向けプロンプト最適化ガイド |
 | `05_sonnet5_prompting.md` | Sonnet 5 向けプロンプト最適化ガイド |
@@ -123,7 +125,7 @@ Confidence 付き）です。使う人は `[Heuristic]` を自分の使い方に
 [クイックスタート](#クイックスタート)の `./install.sh <導入先プロジェクト>` で両方そろいますが、
 手動設置や Windows では次のようにします。
 
-### 料理人（SKILL.md）
+### SKILL.md（料理人）
 
 **このリポジトリの `SKILL.md` が正本**です。`./install.sh`（引数なし）を実行すると
 `~/.claude/skills/model-router/SKILL.md` へ同期されます（既存と差分があれば表示して確認）。
@@ -135,7 +137,7 @@ Confidence 付き）です。使う人は `[Heuristic]` を自分の使い方に
 SKILL.md を編集するときは必ずリポジトリ側を直し、`./install.sh` で反映してください。
 （`.prettierignore` で SKILL.md を除外しています。Markdown 自動整形が手順のネスト構造を壊すためです。）
 
-### レシピ本（docs/ai-model-guides/）
+### docs/ai-model-guides/（レシピ本）
 
 `./install.sh <導入先プロジェクト>` を使えばレシピ本もコピーされます（引数なしだと SKILL.md のみ）。
 手動で置く場合は、導入先プロジェクトのルートに `docs/ai-model-guides/` を作り、6ファイルを置きます。
