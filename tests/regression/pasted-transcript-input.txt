@@ -1,0 +1,78 @@
+/which-model このwhich-modelにかかれたことは、anthropicの公式情報から引用されているかどうかチェックして欲しい
+Bash Locate model selection matrix file
+IN
+find /Users/example/.claude/skills/which-model/docs/ai-model-guides -name "02*"
+
+OUT
+bfs: error: /Users/example/.claude/skills/which-model/docs/ai-model-guides: No such file or directory.
+Bash Find model selection matrix file
+IN
+find /Users/example -iname "02_model_selection_matrix.md" 2>/dev/null
+
+OUT
+/Users/example/Documents/_Projects/projects/which-model/docs/ai-model-guides/02_model_selection_matrix.md
+Read 02_model_selection_matrix.md
+推奨：Fable 5 / effort=high
+理由：which-model内の[Official]タグ付き記述（S1〜S66など）を実際のAnthropic公式情報と突き合わせる、大規模・独立監査タスクのため（判断表「コードレビュー（大規模・独立監査）」に該当）。
+代替：Opus 4.8（対話的に進めたい場合、またはコストを抑えたい場合）
+切替：/model fable5（推奨に変えるなら先にこれを実行。不要ならそのまま）
+実行合図：推奨のままなら y。代替に変えたら y opus のように実行モデル名を添えてください。
+
+SKILL.md
+y
+Read 03_fable5_prompting.md
+── which-model: 最適化プロンプト ──
+実行モデル：Fable 5 / effort=high
+元の指示：which-model のドキュメントに書かれた内容が、Anthropic の公式情報から正しく引用されているかチェックしてほしい。
+
+最適化後プロンプト：
+
+
+### Fixed instruction
+
+あなたは技術ドキュメントの独立監査者です。以下のリポジトリのドキュメント群について、
+`[Official]` タグ付きの記述が本当に Anthropic の公式情報に裏付けられているかを、
+端から端まで監査してください。作業は自分でスコープし、行動できる十分な情報があれば
+質問を待たずに進めてください。監査に必要な範囲を超えるドキュメントの改善提案・
+リファクタ・書き換えはしないでください（指摘の報告まで）。
+
+手順の目安：
+1. <sources_ledger> の各 source_id（S1〜S66 等）について、記載された出典 URL・文書を
+   WebFetch / WebSearch で実際に取得し、内容が現存・一致するか確認する。
+2. 各ドキュメントの `[Official]` 記述を、対応する source_id の実際の公式記述と突き合わせ、
+   「一致 / 誇張・歪曲 / 出典に記載なし / 出典が非公式」に分類する。
+3. `[Heuristic]` タグの記述は監査対象外とするが、`[Official]` を名乗るべきでない記述が
+   `[Official]` になっていないかは確認する。
+4. 出典 URL が取得不能・変更されている場合は、その旨と代替の公式ソース候補を記録する。
+
+### Variables
+
+- <repo>/Users/example/Documents/_Projects/projects/which-model</repo>
+- <audit_targets>
+  - docs/ai-model-guides/01_sources_evidence.md（出典台帳。監査の基準点）
+  - docs/ai-model-guides/02_model_selection_matrix.md
+  - docs/ai-model-guides/03_fable5_prompting.md
+  - docs/ai-model-guides/04_opus48_prompting.md
+  - docs/ai-model-guides/05_sonnet5_prompting.md
+  - SKILL.md（「判断の土台」セクションの記述）
+  </audit_targets>
+- <official_definition>Anthropic 公式 = docs.claude.com / anthropic.com / Anthropic 公式ブログ・
+  リリースノート・モデルカード。第三者ブログ・まとめ記事・推測記事は非公式とみなす。</official_definition>
+
+### Output format
+
+1. 結論（監査全体の判定を一文で：裏付け率と重大な逸脱の有無）
+2. 出典台帳の健全性（source_id ごとの取得可否・公式性の一覧表）
+3. 逸脱の指摘（ファイル名・該当記述・分類・実際の公式記述との差分。深刻度順）
+4. 判定不能だった項目とその理由
+
+### Verification
+
+報告前に、各指摘について「実際に取得した公式ソースの該当箇所」を突き合わせて確認し、
+取得できなかったソースに基づく主張を事実として報告しないでください。指摘には
+確認済み/未確認の別を明示してください。
+主な調整点：単発の依頼を「出典台帳 → 各ドキュメント」の端から端までの監査タスクとして再構成し、公式ソースの定義・分類基準・接地検証（取得したソースとの突き合わせ）を明示。Fable 5 の悪いパターンに従い「推論を説明せよ」系は入れず、スコープ外の書き換え禁止の境界を明記。
+──────────────────────────
+上の「最適化後プロンプト」を送れば、確定モデル（Fable 5）で実行されます。
+
+良い感じで動作しているんだけど、ここで止まることが暴走を防ぐキーだったんだよね。もしそうだとして、コピペするの大変だから、このままでよければ、y　とか打ってエンターで実行とかに出来ない？
