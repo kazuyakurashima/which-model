@@ -9,10 +9,12 @@ which-model 4.0.0 はプラグインとして配布されています。
 
   導入：   /plugin marketplace add kazuyakurashima/which-model
            /plugin install which-model@kazuyakurashima
+           インストール後、Claude Code 内で /reload-plugins を実行してください。
+           認識されない場合は新しいセッションを開くか、Claude Code を再起動してください。
   呼び出し： /which-model:pick <やりたいこと>
 
-判断材料（レシピ本）はプラグインに同梱されているため、プロジェクトへのコピーは不要です。
-プロジェクト独自に調整したい場合のみ、docs/ai-model-guides/ を置けばそちらが優先されます。
+判断材料（レシピ本）はプラグインに同梱されており、プロジェクトへのコピーは不要です。
+4.0.0 では、プロジェクト側に docs/ai-model-guides/ を置いても読み込まれません（同梱版のみを使います）。
 
 旧 standalone 版（/which-model、~/.claude/skills/ へコピーする方式）を使いたい場合は
 v3.9.0 を使ってください：
