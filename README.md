@@ -401,6 +401,6 @@ All `[Official]` claims are backed by docs/ai-model-guides/01_sources_evidence.m
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 [![Status](https://img.shields.io/badge/status-unofficial-lightgrey.svg)](#免責非公式について)
-![Version](https://img.shields.io/badge/version-3.8.0-informational.svg)
+[![Version](https://img.shields.io/github/v/release/kazuyakurashima/which-model?label=version)](https://github.com/kazuyakurashima/which-model/releases/latest)
 
 </div>
