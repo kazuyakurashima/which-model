@@ -1,61 +1,28 @@
 #!/usr/bin/env bash
-# which-model セットアップスクリプト。
-# 1) 料理人（SKILL.md）を ~/.claude/skills/which-model/ へ同期する（常に実行）。
-# 2) 第1引数に導入先プロジェクトを渡すと、レシピ本（docs/ai-model-guides/）も
-#    そのプロジェクトへコピーする（省略時は SKILL.md 同期のみ）。
-# このリポジトリの SKILL.md / docs/ai-model-guides/ が正本。
+# which-model は 4.0.0 でプラグイン配布へ移行しました。
+# このスクリプト（旧 standalone 版セットアップ）は 4.0.0 では何も変更しません。
+# 移行案内を表示して終了します。
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-SRC="${SCRIPT_DIR}/SKILL.md"
-SRC_RECIPE="${SCRIPT_DIR}/docs/ai-model-guides"
-DEST_DIR="${HOME}/.claude/skills/which-model"
-DEST="${DEST_DIR}/SKILL.md"
+cat <<'MSG'
+which-model 4.0.0 はプラグインとして配布されています。
 
-TARGET="${1:-}"
+  導入：   /plugin marketplace add kazuyakurashima/which-model
+           /plugin install which-model@kazuyakurashima
+           インストール後、Claude Code 内で /reload-plugins を実行してください。
+           認識されない場合は新しいセッションを開くか、Claude Code を再起動してください。
+  呼び出し： /which-model:pick <やりたいこと>
 
-# --- 1) 料理人（SKILL.md）の同期（従来どおり・後方互換） ---
-mkdir -p "$DEST_DIR"
+判断材料（レシピ本）はプラグインに同梱されており、プロジェクトへのコピーは不要です。
+4.0.0 では、プロジェクト側に docs/ai-model-guides/ を置いても読み込まれません（同梱版のみを使います）。
 
-if [[ -f "$DEST" ]] && ! diff -q "$SRC" "$DEST" >/dev/null; then
-  echo "既存の $DEST とリポジトリ版に差分があります:"
-  diff -u "$DEST" "$SRC" || true
-  read -r -p "リポジトリ版で上書きしますか? [y/N] " ans
-  [[ "$ans" == "y" ]] || { echo "中止しました。"; exit 1; }
-fi
+旧 standalone 版（/which-model、~/.claude/skills/ へコピーする方式）を使いたい場合は
+v3.9.0 を使ってください：
 
-cp "$SRC" "$DEST"
-echo "インストール完了: $DEST"
+  git checkout v3.9.0
+  ./install.sh <導入先プロジェクトのパス>
 
-# --- 2) レシピ本（docs/ai-model-guides/）のコピー（引数があるときだけ） ---
-if [[ -z "$TARGET" ]]; then
-  echo "ヒント: レシピ本も導入するには ./install.sh <導入先プロジェクト> を実行してください。"
-  exit 0
-fi
+このスクリプトは 4.0.0 では何も変更しません。
+MSG
 
-if [[ ! -d "$TARGET" ]]; then
-  echo "エラー: 指定した導入先プロジェクトが見つかりません: $TARGET" >&2
-  exit 1
-fi
-
-DEST_RECIPE="${TARGET%/}/docs/ai-model-guides"
-
-if [[ -d "$DEST_RECIPE" ]]; then
-  if diff -ru "$DEST_RECIPE" "$SRC_RECIPE" >/dev/null 2>&1; then
-    echo "レシピ本は最新です（変更なし）: $DEST_RECIPE"
-  else
-    echo "既存のレシピ本 $DEST_RECIPE とリポジトリ版に差分があります:"
-    diff -ru "$DEST_RECIPE" "$SRC_RECIPE" || true
-    read -r -p "リポジトリ版で上書きしますか? [y/N] " rans
-    if [[ "$rans" == "y" ]]; then
-      cp -R "$SRC_RECIPE/." "$DEST_RECIPE/"
-      echo "レシピ本を更新しました: $DEST_RECIPE"
-    else
-      echo "レシピ本の更新を中止しました。"
-    fi
-  fi
-else
-  mkdir -p "$(dirname "$DEST_RECIPE")"
-  cp -R "$SRC_RECIPE" "$DEST_RECIPE"
-  echo "レシピ本をコピーしました: $DEST_RECIPE"
-fi
+exit 0

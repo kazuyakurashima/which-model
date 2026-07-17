@@ -11,13 +11,13 @@
 
 <div align="center">
 
-提示で止まり <kbd>y</kbd> で実行——切替も実行も、**常にあなたの手に**。
+提示で止まり <kbd>y</kbd> で確定——切替も実行も、**常にあなたの手に**。
 
 **[すぐ試す](#クイックスタート)** ・ [これは何をするか](#これは何をするか) ・ [仕組み](#仕組み料理人とレシピ本)
 
 </div>
 
-![概要図：/which-model に指示を打つと、タスク判定・モデル選定・effort・プロンプト最適化を行い、①推奨モデルと②最適化プロンプトを提示する。モデルの切替と実行は常にユーザーが行う](docs/images/hero-overview.png)
+![which-model のヒーロー画像。「Claude Code skill · model & prompt advisor」のバッジ、タイトル which-model、「The right Claude for every task.」、「タスクに最適な Claude モデルとプロンプトを"提案"する Claude Code スキル。」、Select → Generate → Execute の3ステップ、そしてインストールコマンド（/plugin marketplace add kazuyakurashima/which-model、/plugin install which-model@kazuyakurashima、/reload-plugins）が並んでいる](docs/images/hero-overview.png)
 
 <div align="center">
 
@@ -30,57 +30,111 @@
 
 「ログインの仕組みを、壊れないように少しずつ確認しながら全部作り直したい」と依頼した実際の流れです。
 
-**1. 依頼する（`/which-model` に、やりたいことを普段どおり書くだけ）**
+**1. 依頼する（`/which-model:pick` に、やりたいことを普段どおり書くだけ）**
 
-![/which-model に「ログインの仕組みを、壊れないように少しずつ確認しながら全部作り直したい」と入力している様子](docs/images/demo-1-input.png)
+![/which-model:pick に「ログインの仕組みを壊れないように、少しずつ確認して全部作り直したい。」と入力している様子](docs/images/demo-1-input.png)
 
 **2. フェーズ1：推奨モデルと effort が理由つきで提示され、いったん停止する**
 
-![推奨 Fable 5 / effort=high、理由（大規模リファクタ・移行に該当）、代替 Opus 4.8、確定合図の説明が表示されている](docs/images/demo-2-phase1.png)
+![推奨 Fable 5 / effort=high、理由（大規模リファクタ・移行に該当）、代替 Opus 4.8、確定合図の説明、判断材料の Last verified 日付が表示されている](docs/images/demo-2-phase1.png)
 
 **3. `y` を送ると、フェーズ2：確定モデル向けに最適化したプロンプトが表示される（まだ実行はしない）**
 
-![最適化プロンプトの冒頭。確定モデル・元の指示に続き、Fixed instruction / Variables / Output format / Verification の構成でプロンプトが生成される（画像は冒頭のみ）](docs/images/demo-3-phase2.png)
+![確定合図を受けて 03_fable5_prompting.md を読み、最適化プロンプトを表示している。確定モデル・元の指示に続き、target タグから始まるプロンプトが生成される（画像は冒頭のみ）](docs/images/demo-3-phase2.png)
 
 *（上は冒頭のみ。実際は `Fixed instruction` / `Variables` / `Output format` / `Verification` の全文が続きます。）*
 
 このあと、確定モデルが今のモデルと違えば `/model claude-fable-5` で切り替え、**もう一度 `y`**（または表示された
 プロンプトを編集して送信）で初めて実行されます。ポイントは **「提示 → （必要なら）切替 → `y` で実行」
-の一拍**。skill は稼働中は読み取り専用で、勝手にコードを触りません。
+の一拍**。skill は提示して停止するところまでしか行いません（`SKILL.md` の絶対規則によるもので、
+技術的に実行できないわけではありません）。
 
 </details>
 
 ## クイックスタート
 
-この配布リポジトリを clone（またはダウンロード）して、導入先プロジェクトを引数に `install.sh` を
-実行するだけです。
+> **Claude Code 専用です。** Codex・ChatGPT・Claude（Web/デスクトップ）では動作しません。
+> プラグイン機構を使うため、Claude Code の比較的新しい版が必要です（`/plugin` が使えること）。
+
+Claude Code の中で、次の3ステップを実行します。ターミナルでの clone は不要です。
 
 ```sh
-git clone https://github.com/kazuyakurashima/which-model.git
-cd which-model
-./install.sh <導入先プロジェクトのパス>
+/plugin marketplace add kazuyakurashima/which-model
+/plugin install which-model@kazuyakurashima
+/reload-plugins
+```
+
+あとは `/which-model:pick <やりたいこと>` と打つだけです。
+
+```sh
+/which-model:pick 認証まわりを大規模リファクタして
 ```
 
 <details>
-<summary><b>これで設置完了。</b>あとは Claude Code で <code>/which-model &lt;やりたいこと&gt;</code> と打つだけ（設置場所・コマンドの意味を詳しく）</summary>
+<summary>うまくいかないとき・スコープ・更新について（詳しく）</summary>
 
-`install.sh` は次の2つを配置します。
+**`Unknown command: /which-model:pick` と出る**
 
-- **`SKILL.md`（skill の動作指示）** → `~/.claude/skills/which-model/`（1回で全プロジェクト共通）
-- **`docs/ai-model-guides/`（モデル選定の判断材料）** → 導入先プロジェクトの `docs/`（プロジェクトごと）
+プラグインは**セッション開始時に読み込まれます**。インストールしただけでは、いま動いている
+セッションには反映されません。`/reload-plugins` を実行してください。それでも認識されない場合は、
+**新しいセッションを開くか、Claude Code を再起動**してください。
 
-上の3行のコマンドの意味（ターミナルに不慣れな方へ）：
+**インストールスコープ**
 
-- **`git clone https://github.com/...`** … このプロジェクト一式を、あなたの PC にコピー（複製）します。`git`
-  というバージョン管理ツールが必要です（未導入なら「Git インストール」で検索）。GitHub の「Code ▾ →
-  Download ZIP」でダウンロードしても代用できます。
-- **`cd which-model`** … `cd` は "change directory"（フォルダの移動）の意味。いまコピーした
-  フォルダの中に入ります。
-- **`./install.sh <導入先プロジェクトのパス>`** … 付属のセットアップスクリプトを実行します。
-  `<導入先プロジェクトのパス>` は、この skill を使いたい自分のプロジェクトのフォルダ
-  （例：`~/dev/my-app`）に置き換えます。
+`/plugin install` の際にスコープを選べます。**特に理由がなければ User スコープ（既定）**を選んで
+ください。全プロジェクトで使えるようになります。Project スコープはそのリポジトリの共同作業者
+全員に、Local スコープは自分のそのリポジトリだけに入ります。
 
-手動設置・Windows（`./install.sh` が使えない場合）・引数なし実行などは、下の[セットアップ（詳細）](#セットアップ詳細)を参照してください。
+**更新の受け取り方**
+
+このマーケットプレイスは Anthropic 公式ではない（＝サードパーティの）ため、**自動更新は既定で
+オフ**です。更新は次のどちらかで受け取ります。
+
+- **手動**：`/plugin marketplace update kazuyakurashima` を実行する
+- **自動**：`/plugin` → **Marketplaces** タブ → `kazuyakurashima` を選択 → **Enable auto-update**
+
+更新が入ると `/reload-plugins` を促す通知が出ます（または次回起動時に反映されます）。
+
+**アンインストール**
+
+```sh
+/plugin uninstall which-model@kazuyakurashima
+/plugin marketplace remove kazuyakurashima
+```
+
+</details>
+
+<details>
+<summary>v3.9.0（旧 standalone 版）を使っていた方へ — 移行の手順（新規の方は読み飛ばしてください）</summary>
+
+**順序が大事です。先に旧版を消すと、新旧どちらも使えない空白ができます。**
+
+1. **先にプラグインを入れる**（上のクイックスタートのとおり）
+2. `/reload-plugins`（効かなければ新しいセッションを開く／再起動）
+3. **`/which-model:pick <やりたいこと>` が動くことを確認する**
+4. **動作を確認できてから**、旧版を退避する（いきなり削除せず、まず移動を推奨）
+
+```sh
+mv ~/.claude/skills/which-model ~/.claude/which-model-standalone-v3.9.0.bak
+```
+
+**変わること**
+
+- **呼び出し名**：`/which-model` → **`/which-model:pick`**。旧版を退避すると `/which-model` は
+  使えなくなります。
+- **判断材料の場所**：プラグインに同梱されたものだけを読みます。**プロジェクト側の
+  `docs/ai-model-guides/` は読まれません**。
+  - 旧版を併用し続ける場合は、旧版がそれを読むので**消さないでください**。
+  - プラグインだけを使うなら、プロジェクト側のコピーは不要です（残っていても無視されます）。
+
+**旧 standalone 版に戻したいとき**
+
+```sh
+mv ~/.claude/which-model-standalone-v3.9.0.bak ~/.claude/skills/which-model
+```
+
+リポジトリから入れ直す場合は `git checkout v3.9.0` を使ってください（`main` の `install.sh` は
+4.0.0 では何もインストールしません）。
 
 </details>
 
@@ -93,7 +147,8 @@ cd which-model
 - [セットアップ（詳細）](#セットアップ詳細)
 - [使い方とコツ](#使い方とコツ)
 - [設計上の割り切り（既知の制約）](#設計上の割り切り既知の制約)
-- [カスタマイズ（配布を受けた人向け）](#カスタマイズ配布を受けた人向け)
+- [カスタマイズについて](#カスタマイズについて)
+- [保守終了の方針](#保守終了の方針)
 - [付録：CLAUDE.md 追記スニペット](#付録claudemd-追記スニペット任意本運用では非推奨)
 - [ライセンス](#ライセンス)
 - [免責・非公式について](#免責非公式について)
@@ -103,7 +158,7 @@ cd which-model
 Claude Code で開発していると、指示のたびに「どのモデルが最適か」「プロンプトをそのモデル向けに
 どう書くか」で迷い、選定を誤ると手戻りが起きます。この skill は、その2つを半自動化します。
 
-1. あなたが `/which-model <指示>` と入力する
+1. あなたが `/which-model:pick <指示>` と入力する
 2. skill が指示内容（設計・実装・リファクタ等）と複雑さを判定し、推奨モデルと effort を理由つきで提示して停止する
 3. 確定合図を送る（**この時点ではまだモデルを切り替えない**）
    - 推奨モデルのまま → `y`
@@ -123,20 +178,22 @@ Claude Code で開発していると、指示のたびに「どのモデルが�
 **料理にたとえると分かりやすい**です。この skill は「**料理人**」と「**レシピ本**」の2つでできている、
 と考えてください。
 
-- **料理人（`SKILL.md`）** … 動作の段取りだけを書いた、Claude への指示書。PC 本体に1つだけ置く（全プロジェクト共通）。
-- **レシピ本（`docs/ai-model-guides/`）** … どのモデルをどう使うかの判断材料。プロジェクトごとに置く。
+- **料理人（`skills/pick/SKILL.md`）** … 動作の段取りだけを書いた、Claude への指示書。
+- **レシピ本（`references/ai-model-guides/`）** … どのモデルをどう使うかの判断材料。
 
-料理人は判断材料を自分では持たず、開いているプロジェクトのレシピ本を読んで「このタスクはどのモデル・
-どの effort が最適か」を判断します。だから**プロジェクトごとに基準を微調整でき、モデルの世代交代にも
-レシピ本を差し替えるだけで追従できます**。料理人はどのキッチン（プロジェクト）でも共通、レシピ本は
-キッチンごとに置く——とイメージすると掴みやすいはずです。
+料理人は判断材料を自分では持たず、レシピ本を読んで「このタスクはどのモデル・どの effort が最適か」を
+判断します。判断材料を skill 本体から切り離しているので、**モデルの世代交代にはレシピ本を差し替える
+だけで追従できます**。
+
+料理人もレシピ本もプラグインに同梱されているので、インストールすれば両方そろいます。あなたの
+プロジェクトに置くものはありません。
 
 ### 詳細
 
 <details>
 <summary>レシピ本の中身（6ファイル）・タグの意味・補足を開く</summary>
 
-レシピ本（`docs/ai-model-guides/`）は6ファイル構成です。
+レシピ本（同梱の `references/ai-model-guides/`。このリポジトリでは `docs/ai-model-guides/` が正本）は6ファイル構成です。
 
 | ファイル | 役割 |
 | --- | --- |
@@ -152,7 +209,9 @@ Claude Code で開発していると、指示のたびに「どのモデルが�
 Confidence 付き）です。使う人は `[Heuristic]` を自分の使い方に合わせて書き換えてください。
 
 > このリポジトリの `README.md` は人間向けの説明書で、Claude Code は読み込みません（トークンを
-> 消費しません）。Claude への動作指示は `SKILL.md` に、判断材料は `docs/ai-model-guides/` にあります。
+> 消費しません）。Claude への動作指示は `skills/pick/SKILL.md` に、判断材料は同梱の
+> `skills/pick/references/ai-model-guides/` にあります（このリポジトリの `docs/ai-model-guides/` が正本で、
+> `./tools/sync-bundled-guides.sh` で同梱コピーへ同期します）。
 > なお `tools/CODEX_VERIFICATION_PROMPT.md` は配布物ではない開発用ファイル（知識ベースの独立監査用
 > プロンプト）で、各プロジェクトへはコピーしません。
 
@@ -160,50 +219,29 @@ Confidence 付き）です。使う人は `[Heuristic]` を自分の使い方に
 
 ## セットアップ（詳細）
 
-[クイックスタート](#クイックスタート)の `./install.sh <導入先プロジェクト>` で両方そろいますが、
-手動設置や Windows では次のようにします。
+[クイックスタート](#クイックスタート)の3行で完了します。ここでは補足だけ書きます。
 
-### SKILL.md（料理人）
+### 何がどこに入るか
 
-**このリポジトリの `SKILL.md` が正本**です。`./install.sh`（引数なし）を実行すると
-`~/.claude/skills/which-model/SKILL.md` へ同期されます（既存と差分があれば表示して確認）。
-手動で置く場合の場所：
+プラグインとして、次の2つが**一緒に**入ります。プロジェクト側に置くものはありません。
 
-- **Mac**：`~/.claude/skills/which-model/SKILL.md`
-- **Windows**：`%USERPROFILE%\.claude\skills\which-model\SKILL.md`
+- **料理人（`skills/pick/SKILL.md`）** … Claude への動作指示
+- **レシピ本（`skills/pick/references/ai-model-guides/`）** … モデル選定の判断材料（6ファイル）
 
-SKILL.md を編集するときは必ずリポジトリ側を直し、`./install.sh` で反映してください。
-（`.prettierignore` で SKILL.md を除外しています。Markdown 自動整形が手順のネスト構造を壊すためです。）
+実体は Claude Code が管理する場所に置かれます。手で配置する必要はありません。
 
-### docs/ai-model-guides/（レシピ本）
+### Windows
 
-`./install.sh <導入先プロジェクト>` を使えばレシピ本もコピーされます（引数なしだと SKILL.md のみ）。
-手動で置く場合は、導入先プロジェクトのルートに `docs/ai-model-guides/` を作り、6ファイルを置きます。
+`/plugin` コマンドは Claude Code の中で実行するので、**OS を問わず同じ手順**です（4.0.0 では
+`install.sh` を使いません）。
 
-```
-<your-project>/
-  docs/
-    ai-model-guides/
-      00_index.md
-      01_sources_evidence.md
-      02_model_selection_matrix.md
-      03_fable5_prompting.md
-      04_opus48_prompting.md
-      05_sonnet5_prompting.md
-```
+### 動かないとき
 
-シェルでディレクトリごとコピーする例（`<this-repo>` = clone したこの配布リポジトリ、
-`<your-project>` = 導入先プロジェクト。いずれもプレースホルダ）：
-
-```sh
-# Mac / Linux（bash）
-cp -r <this-repo>/docs/ai-model-guides <your-project>/docs/
-```
-
-```powershell
-# Windows（PowerShell）。install.sh は bash 用なので Windows では手動コピーになります
-Copy-Item -Recurse <this-repo>\docs\ai-model-guides <your-project>\docs\
-```
+- `/plugin` が無い → Claude Code が古い可能性があります。更新してください。
+- `Unknown command: /which-model:pick` → `/reload-plugins`、それでもだめなら新しいセッションを
+  開くか再起動してください（プラグインはセッション開始時に読み込まれます）。
+- `/plugin marketplace add` が失敗する → リポジトリ名（`kazuyakurashima/which-model`）を確認して
+  ください。
 
 ## 使い方とコツ
 
@@ -211,7 +249,7 @@ Copy-Item -Recurse <this-repo>\docs\ai-model-guides <your-project>\docs\
 設定済みのモデルでそのまま指示すれば十分です。
 
 ```
-/which-model 複数ユーザー対応のタスク管理アプリを設計して
+/which-model:pick 複数ユーザー対応のタスク管理アプリを設計して
 ```
 
 推奨が提示され停止したら、モデルはまだ切り替えずに確定合図を送ります（推奨のまま `y`、
@@ -221,14 +259,18 @@ Copy-Item -Recurse <this-repo>\docs\ai-model-guides <your-project>\docs\
 
 呼び方のコツ：
 
-- **必ず行頭に `/which-model` を付けて呼ぶ。** うしろは、やりたいことを普段どおり書くだけでよい
-  （例：`/which-model 認証まわりを大規模リファクタして`）。「リファクタして」のような実行命令の
+- **必ず行頭に `/which-model:pick` を付けて呼ぶ。** うしろは、やりたいことを普段どおり書くだけでよい
+  （例：`/which-model:pick 認証まわりを大規模リファクタして`）。「リファクタして」のような実行命令の
   ままでよく、skill が起動していれば実行はせず「推奨モデル＋最適化プロンプト」を返して止まります
   （止まるのは SKILL.md の絶対規則によるものです。技術的に実行できないわけではありません）。
 - **提案が出ず、いきなり作業（ファイル編集など）が始まったら、skill が起動していないサイン。**
-  一度止めて、`/which-model …` を行頭単独で打ち直します。
-- スラッシュを使わず自然文で呼ぶときは、「どのモデルがいい？」「〜用のプロンプトにして」のように
-  “実行” ではなく “提案・最適化” を求める言い回しにすると起動しやすいです。
+  一度止めて、`/which-model:pick …` を行頭から打ち直します。
+- **自然文では起動しません。** 4.0.0 では明示的に呼んだときだけ動く設計にしています
+  （`disable-model-invocation`）。「どのモデルがいい？」と書いても Claude が勝手に判定を挟むことは
+  ありません。必ず `/which-model:pick` から始めてください。
+- **通常は、一度呼べば同じセッション内の後続の依頼にも指示が引き継がれます。** 2回目以降で毎回
+  コマンドを打ち直す必要はありません（新しい依頼を書けば、フェーズ1からやり直します）。判定が
+  始まらないときは、もう一度 `/which-model:pick` を付けて呼んでください。
 
 なお **CLAUDE.md には登録しないことを推奨**します。登録すると毎回自動で判定が走り、日々の開発
 テンポを損なうためです（それでも常時参照させたい場合のスニペットは[付録](#付録claudemd-追記スニペット任意本運用では非推奨)を参照）。
@@ -248,17 +290,60 @@ Copy-Item -Recurse <this-repo>\docs\ai-model-guides <your-project>\docs\
 - **判定に時間がかかることがあります**。実測では、提示まで数十秒〜2分超かかった例がありました。
   指示の文字数との単純な比例は見られず、セッションのコンテキスト量や effort も影響している
   可能性があります（未検証）。急ぐときは会話履歴の浅いセッションか、軽いモデルで呼んでください。
+- **会話ログを丸ごと貼り付けると、推奨の提示を飛ばすことがあります**（既知・完全には直っていません）。
+  貼り付けたログの中の `y` や過去のモデル提案を、いまの会話の続きだと読み違えるためです。3.9.0 で
+  大きく減らしましたが、確率的に再発します。起きたときは、依頼を短くまとめ直して呼び直してください。
+  検証記録は [`tests/regression/`](tests/regression/) にあります。
+- **対象は対話型の Claude Code です**。headless（`claude -p`）で複数ターンにまたがる使い方は
+  保証していません（フェーズ2でガイドの読み取りが権限で止まることを確認しています）。
 
-## カスタマイズ（配布を受けた人向け）
+## カスタマイズについて
 
-- `docs/ai-model-guides/02_model_selection_matrix.md` の判断表と、各ガイド（03〜05）を、
-  自分のプロジェクトの事情（扱うデータ、作るアプリの種類、コスト方針）に合わせて調整してください。
+**いまは、判断材料をプロジェクトごとに差し替えることはできません。** skill はプラグインに同梱された
+レシピ本だけを読みます。
+
+理由は、安全性と、どの環境でも同じ判断材料で動くことを優先したためです。プロジェクトごとの上書きを
+許すと、クローンしてきたリポジトリに置かれたファイルを、それと知らずに判断材料として読んでしまう
+余地が生まれます。現行版では、同梱された判断材料だけを読む設計にしています。
+
+**調整したい場合**は、いまのところリポジトリを fork して、`docs/ai-model-guides/` を書き換え、
+`./tools/sync-bundled-guides.sh` を実行して自分のプラグインとして使ってください。
+
+プロジェクトごとの調整に需要があることが分かれば、**明示的なオプトイン**として再導入を検討します。
+必要な方は Issue で教えてください。
+
+### レシピ本の読み方（fork する方向け）
+
+- `[Official]` タグの記述は公式裏付けがあります（`01_sources_evidence.md` の `source_id` が根拠）。
+  モデル世代が変わるまで基本そのままで問題ありません。
 - `[Heuristic]` タグの記述は配布元の経験則です。自分の使い方に合わせて書き換えてください。
-- `[Official]` タグの記述は公式裏付けがあります。モデル世代が変わるまで基本そのままで問題ありません。
 - 各ファイル冒頭の `Last verified` 日付が古くなったら（目安：1〜2ヶ月）、公式ドキュメントで
   再確認してください。モデルの仕様・価格は頻繁に変わります。
 
+## 保守終了の方針
+
+このツールは、Claude Code に公式のモデル自動選択が実装されれば役目を終えます。そうなったときは、
+黙って放置せず次の順序で終了させます。
+
+1. README で非推奨を告知する
+2. 公式機能への移行方法を掲載する
+3. 最終版をリリースする
+4. Marketplace への掲載終了を依頼する
+5. **GitHub リポジトリは削除せず Archive する**（既存の利用者が参照できるように）
+
+**「撤退」ではなく「非推奨化と移行案内」**と考えています。インストール済みのコピーを配布元から
+強制的に消す手段はないため、静かに消えるより、古くなったことが分かる形で残す方が誠実だからです。
+
+同じ理由で、フェーズ1の提示にはレシピ本の `Last verified` 日付を出しています。更新が止まった版を
+使い続けても、判断材料が古いことに気づけるようにするためです。
+
 ## 付録：CLAUDE.md 追記スニペット（任意・本運用では非推奨）
+
+> **⚠️ 4.0.0 では、この付録を使うにはひと手間要ります。** 下のスニペットは
+> `docs/ai-model-guides/` がプロジェクトにある前提で書かれていますが、4.0.0 のレシピ本は
+> プラグインに同梱されており、**あなたのプロジェクトには置かれません**。使う場合は、
+> このリポジトリの `docs/ai-model-guides/` を自分のプロジェクトへ手でコピーしてください
+> （skill 自体はそれを読みませんが、CLAUDE.md 経由で Claude に読ませることはできます）。
 
 上記の通り本運用では CLAUDE.md への登録は推奨しませんが、skill を使わず常時参照させたい
 場合は以下を CLAUDE.md に貼ってください。各行は `02_model_selection_matrix.md` の

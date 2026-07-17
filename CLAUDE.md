@@ -7,13 +7,25 @@ which-model skill 自体の動作指示（SKILL.md）とは別物です。
 > プロジェクトでモデル選定ガイドを常時参照させるための任意スニペットであり、非推奨とされています。
 > 本ファイルはそれとは無関係で、このリポジトリ自体を編集する開発規約です。混同しないでください。
 
+## 構成（4.0.0：プラグイン配布）
+
+このリポジトリは、Claude プラグインであり、かつ自前 marketplace でもある。
+
+- `.claude-plugin/plugin.json` … プラグイン定義（`version` の正本はここ）。
+- `.claude-plugin/marketplace.json` … 自前 marketplace（`which-model@kazuyakurashima`）。
+- `skills/pick/SKILL.md` … skill 本体（正本）。呼び出し名は `/which-model:pick`。
+- `skills/pick/references/ai-model-guides/` … レシピ本の**同梱コピー**（配布用）。
+- `docs/ai-model-guides/` … レシピ本の**正本**（人が編集するのはこちら）。
+
 ## 正本と同期
 
-- `SKILL.md` が正本。リポジトリ側を編集したら、`~/.claude/skills/which-model/SKILL.md`
-  へ必ず同期する。同期の手段は2通り：
-  - Claude Code が `SKILL.md` を編集したときは、`.claude/settings.json` の PostToolUse hook が
-    即時 `cp` で自動同期する（差分確認なし。hook は `jq` に依存する）。
-  - エディタ等で手動編集したときは `./install.sh` を実行する（差分があれば表示して確認できる）。
+- レシピ本の正本は `docs/ai-model-guides/`。**編集したら必ず `./tools/sync-bundled-guides.sh`
+  を実行**し、同梱コピー（`skills/pick/references/ai-model-guides/`）へ反映する。ズレ検出は
+  `./tools/sync-bundled-guides.sh --check`（コミット前チェック用）。
+- skill 本体の開発ループは `claude --plugin-dir .`（インストール不要でその場のプラグインを読む）。
+- **旧 standalone 版の同期 hook（`.claude/settings.json`）は 4.0.0 で削除済み**（ルート `SKILL.md`
+  を監視する死んだ hook だった）。`install.sh` は壊れた実行体をやめ、移行案内を表示して終了する
+  だけの無害なスクリプトにした（standalone を使うなら `git checkout v3.9.0`）。
 
 ## SKILL.md の整形
 
@@ -28,8 +40,9 @@ which-model skill 自体の動作指示（SKILL.md）とは別物です。
 
 ## バージョン更新
 
-- version を上げるときは、`SKILL.md` フロントマターの `version` と `last-updated` を
-  同時に更新する。
+- version の正本は `.claude-plugin/plugin.json` の `version`。上げるときは、`skills/pick/SKILL.md`
+  フロントマターの `metadata.version` と `last-updated` も同時に合わせる（複数箇所で食い違わせない）。
+- marketplace エントリには `version` を書かない（plugin.json が常に優先され、紛れるため）。
 
 ## ドキュメント方針
 
