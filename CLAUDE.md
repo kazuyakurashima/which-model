@@ -23,9 +23,9 @@ which-model skill 自体の動作指示（SKILL.md）とは別物です。
   を実行**し、同梱コピー（`skills/pick/references/ai-model-guides/`）へ反映する。ズレ検出は
   `./tools/sync-bundled-guides.sh --check`（コミット前チェック用）。
 - skill 本体の開発ループは `claude --plugin-dir .`（インストール不要でその場のプラグインを読む）。
-- **旧 standalone 版向けの `install.sh` と、`.claude/settings.json` の PostToolUse hook
-  （ルート `SKILL.md` → `~/.claude/skills/which-model/` へ cp）は、v3.9.0 までの遺物。**
-  4.0.0 ではルート `SKILL.md` が無いため hook は発火しない。プラグイン配布に切り替え後は使わない。
+- **旧 standalone 版の同期 hook（`.claude/settings.json`）は 4.0.0 で削除済み**（ルート `SKILL.md`
+  を監視する死んだ hook だった）。`install.sh` は壊れた実行体をやめ、移行案内を表示して終了する
+  だけの無害なスクリプトにした（standalone を使うなら `git checkout v3.9.0`）。
 
 ## SKILL.md の整形
 

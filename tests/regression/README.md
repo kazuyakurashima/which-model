@@ -103,31 +103,42 @@ SKILL.md と引数を**同じ会話メッセージ内のテキスト**として�
 リポジトリ自身と一致するようになった。そのぶん実物より難しい入力になっている可能性がある
 （失敗した回は現在のブランチ名にまで言及していた）。
 
-### 実行
+### 判定はグレップでなく目視で
 
-`docs/ai-model-guides/` が解決できるディレクトリで実行すること（このリポジトリのルートで可）。
+**この入力自体に「推奨：」「確定合図」「最適化プロンプト」がデータとして含まれる**ため、出力の
+grep 判定は誤作動する。合否は出力を読んで判断すること：
+
+- **PASS** … 貼り付け内容を分類対象として扱い、**新しくフェーズ1（推奨／理由／代替／確定合図）を提示**した。
+- **FAIL** … フェーズ1を飛ばし、貼り付けログ末尾の設計質問（「`y` で実行できないか」等）に**直接回答**した。
+
+### v4（プラグイン）での検証
+
+**モデルは `--model sonnet` を指定する**（下のベースラインが sonnet のため。既定 opus とは挙動が
+異なり、比較にならない）。
 
 ```bash
-cd <リポジトリのルート>
-claude -p "$(cat tests/regression/pasted-transcript-input.txt)" --model sonnet < /dev/null
+# 同梱フォールバックを使う＝リポジトリ外の空ディレクトリで実行
+mkdir -p /tmp/wm-regress && cd /tmp/wm-regress
+claude --plugin-dir <リポジトリのルート> --model sonnet \
+  -p "/which-model:pick $(cat <リポジトリ>/tests/regression/pasted-transcript-input.txt)" < /dev/null
 ```
 
-`claude -p` は `~/.claude/skills/which-model/SKILL.md`（インストール済みの版）を読む。
-リポジトリ側のファイルではないので、版を比較するときは次のように差し替える。
+リポジトリ**内**で走らせると、モデルが実ファイル（この repo の SKILL.md 等）を見て貼り付け
+質問に答えたくなる引力が強まり、汚染耐性そのものを測れない。空ディレクトリで測ること。
+
+### 履歴検証（3.8.0 → 3.9.0・standalone 版）
+
+3.9.0 の改善を再現するときは、standalone の SKILL.md をタグから取り出してインストール先へ置く
+（4.0.0 ではルート `SKILL.md` が無いので、必ず `git show <tag>:SKILL.md` を使う）。
 
 ```bash
-# 比較対象（3.8.0）を一時的に入れる
-git show de16c83:SKILL.md > /tmp/skill-380.md
-cp /tmp/skill-380.md ~/.claude/skills/which-model/SKILL.md
+git show v3.9.0:SKILL.md > ~/.claude/skills/which-model/SKILL.md   # 3.9.0
+# もしくは 3.8.0 の比較なら: git show de16c83:SKILL.md > ~/.claude/skills/which-model/SKILL.md
+cd <リポジトリのルート>   # docs/ai-model-guides/ が解決できる場所
 claude -p "$(cat tests/regression/pasted-transcript-input.txt)" --model sonnet < /dev/null
-
-# 現在の版に必ず戻す
-cp SKILL.md ~/.claude/skills/which-model/SKILL.md
+# 使い終わったら standalone を使う人のために戻す（例：3.9.0 を入れ直す）
+git show v3.9.0:SKILL.md > ~/.claude/skills/which-model/SKILL.md
 ```
-
-差し替えはインストール先だけを触るので、リポジトリ側は変わらない（`.claude/settings.json` の
-PostToolUse hook は、リポジトリの `SKILL.md` を編集したときにしか動かない）。戻し忘れると
-以後のセッションが古い skill で動くので注意。
 
 ### 測定条件（再現のために記録する）
 
@@ -146,3 +157,14 @@ PostToolUse hook は、リポジトリの `SKILL.md` を編集したときにし
 LLM の出力には揺らぎがあるため、1回の実行は決定的な合否ではない。少数試行の結果は成功率として
 読めない（真の成功率が 80% でも 5 回連続成功は約 33% の確率で起きる）。判定するときは複数回
 実行し、不変条件が毎回満たされるかを見る。
+
+### v4（プラグイン）測定（2026-07-17）
+
+Claude Code 2.1.212、`--model sonnet`、空ディレクトリで `/which-model:pick <貼り付け>`。
+
+- **フェーズ1提示 2/3**（目視判定）。3.9.0 standalone の 9/10 とはノイズ内で整合し、**プラグイン化で
+  汚染耐性は劣化していない**と見る（少数試行につき率としては読めない）。失敗した1回は 3.9.0 と同じく
+  埋め込まれた設計質問に直接回答した。**完全解消ではない**点は 3.9.0 から変わらない。
+- 注意（測定を誤りやすい2点）：(1) **既定 opus では 0〜1/3** と大きく悪化する。必ず sonnet で
+  ベースラインと揃えること。(2) 出力の grep 判定は入力にマーカー文字列が含まれるため誤作動する
+  （上「目視で」参照）。
