@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# 【旧 standalone 版（v3.9.0 まで）向け・レガシー】
+# 4.0.0 以降はプラグイン配布（/plugin marketplace add kazuyakurashima/which-model）が正。
+# このスクリプトはルート SKILL.md を前提とするが、4.0.0 でそれは skills/pick/SKILL.md へ
+# 移設されたため、そのままでは動かない。standalone 版を使い続ける人のために残置している。
+#
 # which-model セットアップスクリプト。
 # 1) 料理人（SKILL.md）を ~/.claude/skills/which-model/ へ同期する（常に実行）。
 # 2) 第1引数に導入先プロジェクトを渡すと、レシピ本（docs/ai-model-guides/）も
