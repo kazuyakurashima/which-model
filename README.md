@@ -17,7 +17,7 @@
 
 </div>
 
-![概要図：/which-model に指示を打つと、タスク判定・モデル選定・effort・プロンプト最適化を行い、①推奨モデルと②最適化プロンプトを提示する。モデルの切替と実行は常にユーザーが行う](docs/images/hero-overview.png)
+![概要図：/which-model:pick に指示を打つと、タスク判定・モデル選定・effort・プロンプト最適化を行い、①推奨モデルと②最適化プロンプトを提示する。モデルの切替と実行は常にユーザーが行う](docs/images/hero-overview.png)
 
 <div align="center">
 
@@ -32,15 +32,15 @@
 
 **1. 依頼する（`/which-model:pick` に、やりたいことを普段どおり書くだけ）**
 
-![/which-model に「ログインの仕組みを、壊れないように少しずつ確認しながら全部作り直したい」と入力している様子](docs/images/demo-1-input.png)
+![/which-model:pick に「ログインの仕組みを壊れないように、少しずつ確認して全部作り直したい。」と入力している様子](docs/images/demo-1-input.png)
 
 **2. フェーズ1：推奨モデルと effort が理由つきで提示され、いったん停止する**
 
-![推奨 Fable 5 / effort=high、理由（大規模リファクタ・移行に該当）、代替 Opus 4.8、確定合図の説明が表示されている](docs/images/demo-2-phase1.png)
+![推奨 Fable 5 / effort=high、理由（大規模リファクタ・移行に該当）、代替 Opus 4.8、確定合図の説明、判断材料の Last verified 日付が表示されている](docs/images/demo-2-phase1.png)
 
 **3. `y` を送ると、フェーズ2：確定モデル向けに最適化したプロンプトが表示される（まだ実行はしない）**
 
-![最適化プロンプトの冒頭。確定モデル・元の指示に続き、Fixed instruction / Variables / Output format / Verification の構成でプロンプトが生成される（画像は冒頭のみ）](docs/images/demo-3-phase2.png)
+![確定合図を受けて 03_fable5_prompting.md を読み、最適化プロンプトを表示している。確定モデル・元の指示に続き、target タグから始まるプロンプトが生成される（画像は冒頭のみ）](docs/images/demo-3-phase2.png)
 
 *（上は冒頭のみ。実際は `Fixed instruction` / `Variables` / `Output format` / `Verification` の全文が続きます。）*
 
@@ -193,7 +193,7 @@ Claude Code で開発していると、指示のたびに「どのモデルが�
 <details>
 <summary>レシピ本の中身（6ファイル）・タグの意味・補足を開く</summary>
 
-レシピ本（`docs/ai-model-guides/`）は6ファイル構成です。
+レシピ本（同梱の `references/ai-model-guides/`。このリポジトリでは `docs/ai-model-guides/` が正本）は6ファイル構成です。
 
 | ファイル | 役割 |
 | --- | --- |
@@ -209,7 +209,9 @@ Claude Code で開発していると、指示のたびに「どのモデルが�
 Confidence 付き）です。使う人は `[Heuristic]` を自分の使い方に合わせて書き換えてください。
 
 > このリポジトリの `README.md` は人間向けの説明書で、Claude Code は読み込みません（トークンを
-> 消費しません）。Claude への動作指示は `SKILL.md` に、判断材料は `docs/ai-model-guides/` にあります。
+> 消費しません）。Claude への動作指示は `skills/pick/SKILL.md` に、判断材料は同梱の
+> `skills/pick/references/ai-model-guides/` にあります（このリポジトリの `docs/ai-model-guides/` が正本で、
+> `./tools/sync-bundled-guides.sh` で同梱コピーへ同期します）。
 > なお `tools/CODEX_VERIFICATION_PROMPT.md` は配布物ではない開発用ファイル（知識ベースの独立監査用
 > プロンプト）で、各プロジェクトへはコピーしません。
 
@@ -247,7 +249,7 @@ Confidence 付き）です。使う人は `[Heuristic]` を自分の使い方に
 設定済みのモデルでそのまま指示すれば十分です。
 
 ```
-/which-model 複数ユーザー対応のタスク管理アプリを設計して
+/which-model:pick 複数ユーザー対応のタスク管理アプリを設計して
 ```
 
 推奨が提示され停止したら、モデルはまだ切り替えずに確定合図を送ります（推奨のまま `y`、
