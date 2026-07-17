@@ -17,7 +17,7 @@
 
 </div>
 
-![概要図：/which-model:pick に指示を打つと、タスク判定・モデル選定・effort・プロンプト最適化を行い、①推奨モデルと②最適化プロンプトを提示する。モデルの切替と実行は常にユーザーが行う](docs/images/hero-overview.png)
+![which-model のヒーロー画像。「Claude Code skill · model & prompt advisor」のバッジ、タイトル which-model、「The right Claude for every task.」、「タスクに最適な Claude モデルとプロンプトを"提案"する Claude Code スキル。」、Select → Generate → Execute の3ステップ、そしてインストールコマンド（/plugin marketplace add kazuyakurashima/which-model、/plugin install which-model@kazuyakurashima、/reload-plugins）が並んでいる](docs/images/hero-overview.png)
 
 <div align="center">
 
