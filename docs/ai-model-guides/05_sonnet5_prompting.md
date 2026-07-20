@@ -10,7 +10,7 @@ API model string: `claude-sonnet-5`（Claude Code の Anthropic API では `sonn
 - Sonnet ティアで速度と知性の最良の組み合わせ。特に強いのはコーディング・エージェント作業で、Opus 級に移らずにより高い能力が必要なワークロードの選択肢（S11）。
 - Sonnet 4.6 に対する能力向上版で同価格。最大の向上はコーディングとエージェント作業（S12）。
 - adaptive thinking が既定 on（4.6 は off だった）。off にするには `thinking:{type:"disabled"}`（S18）。manual extended thinking は 400（S17）。
-- effort の既定は high（Claude API / Claude Code とも）。Sonnet ティアで xhigh に対応するのは Sonnet 5 のみで、最難のコーディング/エージェントタスクは xhigh へ（S7）。medium ≈ Sonnet 4.6 の high、high ≈ Sonnet 4.6 の max が目安（S57）。
+- effort の既定は high（Claude API / Claude Code とも）（S71）。Sonnet ティアで xhigh に対応するのは Sonnet 5 のみで、最難のコーディング/エージェントタスクは xhigh へ（S74）。medium ≈ Sonnet 4.6 の high、high ≈ Sonnet 4.6 の max が目安（S57）。
 - 価格 $3/$15 per MTok（2026-08-31 まで導入価格 $2/$10）、1M コンテキスト（既定）、最大出力 128k（S15）。
 - 新トークナイザで同じテキストが約 30% 多くトークン化される（S42）。
 - 初の Sonnet ティアのリアルタイム・サイバーセキュリティ保護あり（S44）。computer use は最大 2576px / 3.75MP に対応（S60）。
@@ -107,4 +107,4 @@ API model string: `claude-sonnet-5`（Claude Code の Anthropic API では `sonn
 - [ ] セキュリティ関連タスクで refusal のリスクを踏まえたか。（S44）
 
 ## 8. 出典
-S7, S11, S12, S15, S17, S18, S38, S39, S40, S41, S42, S43, S44, S45, S49, S54, S57, S58, S59, S60 → `01_sources_evidence.md`
+S11, S12, S15, S17, S18, S38, S39, S40, S41, S42, S43, S44, S45, S49, S54, S57, S58, S59, S60, S71, S74 → `01_sources_evidence.md`
