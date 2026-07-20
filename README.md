@@ -17,7 +17,7 @@
 
 </div>
 
-![which-model のヒーロー画像。「Claude Code skill · model & prompt advisor」のバッジ、タイトル which-model、「The right Claude for every task.」、「タスクに最適な Claude モデルとプロンプトを"提案"する Claude Code スキル。」、Select → Generate → Execute の3ステップ、そしてインストールコマンド（/plugin marketplace add kazuyakurashima/which-model、/plugin install which-model@kazuyakurashima、/reload-plugins）が並んでいる](docs/images/hero-overview.png)
+![which-model のヒーロー画像。「Claude Code skill · model & prompt advisor」のバッジ、タイトル which-model、「The right Claude for every task.」、「タスクに最適な Claude モデルとプロンプトを"提案"する Claude Code スキル。」、Select → Generate → Execute の3ステップ、そして「Claude Code の入力欄で実行」ラベルの付いたインストールコマンド（/plugin marketplace add kazuyakurashima/which-model、/plugin install which-model@kazuyakurashima、/reload-plugins）が並んでいる](docs/images/hero-overview.png)
 
 <div align="center">
 
@@ -36,7 +36,7 @@
 
 **2. フェーズ1：推奨モデルと effort が理由つきで提示され、いったん停止する**
 
-![推奨 Fable 5 / effort=high、理由（大規模リファクタ・移行に該当）、代替 Opus 4.8、確定合図の説明、判断材料の Last verified 日付が表示されている](docs/images/demo-2-phase1.png)
+![推奨 Fable 5 / effort=high、理由（大規模リファクタ・移行に該当）、代替 Opus 4.8 / effort=xhigh、確定合図の説明（y ／ y opus）、判断材料の Last verified 2026-07-19 が表示されている](docs/images/demo-2-phase1.png)
 
 **3. `y` を送ると、フェーズ2：確定モデル向けに最適化したプロンプトが表示される（まだ実行はしない）**
 
@@ -44,8 +44,9 @@
 
 *（上は冒頭のみ。実際は `Fixed instruction` / `Variables` / `Output format` / `Verification` の全文が続きます。）*
 
-このあと、確定モデルが今のモデルと違えば `/model claude-fable-5` で切り替え、**もう一度 `y`**（または表示された
-プロンプトを編集して送信）で初めて実行されます。ポイントは **「提示 → （必要なら）切替 → `y` で実行」
+このあと、実行前に `/model claude-fable-5` と `/effort high` のように**モデルと effort の両方**を
+設定し（すでに同じ設定なら不要）、**もう一度 `y`**（または表示された
+プロンプトを編集して送信）で初めて実行されます。ポイントは **「提示 → （必要なら）設定 → `y` で実行」
 の一拍**。skill は提示して停止するところまでしか行いません（`SKILL.md` の絶対規則によるもので、
 技術的に実行できないわけではありません）。
 
@@ -53,20 +54,36 @@
 
 ## クイックスタート
 
-> **Claude Code 専用です。** Codex・ChatGPT・Claude（Web/デスクトップ）では動作しません。
-> プラグイン機構を使うため、Claude Code の比較的新しい版が必要です（`/plugin` が使えること）。
+> **Claude Code 用のプラグインです。** 以下は Claude Code CLI での導入手順です。Codex・ChatGPT・
+> 通常の Claude Chat で呼び出すものではありません。**Claude Desktop の Code タブ**もプラグインに
+> 対応しており、設定済みの marketplace にあるプラグインは、`+` ボタンのプラグインブラウザから導入できます。
+> 以下の CLI 手順では、プラグイン機構を使うため、Claude Code の比較的新しい版が必要です（`/plugin` が使えること）。
 
-Claude Code の中で、次の3ステップを実行します。ターミナルでの clone は不要です。
+> **Claude Code をまだ入れていない方へ。** 先に[公式のインストール手順](https://code.claude.com/docs/en/setup)で導入してください。
+> **Native Install（推奨）なら Node.js は不要**です（npm 経由で入れるときだけ Node.js 22+ が要ります）。
+> 例：**Windows は PowerShell** で `irm https://claude.ai/install.ps1 | iex`、**macOS / Linux** は
+> `curl -fsSL https://claude.ai/install.sh | bash`。これらの導入コマンドだけは PowerShell やターミナルで実行します。
+> インストール方法は変更されることがあるため、最新情報は公式手順を優先してください。
+
+導入できたら、使いたいプロジェクトのフォルダで `claude` を実行して Claude Code を起動します
+（この `claude` だけはターミナル／PowerShell で打ちます）。
 
 ```sh
+claude
+```
+
+Claude Code が開いたら、次の3ステップを **ターミナルではなく Claude Code の入力欄**に打ち込みます
+（すべて `/` で始まるスラッシュコマンドです。ターミナルでの clone は不要です）。
+
+```text
 /plugin marketplace add kazuyakurashima/which-model
 /plugin install which-model@kazuyakurashima
 /reload-plugins
 ```
 
-あとは `/which-model:pick <やりたいこと>` と打つだけです。
+あとは Claude Code の入力欄に `/which-model:pick <やりたいこと>` と打つだけです。
 
-```sh
+```text
 /which-model:pick 認証まわりを大規模リファクタして
 ```
 
@@ -78,6 +95,16 @@ Claude Code の中で、次の3ステップを実行します。ターミナル�
 プラグインは**セッション開始時に読み込まれます**。インストールしただけでは、いま動いている
 セッションには反映されません。`/reload-plugins` を実行してください。それでも認識されない場合は、
 **新しいセッションを開くか、Claude Code を再起動**してください。
+
+**PowerShell やターミナルで `/plugin ... is not recognized` と出る（`/plugin` が動かない）**
+
+Claude Code の**外**（PowerShell・ターミナル）で実行しています。スラッシュコマンドは Claude Code の
+入力欄に打つものです。まず `claude` を実行して Claude Code を起動し、その中で打ち直してください。
+
+**`claude is not recognized` / `command not found` と出る**
+
+Claude Code の導入、または PATH の反映が完了していません。ターミナルを開き直して `claude --version` で
+インストールを確認してください（未導入なら上の「まだ入れていない方へ」を参照）。
 
 **インストールスコープ**
 
@@ -95,9 +122,9 @@ Claude Code の中で、次の3ステップを実行します。ターミナル�
 
 更新が入ると `/reload-plugins` を促す通知が出ます（または次回起動時に反映されます）。
 
-**アンインストール**
+**アンインストール**（Claude Code の入力欄で）
 
-```sh
+```text
 /plugin uninstall which-model@kazuyakurashima
 /plugin marketplace remove kazuyakurashima
 ```
@@ -164,10 +191,11 @@ Claude Code で開発していると、指示のたびに「どのモデルが�
    - 推奨モデルのまま → `y`
    - 代替モデルにする → `y opus` / `y fable` / `y sonnet` とモデル名を添える
    - skill は今動いているモデルのまま、確定したモデル向けに最適化したプロンプトを生成し表示して**いったん停止する**
-4. 確定モデルが今のモデルと違うときだけ、ここで `/model` を切り替える（同じなら不要）
+4. ここで `/model` と `/effort` を確定どおりに設定する（すでに同じ設定なら不要。effort は
+   セッションをまたいで残るため、前回の設定が残っていないかも確認）
 5. 中身を確認し、よければ**もう一度 `y`** を送ると実行される（コピペ不要）。直したいときは表示されたプロンプトを編集して送る
 
-この「表示 → 切替 → `y` で実行」の一拍が暴走を防ぎます。モデル切替を実行直前の1回だけにしているのは、
+この「表示 → 設定 → `y` で実行」の一拍が暴走を防ぎます。モデル切替を実行直前の1回だけにしているのは、
 切替先モデル（特に長時間実行向けの Fable 5）をプロンプト整形という軽作業のためだけに使わないため。
 プロンプト最適化は常に、今起動している（切替前の）モデルが行います。
 
@@ -254,8 +282,9 @@ Confidence 付き）です。使う人は `[Heuristic]` を自分の使い方に
 
 推奨が提示され停止したら、モデルはまだ切り替えずに確定合図を送ります（推奨のまま `y`、
 代替に変えたら `y opus` / `y fable` / `y sonnet`）。すると今のモデルのまま最適化された
-プロンプトが表示されて停止するので、確定モデルが今のモデルと違えば `/model claude-fable-5`
-などで切り替え、中身を確認して**もう一度 `y`** を送れば実行されます。
+プロンプトが表示されて停止するので、`/model claude-fable-5` と `/effort high` のように
+モデルと effort を確定どおりに設定し（同じ設定なら不要）、中身を確認して**もう一度 `y`** を
+送れば実行されます。
 
 呼び方のコツ：
 
@@ -279,8 +308,10 @@ Confidence 付き）です。使う人は `[Heuristic]` を自分の使い方に
 
 現状の Claude Code の仕様と、この skill の設計上、以下を理解した上で使ってください。
 
-- **モデルの自動切替はできない**。skill は推奨を提示するのみで、`/model` での切替はユーザーが
-  手動で行います（2026-07 時点の Claude Code の仕様。公式ドキュメントの明文根拠は未確認）。
+- **モデル・effort の自動切替はできない**。skill は推奨を提示するのみで、`/model`・`/effort` の
+  設定はユーザーが手動で行います（2026-07 時点の Claude Code の仕様。公式ドキュメントの明文根拠は未確認）。
+  effort は `low`〜`xhigh` がセッションをまたいで保存されるため、前回の設定が残っている点にも注意
+  （根拠は `01_sources_evidence.md` の S77）。
 - **現在のモデルを skill 側から知る手段がない**ため、モデル不一致の自動警告はできません。
 - **提示後にポップアップ（AskUserQuestion）を出さない設計**にしています。ポップアップが出ると
   入力欄が塞がれ、モデル切替ができなくなるためです。代わりに一度停止し、`y` を実行の合図とします。
@@ -347,7 +378,7 @@ Confidence 付き）です。使う人は `[Heuristic]` を自分の使い方に
 
 上記の通り本運用では CLAUDE.md への登録は推奨しませんが、skill を使わず常時参照させたい
 場合は以下を CLAUDE.md に貼ってください。各行は `02_model_selection_matrix.md` の
-記述の要約です（根拠：S1, S6, S7, S9, S10, S16, S25, S29, S65, S67, S68。うち「速い対話・高頻度は
+記述の要約です（根拠：S1, S6, S9, S10, S16, S25, S29, S65, S67, S68, S71, S73。うち「速い対話・高頻度は
 Sonnet 5 / Fable 5 不使用」と「ZDR 前提の代替モデル選択」は公式事実から導く運用判断（`[Heuristic]`）。
 タグ・source_id はランタイムのノイズになるため省略。裏付けは `01_sources_evidence.md` を参照）。
 
@@ -393,7 +424,7 @@ All `[Official]` claims are backed by docs/ai-model-guides/01_sources_evidence.m
 > **「どのモデルか（which model）」を選ぶための skill ですが、モデルを自動で切り替えることはしません。** 現在の
 > Claude Code の仕様上それはできず、また設計としても切替はユーザーの手動操作に委ねています。
 > この skill がするのは「どのモデルが最適かの提示」と「そのモデル向けプロンプトの最適化」まで
-> で、`/model` での切替と実行はあなたが行います。
+> で、`/model`・`/effort` の設定と実行はあなたが行います。
 
 ---
 

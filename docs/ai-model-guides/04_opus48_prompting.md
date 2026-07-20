@@ -10,7 +10,7 @@ API model string: `claude-opus-4-8`（Claude Code の Anthropic API では `opus
 - 複雑なエージェント型コーディングとエンタープライズ作業向け。**迷ったらここから始める既定モデル**（S1）。
 - 長時間エージェント作業・ナレッジワーク・視覚・メモリタスクに特に強み（S64）。
 - adaptive thinking。manual extended thinking（budget_tokens）は削除済みで 400（S17）。thinking は明示的に `{type:"adaptive"}` を設定しない限り off。
-- effort の既定は high（Claude API・Claude Code・claude.ai すべて）。**コーディング・高自律作業は xhigh の明示指定が公式推奨（最良設定）**（S7）。
+- effort の既定は high（Claude API・Claude Code・claude.ai すべて）（S71）。**コーディング・エージェント用途は xhigh 開始が公式推奨（最良設定）。その他の知的作業は最低 high**（S73）。
 - 価格 $5/$25 per MTok、1M コンテキスト（既定）、最大出力 128k（S14）。ZDR 利用可（S16 — ただし Opus 4.8 の ZDR 可は要原文再確認。01 の検証状態注記を参照）。
 
 ## 2. このプロジェクトでの最適タスク
@@ -106,7 +106,7 @@ API model string: `claude-opus-4-8`（Claude Code の Anthropic API では `opus
 - [ ] スコープを字義的に書いたか（「全セクションに」等）。（S30）
 - [ ] ツール使用を促す必要はないか（推論偏重の傾向。いつ・どう使うかを明示したか）。（S32）
 - [ ] 並列化したいならサブエージェントを明示したか。（S33）
-- [ ] コーディング・高自律作業なら effort=xhigh を明示指定したか。（S7）
+- [ ] コーディング・エージェント作業なら effort=xhigh を明示指定したか。（S73）
 - [ ] max/xhigh なら max_tokens を確保したか（64k〜）。（S34）
 - [ ] 望む長さ・文体を正の例で示したか。（S31, S35）
 - [ ] 強制進捗スキャフォールドを外したか。（S51）
@@ -115,4 +115,4 @@ API model string: `claude-opus-4-8`（Claude Code の Anthropic API では `opus
 - [ ] UI なら具体的デザイン方向を指定したか（または複数案提示）。（S37, S59）
 
 ## 8. 出典
-S1, S7, S14, S16, S17, S30, S31, S32, S33, S34, S35, S36, S37, S48, S49, S51, S54, S58, S59, S64 → `01_sources_evidence.md`
+S1, S14, S16, S17, S30, S31, S32, S33, S34, S35, S36, S37, S48, S49, S51, S54, S58, S59, S64, S71, S73 → `01_sources_evidence.md`
