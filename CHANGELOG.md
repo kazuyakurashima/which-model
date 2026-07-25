@@ -17,7 +17,9 @@
 
 - **選定対象を Fable 5 / Opus 5 / Sonnet 5 に変更しました。** 「迷ったら Opus」の既定が公式に
   Opus 5 へ移ったため（Models overview / Choosing a model）、判断表の Opus 列をすべて Opus 5 に
-  差し替えました。コーディング・エージェント作業の推奨 effort は Opus 5 でも `xhigh` 開始です。
+  差し替えました。**effort は `high`（既定）から始め、demanding なコーディング・エージェント作業
+  （複数ファイル機能・大きめのリファクタ・端から端までの実装・深い依存チェーンの追跡）で `xhigh` へ
+  上げる**設計にしました（公式の推奨開始点。Opus 4.8 / 4.7 は「xhigh 開始」でモデルにより異なります）。
 - **`04_opus48_prompting.md` を `04_opus5_prompting.md` にリネームし、全面改訂しました。**
   Opus 5 の破壊的変更（thinking が既定 on、`thinking:{"type":"disabled"}` と effort `xhigh`/`max`
   の併用は 400 エラー）と挙動差分を反映しています。
@@ -63,7 +65,9 @@
 
 - **根拠台帳に P16〜P21（What's new in Opus 5 / Prompting Claude Opus 5 / Model deprecations /
   Fast mode / API and data retention / Claude Fable 5 on your plan）と S81〜S106 を追加しました。**
-  既存の P1〜P15 も 2026-07-25 に直接取得で再検証しています。
+  既存ページのうち **P1 / P2 / P5 / P7 / P9 / P11 / P12 / P13 / P14 / P15 を 2026-07-25 に直接取得で
+  再検証**しました（P3 / P6 / P8 は今回未再取得で従来の検証日を維持、P4 は現在 P16 へリダイレクトされ
+  直接取得不能、P10 は欠番）。
 - **Opus 4.8 は「選定対象外・参照用」として台帳に残しました。** Opus 4.8 は公式に **Active**
   （暫定退役日は早くても 2027-05-28）で、フォールバック先・移行元・互換性の説明で参照するため、
   事実として正しい主張は削除していません。台帳の `Retired` は「この台帳の主張を置き換えた」と
@@ -72,6 +76,10 @@
   は **Fable 5 と Mythos 5 のみ**です。Opus 4.8 は公式に "remains available under ZDR"、Sonnet 5 も
   ZDR 可。Opus 5 は Covered Model の指定がありませんが、ZDR 適格性は機能・サーフェス・組織契約に
   依存するため「全サーフェスで ZDR 可」とは書いていません。
+- **公式ドキュメントの当日改訂を台帳に記録しました。** Opus 5 の effort 推奨は 2026-07-25 中に
+  「xhigh 開始」から「`high`（既定）開始・demanding な作業で `xhigh` へ昇格」へ改訂されました
+  （P2 / P13 / P16 / P17 の4ページ）。改訂前後の逐語を「公式ページ改訂の記録」節に残し、
+  リリース直後の公式ドキュメントは数時間単位で変わりうることを教訓として明記しています。
 - **`tools/CODEX_VERIFICATION_PROMPT.md` を全面更新しました。** 監査対象の P/S-id 範囲を
   P1〜P21 / S1〜S106 に更新し、既知の落とし穴に「Opus 4.8 と Opus 5 で方向が逆転している挙動」
   「thinking 既定の三者差」「Covered Model の "Both models" の読み違い」を追加しました。

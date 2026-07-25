@@ -399,8 +399,10 @@ do not load all of them.
 - Prompting Sonnet 5 (claude-sonnet-5) → docs/ai-model-guides/05_sonnet5_prompting.md
 
 Quick defaults:
-- Unsure / complex agentic coding → Opus 5 (default). Effort defaults to high;
-  set xhigh explicitly for coding and agentic work (official guidance).
+- Unsure / complex agentic coding → Opus 5 (default). Effort defaults to high; start there and
+  step up to xhigh for demanding coding and agentic work (multi-file features, larger refactors,
+  end-to-end work, deep dependency tracing). Official guidance for Opus 4.8/4.7 differs: xhigh
+  is the recommended starting point there.
 - On Opus 5, do not add redundant self-verification steps ("include a final verification step",
   "use a subagent to verify", "double-check your answer") — it self-verifies, and these cause
   over-verification. Acceptance criteria, which tests must pass, and "check against the code
@@ -412,7 +414,9 @@ Quick defaults:
   touching model/effort — the fix is often upstream, not a knob.
 - Still not working? Diagnose: skipped a file / didn't run tests / didn't double-check → raise
   effort. Had all the context and clearly tried, still wrong → switch to a larger model.
-- Sensitive data under ZDR → avoid Fable 5 (Covered Model, ZDR-ineligible); Opus 4.8 and Sonnet 5 are ZDR-eligible.
+- Sensitive data under ZDR → avoid Fable 5 (Covered Model, ZDR-ineligible). Opus 4.8 and Sonnet 5
+  are ZDR-eligible, but ZDR eligibility also depends on your org arrangement, the API features you
+  use, and the surface (consumer plans and some features are out of scope).
 
 All `[Official]` claims are backed by docs/ai-model-guides/01_sources_evidence.md.
 ```

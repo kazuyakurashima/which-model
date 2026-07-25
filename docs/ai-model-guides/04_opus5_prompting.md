@@ -12,7 +12,7 @@ API model string: `claude-opus-5`（Claude Code では `opus` エイリアスが
 - 強み：深い推論／エージェント型コーディングと長時間タスク／test-time compute scaling／**低 effort での効率**／コードレビューとバグ発見／vision／long-context／オフィス文書／マルチエージェント統率（S83）。
 - **thinking は既定 on**（4.8 は明示設定まで off だった）。`{type:"adaptive"}` は既定と等価。`max_tokens` は thinking と応答の**合計**上限（S84）。
 - **`thinking:{"type":"disabled"}` は effort が high 以下のときのみ。xhigh / max との組合せは 400 エラー**（4.8 からの breaking change — S85）。
-- effort は5段階すべてに対応、API・Claude Code の既定は high（S71, S72）。**コーディング・エージェント作業は xhigh 開始が公式推奨、その他の知的作業は high**（S86）。max は「タスクが無制限のトークン支出に見合うとき」に上げる（4.7/4.8 の「evals で headroom を確認したときのみ」という明示ゲートは Opus 5 には書かれていない。単純なタスクでは収穫逓減・overthinking の恐れ — S89）。
+- effort は5段階すべてに対応、API・Claude Code の既定は high（S71, S72）。**`high`（既定）から始め、evals に応じて上下に調整する。`xhigh` へ上げるのは demanding なコーディング・エージェント作業**（S86）。Opus 5 は追加の effort を旧 Opus より確実に成果へ変換するため、選ぶ effort の重みが増している（S86）。max は「タスクが無制限のトークン支出に見合うとき」に上げる（4.7/4.8 の「evals で headroom を確認したときのみ」という明示ゲートは Opus 5 には書かれていない。単純なタスクでは収穫逓減・overthinking の恐れ — S89）。
 - 価格 $5/$25 per MTok（4.8 と同額）、1M コンテキスト（既定かつ最大）、最大出力 128k、知識カットオフ 2026-05（S82）。
 - **web fetch 非対応・Priority Tier 非対応**（S102）。Fast mode は対応（Claude API のみ・$10/$50 — S103）。
 - ZDR：Covered Model の指定はなく、モデル固有の保持要件の記載もない。ただし ZDR 適格性は機能・サーフェス・組織契約に依存するため「全サーフェスで ZDR 可」とは扱わない（S104）。
@@ -35,7 +35,7 @@ API model string: `claude-opus-5`（Claude Code では `opus` エイリアスが
 - **進捗ナレーションが多い。** 望む頻度・形を記述して調整する。正の例が否定指示より効く（S90）。
 - **サブエージェント委譲が積極的。** 委譲すべき条件を明示するか、起動数に上限を設ける（S90）。
 - **タスク仕様は最初のターンで完全に渡す。** 完全な仕様を先に渡して走らせるのが最も性能が出る（S83, S58）。
-- **低 effort を主要なコスト制御手段に。** low / medium は旧 Opus より強い。自分の評価で品質が保てる範囲では積極的に使う。旧モデルの effort 設定を持ち込まず引き直す（S87）。
+- **既定（high）から始め、両方向へ調整する。** low / medium は旧 Opus より強く、evals で品質が保てる範囲ではトークンコストと応答時間の主要な制御手段として積極的に使う。**demanding なコーディング・エージェント作業では xhigh へ上げる**（S86, S87）。旧モデルの effort 設定を持ち込まず引き直す（S87）。
 
 ## 4. 良いプロンプトパターン `[Official]`
 
@@ -56,7 +56,7 @@ API model string: `claude-opus-5`（Claude Code では `opus` エイリアスが
 - **「冗長にするな」等の抽象的否定** → 正の例・具体的な長さ指定に置き換える（S90）。
 - **effort を下げて出力を短くしようとする** → 効かない。長さはプロンプトで指定する（S88）。
 - **budget_tokens で thinking を制御** → 400 エラー。effort を使う（S17）。
-- **`thinking:{"type":"disabled"}` と effort xhigh / max の併用** → 400 エラー。thinking を有効に保ったまま effort を下げてコストを制御するのが公式の推奨（S85）。
+- **`thinking:{"type":"disabled"}` と effort xhigh / max の併用** → 400 エラー。thinking を無効化せず、**低い effort でコストを制御する**のが公式の推奨（大半のタスクでは thinking 有効＋`low` の方が、同程度のコストで thinking 無効より良い — S85）。
 - **「思考するな」「推論するな」系のシステムプロンプト規則** → thinking 無効時に内部 XML タグの漏れを増やす。外す（S85）。
 
 ## 6. 再利用テンプレート
@@ -76,8 +76,8 @@ API model string: `claude-opus-5`（Claude Code では `opus` エイリアスが
 - <files>{{関連ファイルの正確なパス}}</files>
 - <scope_out>{{触ってはいけない範囲}}</scope_out>
 - <done>{{完了の定義：満たすべき受入条件と、通すべきテスト}}</done>
-（推奨: effort=xhigh（コーディングの公式開始点）。max_tokens は 64k から。
- thinking は既定 on なので disabled にしない）
+（推奨: effort=xhigh — 複数ファイル・大きめのリファクタ等の demanding な実装なら既定 high から昇格させる。
+ 小さく閉じた実装なら high のままでよい。max_tokens は 64k から。thinking は既定 on なので disabled にしない）
 
 ### Output format
 1. 実装方針（一文）
@@ -95,7 +95,7 @@ API model string: `claude-opus-5`（Claude Code では `opus` エイリアスが
 ### Variables
 - <symptom>{{再現手順と観測される症状}}</symptom>
 - <suspected_area>{{当たりがあれば}}</suspected_area>
-（推奨: effort=xhigh（エージェント検索の公式開始点））
+（推奨: effort=xhigh — 依存チェーンを追う demanding な調査のため既定 high から昇格させる）
 
 ### Output format
 1. 根本原因（一文）
@@ -146,7 +146,7 @@ API model string: `claude-opus-5`（Claude Code では `opus` エイリアスが
 - [ ] 長さ・簡潔さが要るなら明示指定したか（effort では短くならない）。（S88, S90）
 - [ ] 進捗更新の頻度・形を指定したか（強制スキャフォールドは外したか）。（S90）
 - [ ] サブエージェントの委譲条件・上限を指定したか。（S90）
-- [ ] コーディング・エージェント作業なら effort=xhigh を指定したか。（S86）
+- [ ] effort は既定 high から考えたか。**demanding なコーディング・エージェント作業**（複数ファイル・大きめのリファクタ・端から端まで・深い依存追跡）なら xhigh へ上げたか。（S86）
 - [ ] コストを詰めるなら、その作業で low/medium の品質を確認済みか。（S87）
 - [ ] max/xhigh なら max_tokens を確保したか（64k〜）。thinking 既定 on を踏まえて見直したか。（S34, S84）
 - [ ] `thinking:{"type":"disabled"}` を xhigh/max と併用していないか（400 エラー）。（S85）
