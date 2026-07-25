@@ -1,7 +1,7 @@
 # 05. Sonnet 5 プロンプティングガイド（Claude Code 用）
 
 Last verified: 2026-07-06
-API model string: `claude-sonnet-5`（Claude Code の Anthropic API では `sonnet` エイリアスが Sonnet 5 に解決 — S49）
+API model string: `claude-sonnet-5`（Claude Code の Anthropic API では `sonnet` エイリアスが Sonnet 5 に解決 — S95。Sonnet 5 は Claude Code v2.1.197 以降が必要 — S96）
 
 タグ：`[Official]`（source_id 付き）／`[Heuristic]`（Confidence 付き）
 
@@ -95,7 +95,7 @@ API model string: `claude-sonnet-5`（Claude Code の Anthropic API では `sonn
 
 ## 7. 検証チェックリスト（投げる前に）
 
-- [ ] このタスクは Sonnet 5 で十分か（難所なら Opus 4.8、長時間・端から端まで なら Fable 5）。
+- [ ] このタスクは Sonnet 5 で十分か（難所なら Opus 5、長時間・端から端まで なら Fable 5）。
 - [ ] 簡潔さ・粒度を正の例で示したか（否定指示になっていないか）。（S39）
 - [ ] max_tokens を新トークナイザ（+30%）込みで見直したか。（S42）
 - [ ] high 以上なら max_tokens に余裕があるか。（S43）
@@ -107,4 +107,4 @@ API model string: `claude-sonnet-5`（Claude Code の Anthropic API では `sonn
 - [ ] セキュリティ関連タスクで refusal のリスクを踏まえたか。（S44）
 
 ## 8. 出典
-S11, S12, S15, S17, S18, S38, S39, S40, S41, S42, S43, S44, S45, S49, S54, S57, S58, S59, S60, S71, S74 → `01_sources_evidence.md`
+S11, S12, S15, S17, S18, S38, S39, S40, S41, S42, S43, S44, S45, S54, S57, S58, S59, S60, S71, S74, S95, S96 → `01_sources_evidence.md`
