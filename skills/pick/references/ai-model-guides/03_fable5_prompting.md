@@ -1,6 +1,6 @@
 # 03. Fable 5 プロンプティングガイド（Claude Code 用）
 
-Last verified: 2026-07-06
+Last verified: 2026-07-25（Opus 5 リリース後の再検証：P7〈Prompting Claude Fable 5〉を直接取得し、本ファイルの [Official] 記述がすべて現行本文に存続することを確認。Fable 5 のポジショニング・effort 推奨・検証サブエージェントの推奨・raw CoT の扱いに変更はない。フォールバック経路のみ更新〈API は今も Opus 4.8、Claude Code はカテゴリ別〉。旧履歴：2026-07-06）
 API model string: `claude-fable-5`
 
 タグ：`[Official]`（source_id 付き, 台帳参照）／`[Heuristic]`（運用仮説, Confidence 付き）

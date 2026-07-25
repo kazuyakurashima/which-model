@@ -1,7 +1,7 @@
 # 05. Sonnet 5 プロンプティングガイド（Claude Code 用）
 
-Last verified: 2026-07-06
-API model string: `claude-sonnet-5`（Claude Code の Anthropic API では `sonnet` エイリアスが Sonnet 5 に解決 — S95。Sonnet 5 は Claude Code v2.1.197 以降が必要 — S96）
+Last verified: 2026-07-25（Opus 5 リリース後の再検証：P5〈What's new in Claude Sonnet 5〉と P9〈Prompting Claude Sonnet 5〉を直接取得し、本ファイルの [Official] 記述がすべて現行本文に存続することを確認。ポジショニング〈Opus 級に移らずに済む選択肢〉・effort 推奨・導入価格の期限 2026-08-31 も現行どおり。両ページに Opus 5 への言及はない。旧履歴：2026-07-06）
+API model string: `claude-sonnet-5`（Claude Code では `sonnet` エイリアスが **Anthropic API のときだけ** Sonnet 5 に解決する。Claude Platform on AWS は Sonnet 4.6、Bedrock / Google Cloud / Foundry は Sonnet 4.5 に解決するため、それらではフルモデル名で指定する — S94。Sonnet 5 は Claude Code v2.1.197 以降が必要 — S96）
 
 タグ：`[Official]`（source_id 付き）／`[Heuristic]`（Confidence 付き）
 
@@ -107,4 +107,4 @@ API model string: `claude-sonnet-5`（Claude Code の Anthropic API では `sonn
 - [ ] セキュリティ関連タスクで refusal のリスクを踏まえたか。（S44）
 
 ## 8. 出典
-S11, S12, S15, S17, S18, S38, S39, S40, S41, S42, S43, S44, S45, S54, S57, S58, S59, S60, S71, S74, S95, S96 → `01_sources_evidence.md`
+S11, S12, S15, S17, S18, S38, S39, S40, S41, S42, S43, S44, S45, S54, S57, S58, S59, S60, S71, S74, S94, S96 → `01_sources_evidence.md`

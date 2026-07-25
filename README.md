@@ -381,9 +381,10 @@ Confidence 付き）です。使う人は `[Heuristic]` を自分の使い方に
 
 上記の通り本運用では CLAUDE.md への登録は推奨しませんが、skill を使わず常時参照させたい
 場合は以下を CLAUDE.md に貼ってください。各行は `02_model_selection_matrix.md` の
-記述の要約です（根拠：S1, S6, S9, S10, S16, S25, S29, S65, S67, S68, S71, S73。うち「速い対話・高頻度は
-Sonnet 5 / Fable 5 不使用」と「ZDR 前提の代替モデル選択」は公式事実から導く運用判断（`[Heuristic]`）。
-タグ・source_id はランタイムのノイズになるため省略。裏付けは `01_sources_evidence.md` を参照）。
+記述の要約です（根拠：S6, S9, S10, S16, S25, S29, S65, S67, S68, S71, S81, S86, S91, S98, S104。
+うち「速い対話・高頻度は Sonnet 5 / Fable 5 不使用」と「ZDR 前提の代替モデル選択」は公式事実から
+導く運用判断（`[Heuristic]`）。タグ・source_id はランタイムのノイズになるため省略。裏付けは
+`01_sources_evidence.md` を参照）。
 
 ```md
 ## Model routing & prompt optimization
@@ -400,9 +401,10 @@ do not load all of them.
 Quick defaults:
 - Unsure / complex agentic coding → Opus 5 (default). Effort defaults to high;
   set xhigh explicitly for coding and agentic work (official guidance).
-- On Opus 5, do not add verification instructions ("verify your work", "double-check",
-  "use a subagent to verify") — it self-verifies, and these cause over-verification.
-  Stating acceptance criteria and which tests must pass is fine.
+- On Opus 5, do not add redundant self-verification steps ("include a final verification step",
+  "use a subagent to verify", "double-check your answer") — it self-verifies, and these cause
+  over-verification. Acceptance criteria, which tests must pass, and "check against the code
+  rather than assuming" are all fine.
 - Fast, high-frequency, or simple → Sonnet 5 (effort=low for simple lookups). Do not use Fable 5 for these.
 - Long, ambiguous, hours-to-weeks, end-to-end → Fable 5 (start at effort=high). Set up timeouts,
   progress, and refusal fallback first (Claude Code falls back automatically).
