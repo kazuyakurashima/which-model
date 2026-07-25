@@ -88,7 +88,7 @@ Last verified: 2026-07-25（**Opus 5 対応監査**：P1/P2/P5/P7/P9/P11/P12/P13
 | S71       | effort の既定は high。API 既定＝high で、`effort:"high"` はパラメータ省略と同一挙動。**Opus 5 / Sonnet 5 は Claude API と Claude Code で high 既定**（P1 の注記）。Opus 4.8 は「Claude API・Claude Code・claude.ai を含む全サーフェス」で high。Claude Code の既定 effort は **effort 対応の全モデルで high — 例外は xhigh 既定の Opus 4.7 のみ**（原文キーフレーズ："The default effort is `high` on every model that supports effort, except Opus 4.7, which defaults to `xhigh`"）                                                                                                                                                                                                                                                                                                                       | 全モデル           | P1, P11, P13                  |
 | S72       | effort は low / medium / high / xhigh / max の5段階。**Opus 5 は5段階すべてに対応（beta ヘッダ不要）**。xhigh（high と max の間）は Fable 5 / Mythos 5 / **Opus 5** / Opus 4.8 / Opus 4.7 / Sonnet 5 が対応。max は Fable 5 / Mythos 5 / **Opus 5** / Opus 4.8 / Opus 4.7 / Opus 4.6 / Sonnet 5 / Sonnet 4.6 が対応                                                                                                                                                                                                                                                                                                                                                                                                                                                    | 全モデル           | P11, P13, P16                 |
 | S73       | Opus 4.8：コーディング・エージェント用途は **xhigh 開始が公式推奨（最良設定）**。その他の intelligence-sensitive な用途は最低 high。medium / low への降格は eval で品質維持を確認した場合のみ（原文キーフレーズ："Start with the xhigh effort level for coding and agentic use cases" / "use a minimum of high effort"）。**Opus 5 版は S86**                                                                                                                                                                                                                                                                                                                 | Opus 4.8（選定対象外・参照用）           | P8, P13                       |
-| S86       | Opus 5 の effort 推奨開始点は **`high`（既定）から始め、evals に応じて上下に調整する**（原文キーフレーズ："Start with `high`, the default, and adjust based on your evals"）。**`xhigh` へ上げるのは demanding なコーディング・エージェント作業**（"step up to `xhigh` for demanding coding and agentic work"）、`max` はタスクが無制限のトークン支出に見合うとき。API 既定は high で、明示指定した値が既定を上書きする。P2 はモデルを分けて記述し、**「xhigh が大半のコーディング・エージェント用途で最良設定」は Opus 4.8 / 4.7 に帰属する**（Opus 5 は「既定から始めて evals で上下」）。加えて Opus 5 は「追加の effort をこれまでの Opus より確実に成果へ変換するため、選ぶ effort の重みが増している」（P16 "Effort matters more"）。**⚠この推奨は 2026-07-25 に公式が改訂した**（改訂前は Opus 5 も「xhigh 開始」だった — 末尾「公式ページ改訂の記録」参照） | Opus 5 | P13, P2, P16, P17 |
+| S86       | Opus 5 の effort 推奨開始点は **`high`（既定）から始め、evals に応じて上下に調整する**（原文キーフレーズ："Start with `high`, the default, and adjust based on your evals"）。**`xhigh` へ上げるのは demanding なコーディング・エージェント作業**（"step up to `xhigh` for demanding coding and agentic work"）、`max` はタスクが無制限のトークン支出に見合うとき。API 既定は high で、明示指定した値が既定を上書きする。P2 はモデルを分けて記述し、**「xhigh が大半のコーディング・エージェント用途で最良設定」は Opus 4.8 / 4.7 に帰属する**（Opus 5 は「既定から始めて evals で上下」）。加えて Opus 5 は「追加の effort をこれまでの Opus より確実に成果へ変換するため、選ぶ effort の重みが増している」（P16 "Effort matters more"）。**⚠この推奨は 2026-07-25 の同日内に記述が変わった**（同日 06:54 の取得では Opus 5 も「xhigh 開始」だった — 末尾「公式ページ改訂の記録」参照） | Opus 5 | P13, P2, P16, P17 |
 | S87       | Opus 5 の **low / medium は旧 Opus モデルより強く、より少ないトークンとレイテンシで高い品質を出す**。evals で品質が保てる範囲では、トークンコストと応答時間の**主要な制御手段として積極的に使う**（原文キーフレーズ："use `low` and `medium` liberally as your primary control for token cost and response time wherever your evals show quality holds"）。**旧モデルから effort 設定を持ち込まず、自前の evals で effort sweep をやり直す**（"run a fresh effort sweep on your evals rather than reusing them"） | Opus 5 | P13, P17, P12 |
 | S88       | Opus 5 では **effort は思考量を制御するが、表示される応答の長さは確実には短くならない**（原文キーフレーズ："Effort controls thinking volume, not visible response length: on Claude Opus 5, changing effort does not reliably shorten responses, so prompt for length instead" / "lowering effort can reduce thinking volume without reliably shortening the visible response"）。長さはプロンプトで明示的に指示して制御する                                                                                                                                                                                                                    | Opus 5             | P13, P17                      |
 | S89       | Opus 5 の max：**「タスクが無制限のトークン支出に見合うときに上げる」**（原文キーフレーズ："step up to `max` when a task justifies unconstrained token spending" / migration guide の "test `max` effort where maximum capability matters more than token spend"）。**Opus 4.7 / 4.8 にある「evals が xhigh で measurable headroom を示すときのみ」という明示ゲートは、Opus 5 のセクションには書かれていない**（S76 のゲートを Opus 5 に流用しないこと）。ただし Claude Code の effort 表の「広範採用前にテスト」、および「単純なタスクでは収穫逓減・overthinking の恐れ」という注意は継続                                                          | Opus 5             | P13, P12, P11                 |
@@ -244,25 +244,33 @@ Last verified: 2026-07-25（**Opus 5 対応監査**：P1/P2/P5/P7/P9/P11/P12/P13
 - **[Official] に採用しなかった外部調査の主張**：「Opus 5 の cyber 分類器は Fable 5 より約85%介入が少ない」「Fable 5 の一時クレジット $100」「Opus 5 のトークナイザは旧世代比 1x〜1.35x」「max effort がベンチマークで xhigh より低スコア」。いずれも公式ページ本文で確認できなかった（報道・SNS 由来）。また「Claude Code の最小バージョンは 2.1.199」は別機能（組織既定モデルの反映）の値であり、Opus 5 の必要バージョンは **2.1.219**（S96）。
 - **公式ページ間の鮮度差**：リリース直後は公式ドキュメント間・取得スナップショット間で内容の鮮度が食い違うことがある（今回、外部調査 2 件は `opus` エイリアスや Opus 5 の effort 持ち越しについて古い版を参照していた）。本台帳は**メンテナが直接取得した内容と取得日**を正とする。
 
-## 公式ページ改訂の記録（2026-07-25 当日の変更）
+## 公式ページの記述が変わった記録（2026-07-25）
 
-**Opus 5 のリリース当日（2026-07-24 公開／翌 25 日に確認）に、公式の effort 推奨が改訂された。**
-同日の午前と午後で取得内容が異なったため、経緯を残す（将来の再検証で混乱しないため）。
+**Opus 5 の effort 推奨について、同日の2回の取得で内容が異なった。** 経緯を残す（将来の再検証で
+混乱しないため）。
 
-| 項目 | 改訂前（2026-07-25 午前の取得） | **改訂後（同日午後の再取得。現行）** |
+**取得時刻**：第1回 = 2026-07-25 06:54〜07:30 JST（P13 / P16 / P17 は 06:54 のバッチ、P2 はその直後）、
+第2回 = 同日 09:35〜09:45 JST。約2時間45分の間隔。
+
+**確認できること／できないこと**：確認できるのは「**2回の取得の間で内容が変わっていた**」ことまで。
+編集がこの間に行われたのか、第1回が古い配信キャッシュだったのかは**区別できない**（同日に実施した
+外部調査は `opus` エイリアスについて更に古い状態を参照しており、複数のスナップショットが同時に
+流通していた形跡がある）。したがって「公式がこの時刻に改訂した」とは断定しない。
+
+| 項目 | 第1回取得（06:54〜07:30） | **第2回取得（09:35〜09:45。現行）** |
 | --- | --- | --- |
 | Opus 5 の effort 開始点（P13） | "**Start with `xhigh` for coding and agentic work**, and use `high` for most other intelligence-sensitive workloads." | "**Start with `high`, the default**, and adjust based on your evals: **step up to `xhigh` for demanding coding and agentic work**…" |
 | Opus 5 の effort（P17） | "for coding and agentic work, `xhigh` remains the recommended starting point" | "**Start with the default (`high`)** and adjust based on your evals … **step up to `xhigh` for demanding coding and agentic work**" |
 | P2 の effort 記述 | Opus 5 / 4.8 / 4.7 を**まとめて**「xhigh が大半の coding/agentic 用途で最良」 | **Opus 5 は「既定から始めて evals で上下」**、xhigh 最良は **4.8 / 4.7 に限定** |
 | P16 の該当節 | "Full effort ladder, including `max`" | "**Effort matters more**"（追加 effort を旧 Opus より確実に成果へ変換する。既定 high から両方向へ調整） |
 
-**本台帳は改訂後（現行）を正とする**（S86）。あわせて次も確認した：
+**本台帳は第2回取得（現行）を正とする**（S86）。あわせて次も確認した：
 
 - **P4（What's new in Claude Opus 4.8）の URL は P16 へリダイレクトされる**ようになり、4.8 本文を直接取得できない。S17 の現行証拠からは P4 を外し、P5 / P8 で裏付ける。
 - P17 の thinking 無効時の緩和策が1つの統合指示に整理され、「大半のタスクでは thinking 有効＋`low` effort の方が、同程度のコストで thinking 無効より良い」が追記された（S85 に反映）。
 - P16 の `fallbacks` の beta ヘッダ説明が精緻化された（S100 に反映）。
 
-**教訓**：リリース直後の公式ドキュメントは**数時間単位で改訂されうる**。`Last verified` は日付だけでなく、
+**教訓**：リリース直後の公式ドキュメントは**数時間単位で内容が変わりうる**（編集・配信キャッシュのいずれであっても、観測される内容は変わる）。`Last verified` は日付だけでなく、
 重要な推奨（effort の開始点など）については**逐語を台帳に残す**こと。次回の再検証時は、この表の
 「改訂後」の逐語と現行本文を必ず突き合わせる。
 
