@@ -2,7 +2,7 @@
 name: pick
 description: |
   タスクの種別（設計・要件定義・実装・リファクタ・レビュー・デバッグ・テスト・UI/UX・
-  ドキュメント・調査）と複雑さから、最適な Claude モデル（Fable 5 / Opus 4.8 / Sonnet 5）と
+  ドキュメント・調査）と複雑さから、最適な Claude モデル（Fable 5 / Opus 5 / Sonnet 5）と
   effort を理由つきで提案する。提示後は一度停止する。ユーザーが y（または y opus 等でモデル指定）を
   送ると、モデルを切り替えないまま確定モデル向けに最適化したプロンプトを表示して停止する
   （タスク本体は実行しない）。明示的に呼び出したときだけ起動する。
@@ -10,9 +10,9 @@ allowed-tools: Read
 disable-model-invocation: true
 argument-hint: "[実行したいタスク]"
 metadata:
-  version: "4.1.0"
+  version: "5.0.0"
   author: "Kazuya Kurashima"
-  last-updated: "2026-07-20"
+  last-updated: "2026-07-25"
 ---
 
 # which-model : pick
@@ -103,12 +103,17 @@ metadata:
    モデルのまま**行う。最適化プロンプトは確定後に初めて作る）：
    a. 確定モデルのガイドを `${CLAUDE_SKILL_DIR}/references/ai-model-guides/` から Read する：
       - Fable 5 → `03_fable5_prompting.md`
-      - Opus 4.8 → `04_opus48_prompting.md`
+      - Opus 5 → `04_opus5_prompting.md`
       - Sonnet 5 → `05_sonnet5_prompting.md`
-   b. そのガイドの「再利用テンプレート」（Fixed instruction / Variables /
-      Output format / Verification）に沿って、元の指示を**確定モデル向けに**再構成する。
-   c. そのガイドの「悪いパターン（避ける）」に該当する表現を除く。特に Fable 5 では
-      「思考を出力せよ」「推論を説明せよ」系を必ず除く。
+   b. そのガイドの「再利用テンプレート」に沿って、元の指示を**確定モデル向けに**再構成する。
+      **テンプレートの構成要素はガイドごとに異なる。ガイドに書かれている構成をそのまま使い、
+      ガイドにない節（例：Opus 5 の Verification 節）を勝手に足さない。**
+   c. そのガイドの「悪いパターン（避ける）」に該当する表現を除く。特に：
+      - Fable 5 → 「思考を出力せよ」「推論を説明せよ」系を必ず除く。
+      - Opus 5 → 「最終検証ステップを入れよ」「サブエージェントで検証せよ」「double-check せよ」
+        「報告前に検証せよ」等の**重複する自己検証の指示を入れない**（過剰検証になる）。
+        完了定義・受入条件・通すべきテストの明示、および「推測に頼らずコードから確認せよ」型の
+        根拠接地の指示は入れてよい（これらは別工程の検証を足すものではない）。
    d. 次を表示する：
       ```
       ── which-model: 最適化プロンプト ──

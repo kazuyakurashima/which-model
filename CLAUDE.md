@@ -22,6 +22,11 @@ which-model skill 自体の動作指示（SKILL.md）とは別物です。
 - レシピ本の正本は `docs/ai-model-guides/`。**編集したら必ず `./tools/sync-bundled-guides.sh`
   を実行**し、同梱コピー（`skills/pick/references/ai-model-guides/`）へ反映する。ズレ検出は
   `./tools/sync-bundled-guides.sh --check`（コミット前チェック用）。
+- **台帳とガイドの整合は `python3 tools/check-ledger-consistency.py` で機械検査する。**
+  ダングリング参照・Retired 参照・「8. 出典」欄の一致（＝エラー）と、モデル別ガイドが引く S-id の
+  「対象」欄の整合（＝警告。他モデル参照が正当な場合もあるので人が判断する）を見る。
+  **5.0.0 の監査で「上流の台帳を直したのに下流のガイドが追随していない」抜けを繰り返し出したため
+  導入した。** モデル世代を更新するときは必ず通す。
 - skill 本体の開発ループは `claude --plugin-dir .`（インストール不要でその場のプラグインを読む）。
 - **旧 standalone 版の同期 hook（`.claude/settings.json`）は 4.0.0 で削除済み**（ルート `SKILL.md`
   を監視する死んだ hook だった）。`install.sh` は壊れた実行体をやめ、移行案内を表示して終了する

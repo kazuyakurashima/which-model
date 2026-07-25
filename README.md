@@ -32,17 +32,20 @@
 
 **1. 依頼する（`/which-model:pick` に、やりたいことを普段どおり書くだけ）**
 
-![/which-model:pick に「ログインの仕組みを壊れないように、少しずつ確認して全部作り直したい。」と入力している様子](docs/images/demo-1-input.png)
+![/which-model:pick に「ログインの仕組みを壊れないように少しずつ確認しながら全部作り直したい」と入力している様子](docs/images/demo-1-input.png)
 
 **2. フェーズ1：推奨モデルと effort が理由つきで提示され、いったん停止する**
 
-![推奨 Fable 5 / effort=high、理由（大規模リファクタ・移行に該当）、代替 Opus 4.8 / effort=xhigh、確定合図の説明（y ／ y opus）、判断材料の Last verified 2026-07-19 が表示されている](docs/images/demo-2-phase1.png)
+![「which-model: 判定」として、推奨 Fable 5 / effort=high、理由（大規模リファクタ・移行に該当、複雑さ：重い）、代替 Opus 5 / effort=xhigh（対話で刻んで進めたい場合やコストを抑えたい場合。Opus 5 に切り替えるなら検証サブエージェントの指定は外す）、確定合図の説明（y ／ y opus）、判断材料の Last verified 2026-07-25 が表示されている](docs/images/demo-2-phase1.png)
 
 **3. `y` を送ると、フェーズ2：確定モデル向けに最適化したプロンプトが表示される（まだ実行はしない）**
 
-![確定合図を受けて 03_fable5_prompting.md を読み、最適化プロンプトを表示している。確定モデル・元の指示に続き、target タグから始まるプロンプトが生成される（画像は冒頭のみ）](docs/images/demo-3-phase2.png)
+![「which-model: 最適化プロンプト」として、確定モデル Fable 5 / effort=high、元の指示の要約に続き、Fixed instruction 節から始まる最適化後プロンプトが生成されている。影響範囲調査→計画→段階実装の順序、既存テストスイートを合否基準にすること、段階の切り方は自分でスコープすること、指定範囲外の整頓・抽象化・機能追加をしないことが指示に含まれる（画像は冒頭のみ）](docs/images/demo-3-phase2.png)
 
-*（上は冒頭のみ。実際は `Fixed instruction` / `Variables` / `Output format` / `Verification` の全文が続きます。）*
+*（上は冒頭のみ。実際は各モデルガイドの再利用テンプレートの全文が続きます。テンプレートの構成は
+モデルごとに異なります — 例えば Opus 5 向けには `Verification` 節を付けません〈自己検証が既定挙動で、
+明示すると過剰検証になるため〉。上の例は Fable 5 が確定モデルなので、長時間実行向けに検証の指定が
+入ります。）*
 
 このあと、実行前に `/model claude-fable-5` と `/effort high` のように**モデルと effort の両方**を
 設定し（すでに同じ設定なら不要）、**もう一度 `y`**（または表示された
@@ -229,7 +232,7 @@ Claude Code で開発していると、指示のたびに「どのモデルが�
 | `01_sources_evidence.md` | 根拠台帳（公式主張を source_id で管理） |
 | `02_model_selection_matrix.md` | タスク別のモデル/effort 判断表（SKILL.md が毎回読む中核） |
 | `03_fable5_prompting.md` | Fable 5 向けプロンプト最適化ガイド |
-| `04_opus48_prompting.md` | Opus 4.8 向けプロンプト最適化ガイド |
+| `04_opus5_prompting.md` | Opus 5 向けプロンプト最適化ガイド |
 | `05_sonnet5_prompting.md` | Sonnet 5 向けプロンプト最適化ガイド |
 
 各ガイドの記述には2種類のタグが付いています。`[Official]` は Anthropic 公式ドキュメントで
@@ -378,9 +381,10 @@ Confidence 付き）です。使う人は `[Heuristic]` を自分の使い方に
 
 上記の通り本運用では CLAUDE.md への登録は推奨しませんが、skill を使わず常時参照させたい
 場合は以下を CLAUDE.md に貼ってください。各行は `02_model_selection_matrix.md` の
-記述の要約です（根拠：S1, S6, S9, S10, S16, S25, S29, S65, S67, S68, S71, S73。うち「速い対話・高頻度は
-Sonnet 5 / Fable 5 不使用」と「ZDR 前提の代替モデル選択」は公式事実から導く運用判断（`[Heuristic]`）。
-タグ・source_id はランタイムのノイズになるため省略。裏付けは `01_sources_evidence.md` を参照）。
+記述の要約です（根拠：S6, S9, S10, S16, S25, S29, S65, S67, S68, S71, S81, S86, S91, S98, S104。
+うち「速い対話・高頻度は Sonnet 5 / Fable 5 不使用」と「ZDR 前提の代替モデル選択」は公式事実から
+導く運用判断（`[Heuristic]`）。タグ・source_id はランタイムのノイズになるため省略。裏付けは
+`01_sources_evidence.md` を参照）。
 
 ```md
 ## Model routing & prompt optimization
@@ -391,12 +395,18 @@ do not load all of them.
 
 - Deciding which model for a task → docs/ai-model-guides/02_model_selection_matrix.md
 - Prompting Fable 5 (claude-fable-5) → docs/ai-model-guides/03_fable5_prompting.md
-- Prompting Opus 4.8 (claude-opus-4-8) → docs/ai-model-guides/04_opus48_prompting.md
+- Prompting Opus 5 (claude-opus-5) → docs/ai-model-guides/04_opus5_prompting.md
 - Prompting Sonnet 5 (claude-sonnet-5) → docs/ai-model-guides/05_sonnet5_prompting.md
 
 Quick defaults:
-- Unsure / complex agentic coding → Opus 4.8 (default). Effort defaults to high;
-  set xhigh explicitly for coding and high-autonomy work (official guidance).
+- Unsure / complex agentic coding → Opus 5 (default). Effort defaults to high; start there and
+  step up to xhigh for demanding coding and agentic work (multi-file features, larger refactors,
+  end-to-end work, deep dependency tracing). Official guidance for Opus 4.8/4.7 differs: xhigh
+  is the recommended starting point there.
+- On Opus 5, do not add redundant self-verification steps ("include a final verification step",
+  "use a subagent to verify", "double-check your answer") — it self-verifies, and these cause
+  over-verification. Acceptance criteria, which tests must pass, and "check against the code
+  rather than assuming" are all fine.
 - Fast, high-frequency, or simple → Sonnet 5 (effort=low for simple lookups). Do not use Fable 5 for these.
 - Long, ambiguous, hours-to-weeks, end-to-end → Fable 5 (start at effort=high). Set up timeouts,
   progress, and refusal fallback first (Claude Code falls back automatically).
@@ -404,7 +414,9 @@ Quick defaults:
   touching model/effort — the fix is often upstream, not a knob.
 - Still not working? Diagnose: skipped a file / didn't run tests / didn't double-check → raise
   effort. Had all the context and clearly tried, still wrong → switch to a larger model.
-- Sensitive data under ZDR → avoid Fable 5 (ZDR-ineligible); use Opus 4.8 or Sonnet 5.
+- Sensitive data under ZDR → avoid Fable 5 (Covered Model, ZDR-ineligible). Opus 4.8 and Sonnet 5
+  are ZDR-eligible, but ZDR eligibility also depends on your org arrangement, the API features you
+  use, and the surface (consumer plans and some features are out of scope).
 
 All `[Official]` claims are backed by docs/ai-model-guides/01_sources_evidence.md.
 ```
