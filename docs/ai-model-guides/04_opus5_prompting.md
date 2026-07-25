@@ -13,7 +13,7 @@ API model string: `claude-opus-5`（Claude Code では `opus` エイリアスが
 - **thinking は既定 on**（4.8 は明示設定まで off だった）。`{type:"adaptive"}` は既定と等価。`max_tokens` は thinking と応答の**合計**上限（S84）。
 - **`thinking:{"type":"disabled"}` は effort が high 以下のときのみ。xhigh / max との組合せは 400 エラー**（4.8 からの breaking change — S85）。
 - effort は5段階すべてに対応、API・Claude Code の既定は high（S71, S72）。**`high`（既定）から始め、evals に応じて上下に調整する。`xhigh` へ上げるのは demanding なコーディング・エージェント作業**（S86）。Opus 5 は追加の effort を旧 Opus より確実に成果へ変換するため、選ぶ effort の重みが増している（S86）。max は「タスクが無制限のトークン支出に見合うとき」に上げる（4.7/4.8 の「evals で headroom を確認したときのみ」という明示ゲートは Opus 5 には書かれていない。単純なタスクでは収穫逓減・overthinking の恐れ — S89）。
-- 価格 $5/$25 per MTok（4.8 と同額）、1M コンテキスト（既定かつ最大）、最大出力 128k、知識カットオフ 2026-05（S82）。
+- 価格 $5/$25 per MTok（4.8 と同額）、1M コンテキスト（既定かつ最大）、最大出力 128k（**同期 Messages API の値**。Message Batches API では beta で最大 300k）、知識カットオフ 2026-05（S82）。
 - **web fetch 非対応・Priority Tier 非対応**（S102）。Fast mode は対応（Claude API のみ・$10/$50 — S103）。
 - ZDR：Covered Model の指定はなく、モデル固有の保持要件の記載もない。ただし ZDR 適格性は機能・サーフェス・組織契約に依存するため「全サーフェスで ZDR 可」とは扱わない（S104）。
 
@@ -114,7 +114,8 @@ API model string: `claude-opus-5`（Claude Code では `opus` エイリアスが
 ### Variables
 - <diff>{{レビュー対象の差分またはパス}}</diff>
 - <context>{{仕様・受入条件・注意してほしい観点}}</context>
-（推奨: effort=xhigh。速い一次パスなら low/medium も可 — Opus 5 は低 effort でも精度が保たれる）
+（推奨: effort=high（既定）。**速い一次パス**は low/medium（自分の評価で精度が保てると確認済みの場合。
+ Opus 5 は低 effort でもレビュー精度が保たれる）。**大規模・横断的な差分**なら xhigh へ昇格）
 
 ### Output format
 指摘ごとに：対象ファイル:行 / 内容 / 確信度 / 深刻度 / 修正案

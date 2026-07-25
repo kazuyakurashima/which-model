@@ -37,7 +37,7 @@ Opus 5 は 2026-07-24 リリース。あなたの学習データより新しい�
 - P1  Models overview — https://platform.claude.com/docs/en/about-claude/models/overview
 - P2  Choosing the right model — https://platform.claude.com/docs/en/about-claude/models/choosing-a-model
 - P3  Introducing Claude Fable 5 and Claude Mythos 5 — https://platform.claude.com/docs/en/about-claude/models/introducing-claude-fable-5-and-claude-mythos-5
-- P4  What's new in Claude Opus 4.8（選定対象外・参照用） — https://platform.claude.com/docs/en/about-claude/models/whats-new-claude-4-8
+- P4  What's new in Claude Opus 4.8（選定対象外・参照用。**2026-07-25 時点でこの URL は P16〈Opus 5〉へリダイレクトされ、4.8 本文を直接取得できない。開いて Opus 5 の内容が出ても異常ではない。4.8 の証拠には使えないので、4.8 の裏付けは P8 / P12 を使う**） — https://platform.claude.com/docs/en/about-claude/models/whats-new-claude-4-8
 - P5  What's new in Claude Sonnet 5 — https://platform.claude.com/docs/en/about-claude/models/whats-new-sonnet-5
 - P6  Prompting best practices — https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices
 - P7  Prompting Claude Fable 5 — https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5
@@ -105,6 +105,17 @@ Opus 5 は 2026-07-24 リリース。あなたの学習データより新しい�
 - **thinking の既定**。Opus 4.8 は明示指定まで off、**Opus 5 は既定 on**、Sonnet 5 も既定 on、
   Fable 5 は常時 on（disable 不可）。**Opus 5 では `thinking:{"type":"disabled"}` と effort
   xhigh/max の併用が 400 エラー**（4.8 では独立だった）。P16/P12/P13 で確認する。
+- **Opus 5 と Opus 4.8 / 4.7 で effort の推奨開始点が違う（最重要・2026-07-25 に公式記述が変わった箇所）**。
+  現行の公式は次のように**モデルを分けて**書いている。混同していないか厳しく見ること：
+  - **Opus 5**：「**`high`（既定）から始め、evals に応じて上下**。**demanding なコーディング・エージェント
+    作業で `xhigh` へ昇格**」（P13 / P17 / P2 / P16）。**「Opus 5 はコーディングなら xhigh 開始」と
+    書いてあれば誤り**（2026-07-25 の午前まではそう書かれていたが、現在は違う）。
+  - **Opus 4.8 / Opus 4.7**：「**コーディング・エージェント用途は `xhigh` 開始**」（P8 / P13 / P2）。
+  台帳では S86（Opus 5）と S73（4.8）で分けている。判断表（`02`）では **Opus 5 の effort セルが
+  「既定 high、分岐C で xhigh へ昇格」の形になっているか**、無条件の `xhigh` が残っていないかを確認する。
+  `04` のテンプレート内の推奨 effort も同じ整合を満たすか見る（上流だけ直して下流が旧前提のまま、が起きやすい）。
+- **最大出力 128k の限定**。128k は**同期 Messages API** の値で、Message Batches API では beta
+  （`output-300k-2026-03-24`）で最大 300k。「最大出力 128k」と無条件に書いていないか（P1）。
 - **effort の既定値**。「Claude API の既定」と「Claude Code の既定」を区別する。どのモデルで
   high か xhigh か、xhigh 明示指定の公式推奨がどのモデルにかかるかを P2/P9/P11/P13/P17 で照合する。
 - **effort の持ち越し（Claude Code）**。default hold が明記されているのは Fable 5 / Opus 4.8 /

@@ -11,7 +11,7 @@ API model string: `claude-sonnet-5`（Claude Code では `sonnet` エイリア�
 - Sonnet 4.6 に対する能力向上版で同価格。最大の向上はコーディングとエージェント作業（S12）。
 - adaptive thinking が既定 on（4.6 は off だった）。off にするには `thinking:{type:"disabled"}`（S18）。manual extended thinking は 400（S17）。
 - effort の既定は high（Claude API / Claude Code とも）（S71）。Sonnet ティアで xhigh に対応するのは Sonnet 5 のみで、最難のコーディング/エージェントタスクは xhigh へ（S74）。medium ≈ Sonnet 4.6 の high、high ≈ Sonnet 4.6 の max が目安（S57）。
-- 価格 $3/$15 per MTok（2026-08-31 まで導入価格 $2/$10）、1M コンテキスト（既定）、最大出力 128k（S15）。
+- 価格 $3/$15 per MTok（2026-08-31 まで導入価格 $2/$10）、1M コンテキスト（既定）、最大出力 128k（同期 Messages API の値。Batch API では beta で最大 300k）（S15）。
 - 新トークナイザで同じテキストが約 30% 多くトークン化される（S42）。
 - 初の Sonnet ティアのリアルタイム・サイバーセキュリティ保護あり（S44）。computer use は最大 2576px / 3.75MP に対応（S60）。
 
