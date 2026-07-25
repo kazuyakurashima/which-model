@@ -5,6 +5,76 @@
 
 3.8.0 以前の変更は `git log` を参照してください。
 
+## [5.0.0] - 2026-07-25
+
+2026-07-24 にリリースされた **Claude Opus 5** に対応し、モデル選定の対象を
+**Fable 5 / Opus 5 / Sonnet 5** に更新しました。Opus 5 は挙動が Opus 4.8 から大きく変わっている
+ため（thinking の既定、検証指示の扱い、応答の長さ、委譲の積極性）、判断表とプロンプト最適化の
+ロジックも合わせて変更しています。**選定対象モデルとガイドのファイル名が変わるため、メジャー
+バージョンを上げました。**
+
+### Changed
+
+- **選定対象を Fable 5 / Opus 5 / Sonnet 5 に変更しました。** 「迷ったら Opus」の既定が公式に
+  Opus 5 へ移ったため（Models overview / Choosing a model）、判断表の Opus 列をすべて Opus 5 に
+  差し替えました。コーディング・エージェント作業の推奨 effort は Opus 5 でも `xhigh` 開始です。
+- **`04_opus48_prompting.md` を `04_opus5_prompting.md` にリネームし、全面改訂しました。**
+  Opus 5 の破壊的変更（thinking が既定 on、`thinking:{"type":"disabled"}` と effort `xhigh`/`max`
+  の併用は 400 エラー）と挙動差分を反映しています。
+- **最適化プロンプトに検証指示を入れなくなりました（Opus 5）。** Opus 5 は指示なしで自己検証・
+  自己修正するため、「報告前に検証せよ」「double-check せよ」「サブエージェントで検証せよ」は
+  過剰検証を招きます。テンプレートから `Verification` 節を外し、品質の担保は完了定義（受入条件・
+  通すべきテスト）の明示に一本化しました。**Fable 5 は従来どおり**、長時間実行では検証方法・
+  間隔・別コンテキストの検証サブエージェントを明示します（公式ガイダンスがモデルで異なります）。
+- **skill の実行契約を「ガイドの構成に従う」に変更しました。** 従来は全モデルで4要素
+  （Fixed instruction / Variables / Output format / Verification）を必ず生成していましたが、
+  テンプレートの構成をモデルガイド側に委ね、ガイドにない節を足さない方式にしました。
+- **判断表に Opus 5 の低 effort 活用（分岐D）を追加しました。** Opus 5 の `low`/`medium` は旧
+  Opus より強く、公式も「evals で品質が保てる範囲で積極的に使え」と述べています。ただし自前の
+  評価で確認していない作業に常用しないよう `[Heuristic]` として条件を明示しています。
+- **max effort のゲートをモデル別に書き分けました。** Opus 4.7 / 4.8 の「evals が `xhigh` で
+  measurable headroom を示すときのみ」という明示ゲートは Opus 5 のセクションには存在せず、
+  Opus 5 は「タスクが無制限のトークン支出に見合うとき」と表現されています。混同しないよう
+  分離記載し、判断表で max を通常行に置かない方針は `[Heuristic]` として維持しました。
+
+### Added
+
+- **Opus 5 の運用注意を判断表に追加しました。** 応答・成果物が長い／スコープを広げがち／進捗
+  ナレーションとサブエージェント委譲が多い、という癖への対処を「Opus 5 のプロンプト上の癖」節に
+  まとめました。effort を下げても表示される応答は短くならない（長さはプロンプトで指定する）点も
+  明記しています。
+- **Claude Code の運用差分を追加しました。** Opus 5 は **v2.1.219 以降が必要**、`opus` エイリアス
+  はプロバイダごとに解決先が異なる（Microsoft Foundry のみ Opus 4.6）、**Opus 5 には effort の
+  default hold がなく前回値を持ち越す**（Fable 5 / Opus 4.8 / 4.7 は hold あり）ことを記載しました。
+- **拒否時のフォールバック経路をサーフェス別・カテゴリ別に整理しました。** Claude Code では
+  Fable 5 の biology → Opus 5、Fable 5 の cybersecurity → Opus 4.8、Opus 5 の cybersecurity →
+  Opus 4.8、Opus 5 の biology はフォールバックなしで拒否。API 側はオプトイン（`fallbacks`）で、
+  Fable 5 の推奨フォールバック先は現在も Opus 4.8 です。
+- **プラン差の注記を追加しました。** Fable 5 は全有料プランで選択できますが課金形態が異なります
+  （Max / Team Premium / legacy seat-based Enterprise Premium 席は**プラン内包・週間使用量上限の
+  最大50%まで**、Pro / Team Standard 席は **usage credits** による従量課金）。「Pro では使えない」
+  ではなく「usage credits が必要」と表現します。1M コンテキストは Sonnet 5 がネイティブ、
+  Opus の 1M は Pro のみ usage credits が必要です。
+
+### Documentation
+
+- **根拠台帳に P16〜P21（What's new in Opus 5 / Prompting Claude Opus 5 / Model deprecations /
+  Fast mode / API and data retention / Claude Fable 5 on your plan）と S81〜S106 を追加しました。**
+  既存の P1〜P15 も 2026-07-25 に直接取得で再検証しています。
+- **Opus 4.8 は「選定対象外・参照用」として台帳に残しました。** Opus 4.8 は公式に **Active**
+  （暫定退役日は早くても 2027-05-28）で、フォールバック先・移行元・互換性の説明で参照するため、
+  事実として正しい主張は削除していません。台帳の `Retired` は「この台帳の主張を置き換えた」と
+  いう意味であり、モデルの廃止を意味しないことを明記しました。
+- **ZDR の記述をモデル別・サーフェス別に精密化しました。** Covered Model（30日保持必須・ZDR 不可）
+  は **Fable 5 と Mythos 5 のみ**です。Opus 4.8 は公式に "remains available under ZDR"、Sonnet 5 も
+  ZDR 可。Opus 5 は Covered Model の指定がありませんが、ZDR 適格性は機能・サーフェス・組織契約に
+  依存するため「全サーフェスで ZDR 可」とは書いていません。
+- **`tools/CODEX_VERIFICATION_PROMPT.md` を全面更新しました。** 監査対象の P/S-id 範囲を
+  P1〜P21 / S1〜S106 に更新し、既知の落とし穴に「Opus 4.8 と Opus 5 で方向が逆転している挙動」
+  「thinking 既定の三者差」「Covered Model の "Both models" の読み違い」を追加しました。
+- README のスクリーンショットが 4.1.0 時点（Opus 4.8 が選定対象だった頃）の画面であることを
+  明記しました。
+
 ## [4.1.0] - 2026-07-20
 
 Anthropic 公式一次情報による effort ガイダンスの再監査を反映し、判断表を「第一・第二候補ごとの
