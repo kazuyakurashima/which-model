@@ -5,6 +5,57 @@
 
 3.8.0 以前の変更は `git log` を参照してください。
 
+## [5.1.0] - 2026-08-10
+
+配布物をリポジトリ全体からプラグイン単体へ絞りました。**skill の動作・判断材料・呼び出し方は
+変わりません。** 導入コマンド（`/plugin marketplace add` → `/plugin install`）も同じです。
+
+### Changed
+
+- **配布されるのは `plugins/which-model/` だけになりました。** これまで marketplace の `source` が
+  `./` だったため、リポジトリ全体がプラグインとして配布されていました。実測では、インストール後の
+  キャッシュに `CLAUDE.md`（このリポジトリの開発規約）・`docs/`（レシピ本の正本と画像4枚）・
+  `tests/`・`tools/`・`install.sh` まで含まれ、**レシピ本は正本と同梱コピーの両方が配られて
+  `01_sources_evidence.md` が2件存在していました**。プラグインをサブディレクトリへ隔離し、
+  リポジトリルートの開発用ファイルが配布されないようにしました。
+
+  | | 5.0.0 | 5.1.0 |
+  | --- | --- | --- |
+  | 配布ファイル数 | 31 | 10 |
+  | キャッシュ容量 | 約 1,132 KiB | 約 208 KiB |
+  | `01_sources_evidence.md` | 2 件 | 1 件 |
+
+  測定条件：macOS / APFS、`du -sk`、実行中セッションが作るランタイムファイル（`.in_use/`、
+  8ファイル・32 KiB）を除外。容量はファイルシステムの割当単位に依存するため参考値です。
+  配布物の判定は**10ファイルの内訳**（`plugin.json` / `LICENSE` / `README.md` / `SKILL.md` /
+  レシピ本6ファイル）で行っています。
+
+- **更新手順の案内を3行に直しました。** カタログの更新（`/plugin marketplace update`）と
+  プラグイン本体の更新（`/plugin update`）は別の操作で、従来の案内は前者しか書いておらず、
+  実行しても新しいバージョンが入らない恐れがありました。
+
+### Added
+
+- **`LICENSE` をプラグインに同梱しました。** 配布単位が `plugins/which-model/` になったため、
+  Apache-2.0 §4(a)（再頒布物へのライセンス本文の添付）を満たすようルートの `LICENSE` と
+  バイト同一のコピーを置いています。
+- **配布用の `README.md`（スタブ）を追加しました。** 説明・呼び出し名・リポジトリへのリンクのみで、
+  リポジトリの `README.md` と二重保守しない方針です。
+- **リリース前に `claude plugin validate` を2本とも通す規約を `CLAUDE.md` に追加しました。**
+  marketplace 側の検証は marketplace manifest と `source` 先の `plugin.json` を検査しますが、
+  `SKILL.md` などコンポーネント本体は検査しません（対照実験で確認）。片方だけでは不足します。
+
+### 既存利用者の更新方法
+
+サードパーティ marketplace の自動更新は既定でオフです。Claude Code の入力欄で次の3行を順に
+実行してください。
+
+```text
+/plugin marketplace update kazuyakurashima
+/plugin update which-model@kazuyakurashima
+/reload-plugins
+```
+
 ## [5.0.0] - 2026-07-25
 
 2026-07-24 にリリースされた **Claude Opus 5** に対応し、モデル選定の対象を

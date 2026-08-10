@@ -10,9 +10,9 @@ allowed-tools: Read
 disable-model-invocation: true
 argument-hint: "[実行したいタスク]"
 metadata:
-  version: "5.0.0"
+  version: "5.1.0"
   author: "Kazuya Kurashima"
-  last-updated: "2026-07-25"
+  last-updated: "2026-08-10"
 ---
 
 # which-model : pick
