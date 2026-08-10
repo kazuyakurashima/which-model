@@ -120,10 +120,18 @@ Claude Code の導入、または PATH の反映が完了していません。�
 このマーケットプレイスは Anthropic 公式ではない（＝サードパーティの）ため、**自動更新は既定で
 オフ**です。更新は次のどちらかで受け取ります。
 
-- **手動**：`/plugin marketplace update kazuyakurashima` を実行する
+- **手動**：次の3行を順に実行します。カタログの更新（1行目）とプラグイン本体の更新（2行目）は
+  別の操作なので、1行目だけでは新しいバージョンは入りません。
+
+  ```text
+  /plugin marketplace update kazuyakurashima
+  /plugin update which-model@kazuyakurashima
+  /reload-plugins
+  ```
+
 - **自動**：`/plugin` → **Marketplaces** タブ → `kazuyakurashima` を選択 → **Enable auto-update**
 
-更新が入ると `/reload-plugins` を促す通知が出ます（または次回起動時に反映されます）。
+自動更新が入ると `/reload-plugins` を促す通知が出ます（または次回起動時に反映されます）。
 
 **アンインストール**（Claude Code の入力欄で）
 
@@ -240,8 +248,8 @@ Claude Code で開発していると、指示のたびに「どのモデルが�
 Confidence 付き）です。使う人は `[Heuristic]` を自分の使い方に合わせて書き換えてください。
 
 > このリポジトリの `README.md` は人間向けの説明書で、Claude Code は読み込みません（トークンを
-> 消費しません）。Claude への動作指示は `skills/pick/SKILL.md` に、判断材料は同梱の
-> `skills/pick/references/ai-model-guides/` にあります（このリポジトリの `docs/ai-model-guides/` が正本で、
+> 消費しません）。Claude への動作指示は `plugins/which-model/skills/pick/SKILL.md` に、判断材料は同梱の
+> `plugins/which-model/skills/pick/references/ai-model-guides/` にあります（このリポジトリの `docs/ai-model-guides/` が正本で、
 > `./tools/sync-bundled-guides.sh` で同梱コピーへ同期します）。
 > なお `tools/CODEX_VERIFICATION_PROMPT.md` は配布物ではない開発用ファイル（知識ベースの独立監査用
 > プロンプト）で、各プロジェクトへはコピーしません。
@@ -255,6 +263,7 @@ Confidence 付き）です。使う人は `[Heuristic]` を自分の使い方に
 ### 何がどこに入るか
 
 プラグインとして、次の2つが**一緒に**入ります。プロジェクト側に置くものはありません。
+パスはプラグインルート基準です（このリポジトリでは `plugins/which-model/` 配下にあたります）。
 
 - **料理人（`skills/pick/SKILL.md`）** … Claude への動作指示
 - **レシピ本（`skills/pick/references/ai-model-guides/`）** … モデル選定の判断材料（6ファイル）

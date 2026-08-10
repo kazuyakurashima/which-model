@@ -119,7 +119,7 @@ grep 判定は誤作動する。合否は出力を読んで判断すること：
 ```bash
 # 同梱フォールバックを使う＝リポジトリ外の空ディレクトリで実行
 mkdir -p /tmp/wm-regress && cd /tmp/wm-regress
-claude --plugin-dir <リポジトリのルート> --model sonnet \
+claude --plugin-dir <リポジトリ>/plugins/which-model --model sonnet \
   -p "/which-model:pick $(cat <リポジトリ>/tests/regression/pasted-transcript-input.txt)" < /dev/null
 ```
 
