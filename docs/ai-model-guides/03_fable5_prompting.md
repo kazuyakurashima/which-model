@@ -10,7 +10,7 @@ API model string: `claude-fable-5`
 - Anthropic の最も高能力な一般提供モデル。長時間稼働エージェント向けの次世代知能（S3）。
 - 人間が数時間・数日・数週間かける端から端までの作業に特に効果的。簡単なワークロードだけで試すと真価を過小評価する（S9）。
 - 速度・量のためではない。比較レイテンシは「Slower」で単一リクエストが数分に及ぶ（S10）。素早い対話・高頻度タスクに Sonnet 5 を充てるのは、この公式事実から導く運用判断（S10 の結論部は `[Heuristic]` / Confidence: High / Basis: S10 の公式事実〈レイテンシ・価格〉）。
-- adaptive thinking が唯一のモードで常時 on。`thinking:{type:"disabled"}` は非対応（エラーで拒否）（S8）。
+- adaptive thinking が唯一のモードで常時 on。`thinking:{type:"disabled"}` は非対応で **400 error** を返す。手動 extended thinking も同様（S8）。
 - 生の思考連鎖は決して返らない（S19）。
 - 30 日データ保持必須・ZDR 不可・Covered Model 指定（S16）。価格 $10/$50 per MTok（S13）。
 
