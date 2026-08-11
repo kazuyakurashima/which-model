@@ -1,7 +1,7 @@
 {
   "name": "which-model",
-  "version": "5.1.0",
-  "description": "タスクに適した Claude モデル（Fable 5 / Opus 5 / Sonnet 5）と effort を理由つきで提案し、確定モデル向けにプロンプトを最適化して表示する Claude Code skill。判断を支援するもので、自動でモデルを切り替えたり実行したりはしない。",
+  "version": "6.0.0",
+  "description": "タスクに適した Claude モデル（Fable 5 / Opus 5 / Sonnet 5）と effort を理由つきで選択UIに提示し、選ばれたモデル向けにプロンプトを最適化して表示する Claude Code skill。モデルは自動切替せず、タスクも自動実行しない（表示後に利用者が g を送ったときだけ実行する設計）。",
   "author": {
     "name": "Kazuya Kurashima"
   },
