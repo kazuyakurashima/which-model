@@ -61,7 +61,7 @@ claude plugin validate ./plugins/which-model --strict   # プラグイン側
 
 ## SKILL.md の整形
 
-- `SKILL.md` には Prettier をかけない。ネスト番号付きリスト（手順7の a〜e）が
+- `SKILL.md` には Prettier をかけない。ネスト番号付きリスト（手順9・10 などの a〜f）が
   Markdown 整形で壊れるため、`.prettierignore` で除外されている。
 
 ## タグ規律（[Official] / [Heuristic]）
