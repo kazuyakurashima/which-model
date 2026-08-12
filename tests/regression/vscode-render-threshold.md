@@ -12,7 +12,7 @@
 | 対話ターミナル | 2.1.220 / 2.1.227（いずれも再現せず） |
 | OS | macOS（Darwin 25.5.0） |
 | 表示 | 外部ディスプレイ、論理解像度 3008 × 1692（UI looks like） |
-| 計測器 | 使い捨てスキル `wm-text-test`（引数を分類せず、目印のテキスト1ブロックだけ出して停止する） |
+| 計測器 | 使い捨てスキル `wm-text-test`（引数を分類せず、目印のテキスト1ブロックだけ出して停止する）。実体とペイロード生成器は [`instruments/`](instruments/) に保管 |
 | 手順 | 1回につき新規会話。ペイロードを貼って送信し、目印ブロックが画面に出たかだけを記録 |
 
 **なぜ専用の計測器が要ったか**：`/which-model:pick` 自体で測ると、判定内容・応答長・所要時間が
@@ -87,7 +87,11 @@
 
 近い報告は [anthropics/claude-code#61675](https://github.com/anthropics/claude-code/issues/61675)
 （open、`stale` ラベル、milestone なし。約 4,000 文字域で後続メッセージが隠れるという内容で、
-本件と同族と見てよい）。`AskUserQuestion` まわりの類似報告として
+本件と同族と見てよい）。**2026-08-12、この文書の測定結果を同 issue へ投稿した**
+（[コメント](https://github.com/anthropics/claude-code/issues/61675#issuecomment-5260948384)）。
+既存の報告はいずれも文字数で語っているため、**文字数ではなく描画高さが引き金である**という
+対照実験（ペイロードを変えずウィンドウ高さだけを半分にして結果が反転した測定）が新規の寄与になる。
+新規 issue は立てていない（報告が分散するため）。`AskUserQuestion` まわりの類似報告として
 [#85573](https://github.com/anthropics/claude-code/issues/85573)（fullscreen TUI で回答後の
 継続ターンのテキストが描画されない）、
 [#84065](https://github.com/anthropics/claude-code/issues/84065)（`AskUserQuestion` 直前の
