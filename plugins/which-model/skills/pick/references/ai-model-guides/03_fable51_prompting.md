@@ -1,6 +1,6 @@
 # 03. Fable 5.1 プロンプティングガイド（Claude Code 用）
 
-Last verified: 2026-09-02（Fable 5.1 リリース当日の対応：P22〈What's new〉・P23〈Prompting Claude Fable 5.1〉・P11 を直接取得して全面改訂。公式は「既存の Fable 5 プロンプトは変更なしで 5.1 でも良好に動く」と明言しており〈S133〉、Fable 5 の原則は橋として維持、5.1 で変わった挙動〈S134 の7点〉を反映した。旧履歴：2026-07-25 に Fable 5 版を再検証、2026-07-06 初版）
+Last verified: 2026-09-02（Fable 5.1 リリース当日の対応。**公式表記の release date は 2026-09-01**、JST では 09-02 に観測：P22〈What's new〉・P23〈Prompting Claude Fable 5.1〉・P11 を直接取得して全面改訂。公式は「既存の Fable 5 プロンプトは変更なしで 5.1 でも良好に動く」と明言しており〈S133〉、Fable 5 の原則は橋として維持、5.1 で変わった挙動〈S134 の7点〉を反映した。旧履歴：2026-07-25 に Fable 5 版を再検証、2026-07-06 初版）
 API model string: `claude-fable-5-1`
 
 タグ：`[Official]`（source_id 付き, 台帳参照）／`[Heuristic]`（運用仮説, Confidence 付き）

@@ -16,7 +16,7 @@ Claude とは独立した「別の目」で、Anthropic 公式ドキュメント
 リポジトリ `docs/ai-model-guides/` 配下の 6 ファイル：
 
 - `00_index.md` … 全体の使い方
-- `01_sources_evidence.md` … **根拠台帳**。全 `[Official]` 記述の source_id（S1〜S139。欠番：S4, S5, S52, S53。Retired：S1, S2, S3, S7, S49）と公式出典（P1〜P25。欠番：P10）の対応表。ここが正の起点。
+- `01_sources_evidence.md` … **根拠台帳**。全 `[Official]` 記述の source_id（S1〜S141。欠番：S4, S5, S52, S53。Retired：S1, S2, S3, S7, S49）と公式出典（P1〜P26。欠番：P10）の対応表。ここが正の起点。
 - `02_model_selection_matrix.md` … タスク×モデル×effort の判断表
 - `03_fable51_prompting.md` / `04_opus5_prompting.md` / `05_sonnet5_prompting.md` … モデル別プロンプティングガイド
 
@@ -27,14 +27,14 @@ Claude とは独立した「別の目」で、Anthropic 公式ドキュメント
 - `[Heuristic]` … プロジェクト固有の運用仮説。公式裏付けなし。Confidence 付き。
 
 対象モデルは Claude **Fable 5.1** / **Opus 5** / Sonnet 5 の 3 つ（いずれも 2026 年のモデル。
-Opus 5 は 2026-07-24、Fable 5.1 は 2026-09-02 リリース。あなたの学習データより新しい可能性が
+Opus 5 は 2026-07-24、Fable 5.1 は 2026-09-01 リリース（公式表記。JST では 09-02）。あなたの学習データより新しい可能性が
 高いが、実在する）。
 **Opus 4.8 と Fable 5 は選定対象から外れたが提供は継続**しており（Fable 5 は P1 の
 "Legacy models (still available)"）、フォールバック先・移行元・互換性・橋（S133）の文脈では
 台帳に残っている（対象欄に「選定対象外・参照用」または「Fable 5, Fable 5.1（S133 の橋で適用）」
 と明記されている主張がそれ）。「4.8 や Fable 5 の記述が残っているのは誤り」と早合点しないこと。
 
-### 公式一次情報（`01` の P1〜P25。P10 は欠番・未参照。ここだけを事実の根拠にする）
+### 公式一次情報（`01` の P1〜P26。P10 は欠番・未参照。ここだけを事実の根拠にする）
 
 - P1  Models overview — https://platform.claude.com/docs/en/about-claude/models/overview
 - P2  Choosing the right model — https://platform.claude.com/docs/en/about-claude/models/choosing-a-model
@@ -61,13 +61,14 @@ Opus 5 は 2026-07-24、Fable 5.1 は 2026-09-02 リリース。あなたの学�
 - P23 Prompting Claude Fable 5.1 — https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1
 - P24 Migrating to Claude Fable 5.1 and Claude Mythos 5.1 — https://platform.claude.com/docs/en/models/fable-5-1/migration-guide
 - P25 Introducing Claude Fable 5.1 and Claude Mythos 5.1（Anthropic 公式発表） — https://www.anthropic.com/claude-fable-and-mythos-5-1
+- P26 Claude Code changelog — https://code.claude.com/docs/en/changelog
 
 **P15 の検証上の注意**：S65 / S67 / S68 / S69 / S70 / S80 は P15 を出典とする。**P15 は 2026-07-07 公開のまま Opus 5 に更新されていない**（本文は Opus 4.8 期の記述）。台帳はこれを承知の上で、model=how capable / effort=how thorough の枠組みと specialist・expert・generalist の比喩、default-first 原則を「モデル世代に依存しない一般論」として維持している。**個別モデルの推奨開始点は P13 を正とする**。P15 由来の逐語が取得できない場合は「確認不能」と明示すること（憶測で「一致」と判定しない）。
 
 ### 実施する検証（5 観点）
 
-1. **`[Official]` 記述の事実性。** `01` の各 source_id（S1〜S139。欠番：S4, S5, S52, S53。Retired：S1, S2, S3, S7, S49）の主張が、記載された出典ページ
-   （P1〜P25。P10 は欠番）の内容と一致するかを確認する。古い・誤り・過大/過小表現があれば指摘する。
+1. **`[Official]` 記述の事実性。** `01` の各 source_id（S1〜S141。欠番：S4, S5, S52, S53。Retired：S1, S2, S3, S7, S49）の主張が、記載された出典ページ
+   （P1〜P26。P10 は欠番）の内容と一致するかを確認する。古い・誤り・過大/過小表現があれば指摘する。
    特に価格・コンテキスト長・最大出力・effort 既定値・thinking 仕様・データ保持要件・
    refusal の対象領域は、公式の逐語表現と厳密に照合する。
 
@@ -103,6 +104,15 @@ Opus 5 は 2026-07-24、Fable 5.1 は 2026-09-02 リリース。あなたの学�
 
 ### 特に注意して見るべき既知の落とし穴（先入観で流さない）
 
+- **「Legacy」と「Deprecated」を混同しない（2026-09-02 に独立2系統の調査が揃って指摘した箇所）**。
+  P18 の status 表では **`claude-fable-5` も `claude-fable-5-1` も Active**（Deprecated 欄は N/A）で、
+  deprecation history に Fable 5 の告知は無い。P1 の比較UIが Fable 5 を「Legacy models (still available)」
+  見出し下に置いているのは**分類表示**であり、**deprecated になったという意味ではない**（P18 の用語定義では
+  Legacy＝「更新を受けず、将来 deprecated になりうる」で別段階）。台帳は S140 で両方を併記している。
+  Opus 4.8 についても同型の注記が S101 にある。「Legacy と書いてあるのに Active なのは誤り」と早合点しないこと。
+- **Fable 5.1 の必要 Claude Code バージョンは公式内で表記が割れている**。P11（Model configuration）は
+  "requires Claude Code v2.1.255 or later"、P26（changelog）は Fable 5.1 の追加を **v2.1.257** のエントリに置く。
+  台帳は S141 で**両方を併記**し、要件としては P11 を採っている。どちらか一方だけを見て「誤り」と判定しないこと。
 - **Fable 5 と Fable 5.1 の混同（最重要・2026-09-02 の世代交代箇所）**。Opus 4.8 → Opus 5 と
   異なり、**5 → 5.1 では方向逆転が確認されていない**。公式は「既存の Fable 5 プロンプトは変更
   なしで 5.1 でも良好に動く」（P23 冒頭・台帳 S133）と述べ、台帳はこの橋で Fable 5 の
@@ -168,7 +178,7 @@ Opus 5 は 2026-07-24、Fable 5.1 は 2026-09-02 リリース。あなたの学�
 
 ### 制約
 
-- 事実判定は **P1〜P25（P10 は欠番）の実ページ内容のみ** を根拠にする。あなたの記憶や訓練データの一般知識で
+- 事実判定は **P1〜P26（P10 は欠番）の実ページ内容のみ** を根拠にする。あなたの記憶や訓練データの一般知識で
   「こうだろう」と補完しない。
 - Web 取得ができない環境の場合：事実性（観点 1・2）は「確認不能」と明示し、代わりに観点 3・4・5
   と整合性チェック（S-id 参照・タグ規律・内部数値整合）を漏れなく実施する。憶測で「一致」と
