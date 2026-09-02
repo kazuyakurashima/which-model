@@ -113,6 +113,11 @@ Opus 5 は 2026-07-24、Fable 5.1 は 2026-09-01 リリース（公式表記。J
 - **Fable 5.1 の必要 Claude Code バージョンは公式内で表記が割れている**。P11（Model configuration）は
   "requires Claude Code v2.1.255 or later"、P26（changelog）は Fable 5.1 の追加を **v2.1.257** のエントリに置く。
   台帳は S141 で**両方を併記**し、要件としては P11 を採っている。どちらか一方だけを見て「誤り」と判定しないこと。
+- **`fable` / `best` エイリアスには Claude apps gateway の例外がある**。P26 の 2.1.257 に逐語
+  "Changed `fable` and `best` in Claude apps gateway sessions to keep resolving to Fable 5 for now …
+  pick Fable 5.1 in `/model` to use it" とある。**P11 はこの例外に触れず一般則だけを書いている**ので、
+  P11 だけを見て「gateway でも 5.1 に解決する」と判定しないこと。台帳は S142 で両方を持つ。
+  利用者向けの案内が「`/model fable` と打て」になっていたら**誤り**（gateway で別モデルが起動する）。
 - **Fable 5 と Fable 5.1 の混同（最重要・2026-09-02 の世代交代箇所）**。Opus 4.8 → Opus 5 と
   異なり、**5 → 5.1 では方向逆転が確認されていない**。公式は「既存の Fable 5 プロンプトは変更
   なしで 5.1 でも良好に動く」（P23 冒頭・台帳 S133）と述べ、台帳はこの橋で Fable 5 の
@@ -150,8 +155,9 @@ Opus 5 は 2026-07-24、Fable 5.1 は 2026-09-01 リリース（公式表記。J
   high か xhigh か、xhigh 明示指定の公式推奨がどのモデルにかかるかを P2/P9/P11/P13/P17 で照合する。
 - **effort の持ち越し（Claude Code）**。default hold が明記されているのは Fable 5 / Opus 4.8 /
   Opus 4.7 で、**Opus 5 は hold なし（前回値を持ち越す）**。Sonnet 5 は公式文に列挙されていないので
-  台帳も断定していない。**Fable 5.1 の hold の有無も 2026-09-02 時点で公式記述が未確認**（台帳・
-  判断表とも断定していない — 断定的な記述があれば指摘する）。P11 の逐語で確認する。
+  台帳も断定していない。**Fable 5.1 も hold なし**（P11 逐語
+  "Opus 5 and Fable 5.1 have no such hold"。2026-09-02 に直接確認して S97 を更新した）。
+  したがって hold を持つのは Fable 5 / Opus 4.8 / Opus 4.7 の3モデルである。P11 の逐語で確認する。
 - **Covered Model / データ保持**。Covered Model（30 日保持必須・ZDR 不可）に指定されているのは
   **Fable 5.1 / Mythos 5.1 / Fable 5 / Mythos 5 の4モデル**（P20 現行逐語 "Claude Fable 5.1,
   Claude Mythos 5.1, Claude Fable 5, and Claude Mythos 5 are designated Covered Models"。
