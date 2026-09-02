@@ -219,7 +219,7 @@ Claude Code で開発していると、指示のたびに「どのモデルを�
 5. 中身を確認し、よければ **`g` を送る**と実行される。直したいときはプロンプトを編集して送る
 
 この「選択 → 設定 → `g` で実行」の一拍が暴走を防ぎます。モデル切替を実行直前の1回だけに
-しているのは、切替先モデル（特に長時間実行向けの Fable 5）をプロンプト整形という軽作業のためだけに
+しているのは、切替先モデル（特に長時間実行向けの Fable 5.1）をプロンプト整形という軽作業のためだけに
 使わないため。プロンプト最適化は常に、今起動している（切替前の）モデルが行います。
 
 ## 仕組み（料理人とレシピ本）
@@ -251,7 +251,7 @@ Claude Code で開発していると、指示のたびに「どのモデルを�
 | `00_index.md` | 全体の使い方・読み込みルール |
 | `01_sources_evidence.md` | 根拠台帳（公式主張を source_id で管理） |
 | `02_model_selection_matrix.md` | タスク別のモデル/effort 判断表（SKILL.md が毎回読む中核） |
-| `03_fable5_prompting.md` | Fable 5 向けプロンプト最適化ガイド |
+| `03_fable51_prompting.md` | Fable 5.1 向けプロンプト最適化ガイド |
 | `04_opus5_prompting.md` | Opus 5 向けプロンプト最適化ガイド |
 | `05_sonnet5_prompting.md` | Sonnet 5 向けプロンプト最適化ガイド |
 
@@ -306,7 +306,7 @@ Confidence 付き）です。使う人は `[Heuristic]` を自分の使い方に
 
 選択UIが出たら、モデルはまだ切り替えずに候補を選びます（通常推奨／成果優先／効率優先／中止。
 根拠のある候補だけが出るので、行によっては通常推奨と中止の2つだけです）。すると今の
-モデルのまま最適化されたプロンプトが表示されて停止するので、`/model claude-fable-5` と
+モデルのまま最適化されたプロンプトが表示されて停止するので、`/model fable` と
 `/effort high` のようにモデルと effort を確定どおりに設定し（同じ設定なら不要）、中身を確認して
 **`g` を送れば**実行されます。
 
@@ -451,8 +451,8 @@ Confidence 付き）です。使う人は `[Heuristic]` を自分の使い方に
 
 上記の通り本運用では CLAUDE.md への登録は推奨しませんが、skill を使わず常時参照させたい
 場合は以下を CLAUDE.md に貼ってください。各行は `02_model_selection_matrix.md` の
-記述の要約です（根拠：S6, S9, S10, S16, S25, S29, S65, S67, S68, S71, S81, S86, S91, S98, S104。
-うち「速い対話・高頻度は Sonnet 5 / Fable 5 不使用」と「ZDR 前提の代替モデル選択」は公式事実から
+記述の要約です（根拠：S6, S25, S65, S67, S68, S71, S81, S86, S91, S98, S104, S123, S125, S127, S131。
+うち「速い対話・高頻度は Sonnet 5 / Fable 5.1 不使用」と「ZDR 前提の代替モデル選択」は公式事実から
 導く運用判断（`[Heuristic]`）。タグ・source_id はランタイムのノイズになるため省略。裏付けは
 `01_sources_evidence.md` を参照）。
 
@@ -464,7 +464,7 @@ model, consult these guides. Read only the file relevant to the current task —
 do not load all of them.
 
 - Deciding which model for a task → docs/ai-model-guides/02_model_selection_matrix.md
-- Prompting Fable 5 (claude-fable-5) → docs/ai-model-guides/03_fable5_prompting.md
+- Prompting Fable 5.1 (claude-fable-5-1) → docs/ai-model-guides/03_fable51_prompting.md
 - Prompting Opus 5 (claude-opus-5) → docs/ai-model-guides/04_opus5_prompting.md
 - Prompting Sonnet 5 (claude-sonnet-5) → docs/ai-model-guides/05_sonnet5_prompting.md
 
@@ -477,14 +477,15 @@ Quick defaults:
   "use a subagent to verify", "double-check your answer") — it self-verifies, and these cause
   over-verification. Acceptance criteria, which tests must pass, and "check against the code
   rather than assuming" are all fine.
-- Fast, high-frequency, or simple → Sonnet 5 (effort=low for simple lookups). Do not use Fable 5 for these.
-- Long, ambiguous, hours-to-weeks, end-to-end → Fable 5 (start at effort=high). Set up timeouts,
-  progress, and refusal fallback first (Claude Code falls back automatically).
+- Fast, high-frequency, or simple → Sonnet 5 (effort=low for simple lookups). Do not use Fable 5.1 for these.
+- Demanding reasoning, long-horizon agentic work, or evals still falling short on Opus 5 at higher
+  effort → Fable 5.1 (start at effort=high). Set up timeouts, progress, and refusal fallback first
+  (Claude Code falls back automatically; requires Claude Code v2.1.255+).
 - If something goes wrong, check context first (prompt clarity, CLAUDE.md, task scope) before
   touching model/effort — the fix is often upstream, not a knob.
 - Still not working? Diagnose: skipped a file / didn't run tests / didn't double-check → raise
   effort. Had all the context and clearly tried, still wrong → switch to a larger model.
-- Sensitive data under ZDR → avoid Fable 5 (Covered Model, ZDR-ineligible). Opus 4.8 and Sonnet 5
+- Sensitive data under ZDR → avoid Fable 5.1 and Fable 5 (Covered Models, ZDR-ineligible). Opus 4.8 and Sonnet 5
   are ZDR-eligible, but ZDR eligibility also depends on your org arrangement, the API features you
   use, and the surface (consumer plans and some features are out of scope).
 

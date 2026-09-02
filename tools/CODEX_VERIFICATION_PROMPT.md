@@ -16,9 +16,9 @@ Claude とは独立した「別の目」で、Anthropic 公式ドキュメント
 リポジトリ `docs/ai-model-guides/` 配下の 6 ファイル：
 
 - `00_index.md` … 全体の使い方
-- `01_sources_evidence.md` … **根拠台帳**。全 `[Official]` 記述の source_id（S1〜S106。欠番：S4, S5, S52, S53。Retired：S1, S7, S49）と公式出典（P1〜P21。欠番：P10）の対応表。ここが正の起点。
+- `01_sources_evidence.md` … **根拠台帳**。全 `[Official]` 記述の source_id（S1〜S139。欠番：S4, S5, S52, S53。Retired：S1, S2, S3, S7, S49）と公式出典（P1〜P25。欠番：P10）の対応表。ここが正の起点。
 - `02_model_selection_matrix.md` … タスク×モデル×effort の判断表
-- `03_fable5_prompting.md` / `04_opus5_prompting.md` / `05_sonnet5_prompting.md` … モデル別プロンプティングガイド
+- `03_fable51_prompting.md` / `04_opus5_prompting.md` / `05_sonnet5_prompting.md` … モデル別プロンプティングガイド
 
 （補助として、リポジトリ README.md 末尾の CLAUDE.md 追記スニペットも同じタグ規律に従う。）
 
@@ -26,13 +26,15 @@ Claude とは独立した「別の目」で、Anthropic 公式ドキュメント
 - `[Official]` … Anthropic 公式で確認できる事実。必ず `01` の source_id に紐づく。
 - `[Heuristic]` … プロジェクト固有の運用仮説。公式裏付けなし。Confidence 付き。
 
-対象モデルは Claude Fable 5 / **Opus 5** / Sonnet 5 の 3 つ（いずれも 2026 年のモデル。
-Opus 5 は 2026-07-24 リリース。あなたの学習データより新しい可能性が高いが、実在する）。
-**Opus 4.8 は選定対象から外れたが公式には Active** で、フォールバック先・移行元・互換性の
-文脈では台帳に残っている（対象欄に「選定対象外・参照用」と明記されている主張がそれ）。
-「4.8 の記述が残っているのは誤り」と早合点しないこと。
+対象モデルは Claude **Fable 5.1** / **Opus 5** / Sonnet 5 の 3 つ（いずれも 2026 年のモデル。
+Opus 5 は 2026-07-24、Fable 5.1 は 2026-09-02 リリース。あなたの学習データより新しい可能性が
+高いが、実在する）。
+**Opus 4.8 と Fable 5 は選定対象から外れたが提供は継続**しており（Fable 5 は P1 の
+"Legacy models (still available)"）、フォールバック先・移行元・互換性・橋（S133）の文脈では
+台帳に残っている（対象欄に「選定対象外・参照用」または「Fable 5, Fable 5.1（S133 の橋で適用）」
+と明記されている主張がそれ）。「4.8 や Fable 5 の記述が残っているのは誤り」と早合点しないこと。
 
-### 公式一次情報（`01` の P1〜P21。P10 は欠番・未参照。ここだけを事実の根拠にする）
+### 公式一次情報（`01` の P1〜P25。P10 は欠番・未参照。ここだけを事実の根拠にする）
 
 - P1  Models overview — https://platform.claude.com/docs/en/about-claude/models/overview
 - P2  Choosing the right model — https://platform.claude.com/docs/en/about-claude/models/choosing-a-model
@@ -54,14 +56,18 @@ Opus 5 は 2026-07-24 リリース。あなたの学習データより新しい�
 - P18 Model deprecations — https://platform.claude.com/docs/en/about-claude/model-deprecations
 - P19 Fast mode — https://platform.claude.com/docs/en/build-with-claude/fast-mode
 - P20 API and data retention — https://platform.claude.com/docs/en/manage-claude/api-and-data-retention
-- P21 Claude Fable 5 on your plan（Anthropic 公式サポート記事） — https://support.claude.com/en/articles/15424964-claude-fable-5-on-your-plan
+- P21 Claude Fable models on your plan（Anthropic 公式サポート記事。旧題「Claude Fable 5 on your plan」から改題・article id 同一） — https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan
+- P22 What's new in Claude Fable 5.1 — https://platform.claude.com/docs/en/models/fable-5-1/whats-new-fable-5-1
+- P23 Prompting Claude Fable 5.1 — https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1
+- P24 Migrating to Claude Fable 5.1 and Claude Mythos 5.1 — https://platform.claude.com/docs/en/models/fable-5-1/migration-guide
+- P25 Introducing Claude Fable 5.1 and Claude Mythos 5.1（Anthropic 公式発表） — https://www.anthropic.com/claude-fable-and-mythos-5-1
 
 **P15 の検証上の注意**：S65 / S67 / S68 / S69 / S70 / S80 は P15 を出典とする。**P15 は 2026-07-07 公開のまま Opus 5 に更新されていない**（本文は Opus 4.8 期の記述）。台帳はこれを承知の上で、model=how capable / effort=how thorough の枠組みと specialist・expert・generalist の比喩、default-first 原則を「モデル世代に依存しない一般論」として維持している。**個別モデルの推奨開始点は P13 を正とする**。P15 由来の逐語が取得できない場合は「確認不能」と明示すること（憶測で「一致」と判定しない）。
 
 ### 実施する検証（5 観点）
 
-1. **`[Official]` 記述の事実性。** `01` の各 source_id（S1〜S106。欠番：S4, S5, S52, S53。Retired：S1, S7, S49）の主張が、記載された出典ページ
-   （P1〜P21。P10 は欠番）の内容と一致するかを確認する。古い・誤り・過大/過小表現があれば指摘する。
+1. **`[Official]` 記述の事実性。** `01` の各 source_id（S1〜S139。欠番：S4, S5, S52, S53。Retired：S1, S2, S3, S7, S49）の主張が、記載された出典ページ
+   （P1〜P25。P10 は欠番）の内容と一致するかを確認する。古い・誤り・過大/過小表現があれば指摘する。
    特に価格・コンテキスト長・最大出力・effort 既定値・thinking 仕様・データ保持要件・
    refusal の対象領域は、公式の逐語表現と厳密に照合する。
 
@@ -86,16 +92,28 @@ Opus 5 は 2026-07-24 リリース。あなたの学習データより新しい�
   source_id（欠番の意図的宣言を除く）を洗い出す。
 - **タグ規律**：`[Official]` の記述に source_id が付いているか。`[Official]` と `[Heuristic]` の
   取り違えがないか。
-- **モデル ID・数値の内部整合**：`claude-fable-5` / **`claude-opus-5`** / `claude-sonnet-5`、
-  価格（$10/$50, $5/$25, $3/$15）、2576px、~30% トークナイザ増（Sonnet 5）、64k、128k、512 トークン
-  （Opus 5 のキャッシュ最小長）、v2.1.219、2026-08-31 導入価格などの数値がファイル間で食い違っていないか。
-- **旧モデル名の残存**：`Opus 4.8` / `claude-opus-4-8` / `opus48` が残っている箇所が、
-  すべて意図的なもの（フォールバック先・ライフサイクル・移行元・Retired 注記・CHANGELOG）か。
-  選定対象や第一/第二候補として 4.8 が残っていれば誤り。
+- **モデル ID・数値の内部整合**：**`claude-fable-5-1`** / **`claude-opus-5`** / `claude-sonnet-5`、
+  価格（$10/$50, $5/$25, $3/$15）、キャッシュ読み $0.25/MTok（Fable 5.1 のみ 0.025 倍）、2576px、
+  ~30% トークナイザ増（Sonnet 5）、64k、128k、512 トークン（キャッシュ最小長）、v2.1.219（Opus 5）、
+  **v2.1.255（Fable 5.1）**、2026-08-31 導入価格などの数値がファイル間で食い違っていないか。
+- **旧モデル名の残存**：`Opus 4.8` / `claude-opus-4-8` / `opus48`、および **`Fable 5`（単体）/
+  `claude-fable-5`（`-1` なし）/ `fable5`** が残っている箇所が、すべて意図的なもの
+  （フォールバック先・ライフサイクル・移行元・橋〈S133〉・Retired 注記・参照用・CHANGELOG）か。
+  選定対象や候補として Fable 5（5.1 でない方）や 4.8 が残っていれば誤り。
 
 ### 特に注意して見るべき既知の落とし穴（先入観で流さない）
 
-- **Opus 4.8 と Opus 5 の混同（最重要）**。**方向が逆転している挙動がある**：4.8 は
+- **Fable 5 と Fable 5.1 の混同（最重要・2026-09-02 の世代交代箇所）**。Opus 4.8 → Opus 5 と
+  異なり、**5 → 5.1 では方向逆転が確認されていない**。公式は「既存の Fable 5 プロンプトは変更
+  なしで 5.1 でも良好に動く」（P23 冒頭・台帳 S133）と述べ、台帳はこの橋で Fable 5 の
+  プロンプティング原則を 5.1 に適用している（対象欄「Fable 5, Fable 5.1（S133 の橋で適用）」）。
+  **これを「5 の記述を 5.1 に流用した誤り」と判定しないこと**。一方で次は 5.1 固有なので
+  5 と取り違えていないかを見る：キャッシュ読み $0.25/MTok（0.025 倍）、per-message effort
+  （beta。**Fable 5 は 400**）、forced tool use 廃止（`tool_choice: any/tool` → 400）、
+  thinking ブロックの一方向性と履歴 append-only 要件、effort 昇格先に max が明示
+  （P13「xhigh **or max** for the most capability-sensitive」）、挙動差7点（P22
+  "Changed from Claude Fable 5"）、誤検知の減少と vulnerability-finding permitted（P23）。
+- **Opus 4.8 と Opus 5 の混同**。**方向が逆転している挙動がある**：4.8 は
   「サブエージェントは少なめに起動」「進捗更新は既定で高品質だから強制スキャフォールドを外す」だが、
   Opus 5 は「委譲が積極的すぎるので条件と上限を明示」「ナレーションが多いので頻度と形を指定」。
   また **Opus 5 は自己検証するので検証指示を削除する**のが公式推奨で、4.8 のガイドにあった
@@ -105,7 +123,7 @@ Opus 5 は 2026-07-24 リリース。あなたの学習データより新しい�
   （4.7/4.8 は「evals で headroom を示すときのみ」／Opus 5 は「無制限のトークン支出に見合うとき」）を
   取り違えていないか。P13 のモデル別セクションで区別して確認する。
 - **thinking の既定**。Opus 4.8 は明示指定まで off、**Opus 5 は既定 on**、Sonnet 5 も既定 on、
-  Fable 5 は常時 on（disable 不可）。**Opus 5 では `thinking:{"type":"disabled"}` と effort
+  Fable 5 / Fable 5.1 は常時 on（disable 不可。P22 の Unchanged 節）。**Opus 5 では `thinking:{"type":"disabled"}` と effort
   xhigh/max の併用が 400 エラー**（4.8 では独立だった）。P16/P12/P13 で確認する。
 - **Opus 5 と Opus 4.8 / 4.7 で effort の推奨開始点が違う（最重要・2026-07-25 に公式記述が変わった箇所）**。
   現行の公式は次のように**モデルを分けて**書いている。混同していないか厳しく見ること：
@@ -122,31 +140,35 @@ Opus 5 は 2026-07-24 リリース。あなたの学習データより新しい�
   high か xhigh か、xhigh 明示指定の公式推奨がどのモデルにかかるかを P2/P9/P11/P13/P17 で照合する。
 - **effort の持ち越し（Claude Code）**。default hold が明記されているのは Fable 5 / Opus 4.8 /
   Opus 4.7 で、**Opus 5 は hold なし（前回値を持ち越す）**。Sonnet 5 は公式文に列挙されていないので
-  台帳も断定していない。P11 の逐語で確認し、Sonnet 5 について断定的な記述があれば指摘する。
+  台帳も断定していない。**Fable 5.1 の hold の有無も 2026-09-02 時点で公式記述が未確認**（台帳・
+  判断表とも断定していない — 断定的な記述があれば指摘する）。P11 の逐語で確認する。
 - **Covered Model / データ保持**。Covered Model（30 日保持必須・ZDR 不可）に指定されているのは
-  **Fable 5 と Mythos 5 のみ**。P12 の "Both models require 30-day data retention..." の "Both" が
-  何と何を指すかを本文の文脈で確認する（Opus 5 と読み違えると誤判定になる）。**Opus 4.8 は
-  "remains available under ZDR"**、Sonnet 5 も ZDR 可。**Opus 5 は Covered Model 指定なし**だが
-  台帳は「全サーフェスで ZDR 可」とは書いていない（ZDR 適格性は機能・サーフェス・契約に依存）。
-  P20 の feature eligibility 表も併せて確認する。
+  **Fable 5.1 / Mythos 5.1 / Fable 5 / Mythos 5 の4モデル**（P20 現行逐語 "Claude Fable 5.1,
+  Claude Mythos 5.1, Claude Fable 5, and Claude Mythos 5 are designated Covered Models"。
+  2026-09-02 に2モデルから拡大した）。**Opus 4.8 は "remains available under ZDR"**、Sonnet 5 も
+  ZDR 可。**Opus 5 は Covered Model 指定なし**だが台帳は「全サーフェスで ZDR 可」とは書いていない
+  （ZDR 適格性は機能・サーフェス・契約に依存）。P20 の feature eligibility 表も併せて確認する。
 - **refusal の対象と誤検知**。安全分類器の対象領域（攻撃的サイバー技術・生物/生命科学・思考抽出）と、
-  「良性の作業でも誤検知しうる」旨が **どのモデルについて公式に明記されているか**（Fable 5 のみか、
-  Sonnet 5 にも及ぶか）を P3/P5/P7 で区別する。
+  「良性の作業でも誤検知しうる」旨が **どのモデルについて公式に明記されているか**（Fable 系のみか、
+  Sonnet 5 にも及ぶか）を P3/P5/P7/P22/P23 で区別する。**Fable 5.1 は誤検知が 5 のローンチ時より
+  減り、ソースコードの脆弱性発見は許可と明記**（P23）— 5 の記述をそのまま流用していないか。
 - **フォールバック**。**サーフェスで挙動が違う**：API はオプトイン（`fallbacks` パラメータ, beta。
-  `"default"` でカテゴリ別ルーティング）で、Fable 5 の推奨フォールバック先は Opus 4.8。
-  **Claude Code はカテゴリ別に自動**（Fable 5 の bio → Opus 5、Fable 5 の cyber → Opus 4.8、
-  Opus 5 の cyber → Opus 4.8、Opus 5 の bio はフォールバックなしで refusal）。P11/P14 で確認する。
+  `"default"` でカテゴリ別ルーティング）で、Fable 5 の推奨フォールバック先は Opus 4.8、
+  **Fable 5.1 の許可フォールバック先は Opus 4.8 と Opus 5**（P22）。
+  **Claude Code はカテゴリ別に自動**（**Fable 5.1 / Fable 5** の bio → Opus 5、cyber → Opus 4.8、
+  Opus 5 の cyber → Opus 4.8、Opus 5 の bio はフォールバックなしで refusal）。P11/P14/P22 で確認する。
   refusal カテゴリの現行列挙値（cyber / bio / frontier_llm / reasoning_extraction / general_harms）も
   P14 で照合する。
 - **`opus` エイリアスの解決先**。プロバイダごとに違う（Anthropic API / Claude Platform on AWS /
   Bedrock / Google Cloud → Opus 5、**Microsoft Foundry → Opus 4.6**）。P11 の表で確認する。
-- **プラン差**。Fable 5 は全有料プランで「選択可能」だが課金形態が違う（Max / Team Premium /
-  legacy seat-based Enterprise Premium 席は内包・週間上限の 50%、Pro / Team Standard 席は
-  usage credits）。「Pro では使えない」と書いていれば誤り。P21 で確認する。
+- **プラン差**。Fable 5.1 と Fable 5 は全有料プランで「選択可能」だが課金形態が違う（Max /
+  Team Premium / legacy seat-based Enterprise Premium 席は内包・週間上限の 50% — **5.1 と 5 の
+  合算**、Pro / Team Standard 席は usage credits）。「Pro では使えない」と書いていれば誤り。
+  P21（改題後の「Claude Fable models on your plan」）で確認する。
 
 ### 制約
 
-- 事実判定は **P1〜P21（P10 は欠番）の実ページ内容のみ** を根拠にする。あなたの記憶や訓練データの一般知識で
+- 事実判定は **P1〜P25（P10 は欠番）の実ページ内容のみ** を根拠にする。あなたの記憶や訓練データの一般知識で
   「こうだろう」と補完しない。
 - Web 取得ができない環境の場合：事実性（観点 1・2）は「確認不能」と明示し、代わりに観点 3・4・5
   と整合性チェック（S-id 参照・タグ規律・内部数値整合）を漏れなく実施する。憶測で「一致」と
