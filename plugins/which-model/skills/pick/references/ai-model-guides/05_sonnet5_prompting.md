@@ -95,7 +95,7 @@ API model string: `claude-sonnet-5`（Claude Code では `sonnet` エイリア�
 
 ## 7. 検証チェックリスト（投げる前に）
 
-- [ ] このタスクは Sonnet 5 で十分か（難所なら Opus 5、長時間・端から端まで なら Fable 5）。
+- [ ] このタスクは Sonnet 5 で十分か（難所なら Opus 5、長時間・端から端まで なら Fable 5.1）。
 - [ ] 簡潔さ・粒度を正の例で示したか（否定指示になっていないか）。（S39）
 - [ ] max_tokens を新トークナイザ（+30%）込みで見直したか。（S42）
 - [ ] high 以上なら max_tokens に余裕があるか。（S43）
