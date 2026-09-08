@@ -154,10 +154,10 @@ Updated: 2026-08-12（**第二候補列を廃止し、「通常推奨・成果�
 
 **対象範囲**：公式のデータ保持ページが扱うのは Claude API・Claude Platform on AWS・Microsoft Foundry（Anthropic がデータ処理者となるサーフェス）。**ZDR の適用が明示されているのは API の適格機能・条件付きの Claude Code・Claude Platform on AWS**（Foundry は ZDR 適用範囲として明示されていない）。Amazon Bedrock / Google Cloud はクラウド事業者がデータ処理者なので各プラットフォームの資料を見る。`[Official]` S104
 
-- **Fable 5.1 / Mythos 5.1 / Fable 5 / Mythos 5 の4モデルは Covered Model で 30 日データ保持が必須。ZDR では利用不可**（ZDR 契約組織はワークスペース単位の 30 日保持オーバーライドで利用可）。`[Official]` S127, S104
+- **Fable 5.1 / Mythos 5.1 / Fable 5 / Mythos 5 の4モデルは Covered Model で 30 日データ保持が必須。ZDR では利用不可**（ZDR 契約組織はワークスペース単位の 30 日保持オーバーライドで利用可）。**例外は Enterprise Frontier Safeguards（EFS）**：要件を満たす組織には、EFS への移行措置として**期間限定**で Fable 5 / 5.1 の ZDR 利用が提供される（2026 年秋から段階展開）。`[Official]` S127, S104
 - **Opus 4.8 は ZDR 可**（公式に "remains available under ZDR"）。**Sonnet 5 も ZDR 可**。`[Official]` S104
 - **Opus 5 は Covered Model の指定がなく、モデル固有の保持要件の記載もない。** ただし ZDR 適格性はモデルだけでなく利用する API 機能・サーフェス・組織契約に依存するため、「Opus 5 なら全サーフェスで ZDR 可」とは扱わないこと。`[Official]` S104
-- 機微データを扱うパイプラインで ZDR 前提のときは Fable 5.1（と Fable 5）を避け、Opus 4.8 / Sonnet 5 を使う。`[Heuristic]` / Confidence: High / Basis: S127・S104 の公式記述。
+- 機微データを扱うパイプラインで ZDR 前提のときは Fable 5.1（と Fable 5）を避け、Opus 4.8 / Sonnet 5 を使う（EFS の対象組織はこの限りでない — S127）。`[Heuristic]` / Confidence: High / Basis: S127・S104 の公式記述。
 
 ## 注意（プラン差・Claude Code の運用）
 
