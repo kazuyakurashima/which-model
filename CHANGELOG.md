@@ -79,6 +79,28 @@ high のまま（S128）、**16行×3プロファイルでモデル×effort が�
 
 - `tools/CODEX_VERIFICATION_PROMPT.md` の S-id 範囲が「S1〜S106」のまま S107〜S121 を
   含んでいなかった直し漏れ（2026-08-11 監査時の追随漏れ）を今回まとめて解消
+- **Sonnet 5 の価格が古かったのを訂正**（タグ前の逐語再確認で検出。2026-09-08）。台帳 S15 は
+  「入力 $3 / 出力 $15、2026-08-31 まで導入価格 $2/$10」としていたが、公式の Pricing ページ
+  （**P28 を新設**）に「導入価格 $2/$10 が**標準価格になった**／$3/$15 への値上げは**行われない**」
+  という注記が入っていた。**S15 を $2/$10 に訂正**し、`02` の単価順序の記述（Sonnet 5 ＜ Opus 5 ＜
+  Fable 5.1）と `05` の価格・Basis・Last verified 注記を追随させた。**判断表への影響はゼロ**
+  （単価の順序は変わらないため、効率優先の下限が Sonnet 5 / low である結論は不変）
+
+### タグ前の逐語再確認（2026-09-08）
+
+リリース当日の観測を含むため、5.0.0 の教訓（公式ページは数時間単位で変わりうる）に従って重要な
+推奨の逐語を再取得した。**4点のうち3点は完全一致、1点で上記の価格ズレを検出した。**
+
+| 再確認した逐語 | 出典 | 結果 |
+| --- | --- | --- |
+| effort 開始点（S128）"Claude Fable 5.1 supports all five effort levels. Start with `high`, the default. Step up to `xhigh` or `max` for the most capability-sensitive agentic and coding work…" | P13 | 一致 |
+| 選定ガイダンス（S123）"Use Claude Fable 5.1 for demanding reasoning and long-horizon agentic work, or when your evals on Claude Opus 5 at higher effort still fall short" ／ "If your evals at `xhigh` or `max` effort still fall short…, move to Claude Fable 5.1" ／ 選定マトリクス "The highest available capability → Claude Fable 5.1" | P1, P2 | 一致 |
+| フォールバック先（S131）"The permitted fallback targets for Claude Fable 5.1 are Claude Opus 4.8 and Claude Opus 5" | P22 | 一致 |
+| Sonnet 5 の価格（S15） | P1, P28 | **不一致 → 訂正**（上記 Fixed 参照） |
+
+あわせて S122（"Legacy models (still available)" に Fable 5）・S125（比較レイテンシ Slower、
+$10/$50 対 $5/$25）・S126（1M ウィンドウ全体が標準単価、cache read $0.25）・S103（fast mode は
+Opus 5 / Opus 4.8 のみ）も現行本文で一致を確認した。
 
 ### 独立2系統の Deep Research による事後照合（2026-09-02）
 

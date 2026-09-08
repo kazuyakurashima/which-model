@@ -1,6 +1,6 @@
 # 05. Sonnet 5 プロンプティングガイド（Claude Code 用）
 
-Last verified: 2026-07-25（Opus 5 リリース後の再検証：P5〈What's new in Claude Sonnet 5〉と P9〈Prompting Claude Sonnet 5〉を直接取得し、本ファイルの [Official] 記述がすべて現行本文に存続することを確認。ポジショニング〈Opus 級に移らずに済む選択肢〉・effort 推奨・導入価格の期限 2026-08-31 も現行どおり。両ページに Opus 5 への言及はない。旧履歴：2026-07-06）
+Last verified: 2026-07-25（Opus 5 リリース後の再検証：P5〈What's new in Claude Sonnet 5〉と P9〈Prompting Claude Sonnet 5〉を直接取得し、本ファイルの [Official] 記述がすべて現行本文に存続することを確認。ポジショニング〈Opus 級に移らずに済む選択肢〉・effort 推奨も現行どおり。両ページに Opus 5 への言及はない。**2026-09-08 に価格のみ訂正**：導入価格 $2/$10 が標準価格になり $3/$15 への値上げは行われない〈S15・P28〉。旧履歴：2026-07-06）
 API model string: `claude-sonnet-5`（Claude Code では `sonnet` エイリアスが **Anthropic API のときだけ** Sonnet 5 に解決する。Claude Platform on AWS は Sonnet 4.6、Bedrock / Google Cloud / Foundry は Sonnet 4.5 に解決するため、それらではフルモデル名で指定する — S94。Sonnet 5 は Claude Code v2.1.197 以降が必要 — S96）
 
 タグ：`[Official]`（source_id 付き）／`[Heuristic]`（Confidence 付き）
@@ -11,14 +11,14 @@ API model string: `claude-sonnet-5`（Claude Code では `sonnet` エイリア�
 - Sonnet 4.6 に対する能力向上版で同価格。最大の向上はコーディングとエージェント作業（S12）。
 - adaptive thinking が既定 on（4.6 は off だった）。off にするには `thinking:{type:"disabled"}`（S18）。manual extended thinking は 400（S17）。
 - effort の既定は high（Claude API / Claude Code とも）（S71）。Sonnet ティアで xhigh に対応するのは Sonnet 5 のみで、最難のコーディング/エージェントタスクは xhigh へ（S74）。medium ≈ Sonnet 4.6 の high、high ≈ Sonnet 4.6 の max が目安（S57）。
-- 価格 $3/$15 per MTok（2026-08-31 まで導入価格 $2/$10）、1M コンテキスト（既定）、最大出力 128k（同期 Messages API の値。Batch API では beta で最大 300k）（S15）。
+- 価格 $2/$10 per MTok（**launch 時の導入価格が標準価格になり、$3/$15 への値上げは行われない** — S15）、1M コンテキスト（既定）、最大出力 128k（同期 Messages API の値。Batch API では beta で最大 300k）（S15）。
 - 新トークナイザで同じテキストが約 30% 多くトークン化される（S42）。
 - 初の Sonnet ティアのリアルタイム・サイバーセキュリティ保護あり（S44）。computer use は最大 2576px / 3.75MP に対応（S60）。
 
 ## 2. このプロジェクトでの最適タスク
 
 - **`[Official]`** コーディング・エージェント作業全般（最大の向上点）（S12）。
-- **`[Heuristic]`** 日々の反復実装（主力）、テスト設計、ドキュメント作成、短い調査・要約。 / Confidence: High / Basis: $3/$15 の価格（S15）＋高頻度タスクという性質＋コーディング向上（S12）。
+- **`[Heuristic]`** 日々の反復実装（主力）、テスト設計、ドキュメント作成、短い調査・要約。 / Confidence: High / Basis: $2/$10 の価格（S15）＋高頻度タスクという性質＋コーディング向上（S12）。
 
 ## 3. プロンプティング原則 `[Official]`
 
