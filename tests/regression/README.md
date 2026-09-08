@@ -410,7 +410,21 @@ skill は（妥当に）「判定できない」へ落ちる。矛盾入力で�
 | 8b | **表示は 1 回合格。読んだファイルは headless で 1 回合格** | 対話環境では `確定モデル：Fable 5.1 / effort=high` を確認したが、**読んだファイル名がスクリーンショットに写っていない**（`Ran 1 shell command` と折りたたまれた。skill が Read ではなく shell 経由でガイドを読んだため）。代替として headless セッション 3 のトランスクリプトを直接確認し、`03_fable51_prompting.md` を Read していて旧 `03_fable5_prompting.md` を探していないことを確認した。**対話経路での Read 確認は未取得** |
 | 8c | **1 回合格** | 17 行・推定表示 34 行の長文 → `p model fable high`。「直接指定を受け取りました。確定：Fable 5.1 / effort=high。」と表示し、`p` を二度求めずにフェーズ2まで進んだ |
 | 8d | **合格** | `grep -rn 'claude-fable-5"\|claude-fable-5 \|03_fable5_prompting' plugins/which-model/` のヒットは 1 件のみで、`01_sources_evidence.md` の **P7（Fable 5 のプロンプトガイド URL）**。選定対象外・参照用の出典行なので裁定は合格 |
-| 8e | **未実施（要 v2.1.255+）** | 実施環境が 2.1.232。skill はモデルを切り替えず表示するだけなので他項目には影響しない |
+| 8e | **実施したが確認できず（この接続経路では成立しない）** | Claude Code **2.1.263**（要件 v2.1.255+ は満たす）、ターミナルから `claude --plugin-dir ./plugins/which-model`。**`/model` の一覧に Fable 5.1 が現れず、Fable 5 までしか出なかった。** 接続経路は **Claude apps gateway**（`organizationType: claude_max` / `billingType: stripe_subscription`、`ANTHROPIC_API_KEY` 未設定）。S142 の公式逐語「gateways not yet configured for Fable 5.1 reject it」と整合する観測で、**バージョン不足ではなく gateway 側が Fable 5.1 に未対応**。skill はモデルを切り替えず表示するだけなので他項目には影響しない |
+
+**8e が明らかにしたこと（記録として残す）**
+
+この経路では **skill の案内どおりに操作しても Fable 5.1 に到達できない。** 8e は「案内の実行可能性」を
+測る唯一の項目なので、これは skill の動作不良ではなく**案内の不備**を指す：README と `SKILL.md` は
+「`/model` の一覧から Fable 5.1 を選ぶ」としか書いておらず、**一覧に無い場合の行き先を書いていない**。
+
+**確認できた事実の切り分け**
+
+| | 内容 |
+| --- | --- |
+| `[Official]`（S142） | gateway セッションでは `fable` / `best` は当面 Fable 5 に解決する。**Fable 5.1 に未対応の gateway はこれを拒否する**。使うには `/model` で明示選択する |
+| 観測（2026-09-08） | Claude Max サブスクリプション・Claude Code 2.1.263 の**ターミナル**セッションで、`/model` の一覧に Fable 5.1 が**存在しなかった** |
+| 言えないこと | 「すべての gateway 経路で選べない」とは言えない（1 経路 1 回の観測）。gateway 側の対応は時期で変わりうるので、**この結果は日付とセットで読む** |
 
 **再現した既知の未決事項（7.0.1 で扱う。新規の欠陥ではない）**
 
