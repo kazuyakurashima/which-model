@@ -369,9 +369,15 @@ Fable 5.1 が実際に必要なのは **8e だけ**（実使用モデルの確�
 
 | 項目 | 値 |
 | --- | --- |
-| Claude Code | 2.1.232（**v2.1.255 未満**。8e はこの環境では実施できない） |
+| Claude Code | **測定ごとに異なる。トランスクリプトの `version` フィールドで確認した値を書く。** 対話環境（7a〜7h・8a・8b・7d 再実行）＝ **2.1.232**／headless（7i〜7k・8c）＝ **2.1.263**。同日中に 2.1.232 → 2.1.263 の更新が入り、**起動中の拡張ホストが更新前のコードを保持していた**ため、同じ日の測定でバージョンが割れた |
 | 対話環境（7a〜7h・8a・8b） | `claude --plugin-dir ./plugins/which-model`。Opus 5 / effort=high。**依頼ごとに別セッション**（`/clear`）。スクリーンショットで判定 |
 | headless（7i〜7k・8c） | `claude --plugin-dir <リポジトリ>/plugins/which-model --model sonnet --allowedTools Read -p`（`/tmp/wm-800-accept` 配下・新規セッション。多ターンは固定 `--session-id` → `--resume`） |
+
+**`claude --version` の値を測定環境のバージョンとして記録しない。** 2026-09-08 はこれで誤った記録を
+作った。`claude --version` は**そのとき PATH にある実行体**を答えるだけで、**すでに起動している
+セッションのバージョンとは一致しない**（更新が入ると乖離する）。測定環境のバージョンは
+`~/.claude/projects/<project>/<session-id>.jsonl` の `version` フィールドを読んで確定する。
+この誤りにより「8e は v2.1.255 未満なので実施できない」と一度判断したが、実際には実施可能だった。
 | 機械ゲート | `claude plugin validate . --strict` / `… ./plugins/which-model --strict` / `tools/check-ledger-consistency.py` / `tools/sync-bundled-guides.sh --check` の4本とも合格 |
 
 | # | 結果 | 備考 |
