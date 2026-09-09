@@ -8,7 +8,7 @@ API model string: `claude-sonnet-5`（Claude Code では `sonnet` エイリア�
 ## 1. 公式ポジショニング `[Official]`
 
 - Sonnet ティアで速度と知性の最良の組み合わせ。特に強いのはコーディング・エージェント作業で、Opus 級に移らずにより高い能力が必要なワークロードの選択肢（S11）。
-- Sonnet 4.6 に対する能力向上版で同価格。最大の向上はコーディングとエージェント作業（S12）。
+- Sonnet 4.6 に対する能力向上版。最大の向上はコーディングとエージェント作業（S12）。**価格は同一ではない**（Sonnet 5 は $2/$10、Sonnet 4.6 は $3/$15 — S15）。
 - adaptive thinking が既定 on（4.6 は off だった）。off にするには `thinking:{type:"disabled"}`（S18）。manual extended thinking は 400（S17）。
 - effort の既定は high（Claude API / Claude Code とも）（S71）。Sonnet ティアで xhigh に対応するのは Sonnet 5 のみで、最難のコーディング/エージェントタスクは xhigh へ（S74）。medium ≈ Sonnet 4.6 の high、high ≈ Sonnet 4.6 の max が目安（S57）。
 - 価格 $2/$10 per MTok（**launch 時の導入価格が標準価格になり、$3/$15 への値上げは行われない** — S15）、1M コンテキスト（既定）、最大出力 128k（同期 Messages API の値。Batch API では beta で最大 300k）（S15）。
