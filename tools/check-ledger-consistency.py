@@ -24,9 +24,9 @@ from pathlib import Path
 
 BASE = Path(__file__).resolve().parent.parent / "docs" / "ai-model-guides"
 LEDGER = BASE / "01_sources_evidence.md"
-CITING = ["00_index.md", "02_model_selection_matrix.md", "03_fable5_prompting.md",
+CITING = ["00_index.md", "02_model_selection_matrix.md", "03_fable51_prompting.md",
           "04_opus5_prompting.md", "05_sonnet5_prompting.md"]
-MODEL_GUIDES = {"03_fable5_prompting.md": "Fable 5",
+MODEL_GUIDES = {"03_fable51_prompting.md": "Fable 5.1",
                 "04_opus5_prompting.md": "Opus 5",
                 "05_sonnet5_prompting.md": "Sonnet 5"}
 # 「対象」欄がこれらを含む主張は、どのガイドから引いてもよい
@@ -94,7 +94,9 @@ def main():
         m = re.search(r"## 8\. 出典\n+(.*?)(?:\n\n|\Z)", txt, re.S)
         for sid in sorted(cited_ids(m.group(1)), key=lambda x: int(x[1:])):
             tgt = ledger[sid][0]
-            if any(g in tgt for g in GENERIC_TARGETS) or model in tgt:
+            # モデル名は境界付きで照合する（"Fable 5" が "Fable 5.1" に誤マッチしないように。
+            # MODEL_GUIDES の値の更新漏れが「無音の合格」ではなく警告として現れる）
+            if any(g in tgt for g in GENERIC_TARGETS) or re.search(re.escape(model) + r"(?![\d.])", tgt):
                 continue
             warnings.append(f"{f}（{model}）: {sid} の対象欄は「{tgt}」— "
                             f"{model} が含まれない。意図的な他モデル参照か確認する")

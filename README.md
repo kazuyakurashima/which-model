@@ -36,19 +36,21 @@
 
 **2. フェーズ1：通常推奨と、条件を満たしたプロファイルの候補が選択UIで表示される**
 
-![選択UI「Model」。上部に依頼「/which-model:pick ログインの仕組みを、壊れないように少しずつ確認しながら全部作り直したい」と「Read 1 file」。質問文は「どのモデルで最適化しますか？」、続けて「成果優先は条件つきの候補です（要求品質がモデルの能力上限に強く依存すると事前に判断できる場合）。条件を満たすと分かっている場合だけ指定してください。」「提示した候補以外のモデルも指定できます。その場合は推奨ではなく、あなたの指定として扱います。」「判断材料：Last verified 2026-08-11（モデルの仕様・価格は陳腐化する。古ければ更新を）」「選択後に最適化プロンプトが表示されない場合は、次のメッセージで半角の p を送ってください。」。選択肢は 1. 通常推奨: Fable 5 / high（一度に収まらない大きな移行を任せるのに向くモデルです）、2. 効率優先: Opus 5 / xhigh（段階を刻んで進めたいとき。テストや受入基準で各段階を確認できる場合。単価は下がりますが、手戻りが増えると総コストは逆転しえます）、3. 中止（何もせず終了する）、4. Type something.（自由入力）、5. Chat about this。成果優先は条件を判定できないため選択肢に出ていない。最下部に「Enter to select · ↑/↓ to navigate · Esc to cancel」](docs/images/demo-2-phase1.png)
+![選択UI「Model」。上部に依頼「/which-model:pick ログインの仕組みを、壊れないように少しずつ確認しながら全部作り直したい」と「Ran 5 shell commands」。質問文は「どのモデルで最適化しますか？」、続けて「成果優先は条件つきの候補です（通常の設定では品質要件を満たせず、能力の余力を最大化する必要があると事前に分かっている場合）。条件を満たすと分かっている場合だけ指定してください。」「判断材料：Last verified 2026-09-02（モデルの仕様・価格は陳腐化する。古ければ更新を）」「選択後に最適化プロンプトが表示されない場合は、次のメッセージで半角の p を送ってください。」「提示した候補以外のモデルも指定できます。その場合は推奨ではなく、あなたの指定として扱います。」。選択肢は 1. 通常推奨: Fable 5.1 / high（一度に収まらない大きな移行を任せるのに向くモデルです）、2. 効率優先: Opus 5 / xhigh（段階を刻んで進めたいとき。テストや受入基準で各段階を確認できる場合。単価は下がりますが、手戻りが増えると総コストは逆転しえます）、3. 中止（何もせず終了する）、4. Type something.（自由入力）、5. Chat about this。成果優先は条件を判定できないため選択肢に出ていない。最下部に「Enter to select · ↑/↓ to navigate · Esc to cancel」](docs/images/demo-2-phase1.png)
 
 **3. モデルを選ぶと、フェーズ2：確定モデル向けに最適化したプロンプトが表示される（まだ実行はしない）**
 
-![「── which-model: 最適化プロンプト ──」の表示。確定モデル：Fable 5 / effort=high。最適化後プロンプトは Fixed instruction / Variables / Output format の3節からなり、影響範囲調査→計画→段階的な実装の順序、各段階での既存テスト実行と報告・確認、指定範囲外の変更と過剰な抽象化の禁止、対象・変更してよい範囲・触らない範囲・完了条件（success_criteria）が含まれる。続く「主な調整点」に、Fable 5 の大規模リファクタ／移行テンプレートに沿って条件を明示化したこと、長時間の自律実行ではないため Verification 節を付けなかったことが書かれている。最下部の案内は「内容を確認してください」「必要なら /model fable と /effort high を設定してください（設定を忘れて g を送ると現在のモデル・effort のまま実行されます）」「p：この表示をもう一度出す（実行しません）」「g：現在のモデル・effort で実行（一度だけ有効）」](docs/images/demo-3-phase2.png)
+![「── which-model: 最適化プロンプト ──」の表示。確定モデル：Fable 5.1 / effort=high。上部には選択UIで答えた内容（「→ 通常推奨: Fable 5.1 / high」）が畳まれて残っている。最適化後プロンプトは Fixed instruction / Variables / Output format の3節からなり、影響範囲調査→計画→実装の順序、実装を小さな段階に分けて各段階ごとに動作確認とテストの合否を確認してから次へ進むこと、テストが無い箇所は先に現在の挙動を固定するテストを追加すること、指定範囲外は変更しないこと、不明点は着手前に質問することが含まれる。Variables は target・scope_in・scope_out・success_criteria、Output format は影響範囲サマリ・実行計画・段階ごとの差分・段階ごとのテスト結果の4項目。続く「主な調整点」に、Fable 5.1 の大規模リファクタ／移行テンプレートに沿って再構成し、「壊れないように少しずつ確認しながら」を段階分割・各段階の合否基準・スコープ外の明示として具体化したこと、単発の対話実行なので検証サブエージェント節を付けなかったことが書かれている。最下部の案内は「内容を確認してください」「必要なら /model で Fable 5.1 を選び、/effort high を設定してください。すでに同じ設定なら不要です（effort はセッションをまたいで残ります）。エイリアス（/model fable 等）で代用しない：接続経路によっては別世代のモデルに解決することがあるため、一覧から選び、実行前に現在のモデルを確認してください。設定を忘れて g を送ると、現在のモデル・effort のまま実行されます」「p：この表示をもう一度出す（実行しません）」「g：現在のモデル・effort で実行（一度だけ有効）」](docs/images/demo-3-phase2.png)
 
 *（上は冒頭のみ。実際は各モデルガイドの再利用テンプレートの全文が続きます。テンプレートの構成は
 モデルごとに異なります — 例えば Opus 5 向けには `Verification` 節を付けません〈自己検証が既定挙動で、
-明示すると過剰検証になるため〉。上の例は Fable 5 が確定モデルなので、長時間実行向けに検証の指定が
-入ります。）*
+明示すると過剰検証になるため〉。上の例は Fable 5.1 が確定モデルですが、数時間規模の自律実行ではなく
+単発の対話実行と判断されたため、検証サブエージェント節は付いていません。）*
 
-このあと、実行前に `/model claude-fable-5` と `/effort high` のように**モデルと effort の両方**を
-設定し（すでに同じ設定なら不要）、**`g` を送る**ことで初めて実行されます。
+このあと、実行前に `/model` の一覧から Fable 5.1 を選び、`/effort high` を設定して、**モデルと
+effort の両方**をそろえたうえで（すでに同じ設定なら不要）、**`g` を送る**ことで初めて実行されます。
+`/model fable` のようなエイリアスで代用しないでください — 接続経路によっては別世代のモデルに
+解決します。
 ポイントは **「選択 → （必要なら）設定 → `g` で実行」の一拍**。skill は**この応答では表示して
 停止する**ところまでしか行わず、実行に進むのは次のターンで `g` を受け取ったときだけです
 （`SKILL.md` の絶対規則によるもので、技術的に実行できないわけではありません）。
@@ -219,7 +221,7 @@ Claude Code で開発していると、指示のたびに「どのモデルを�
 5. 中身を確認し、よければ **`g` を送る**と実行される。直したいときはプロンプトを編集して送る
 
 この「選択 → 設定 → `g` で実行」の一拍が暴走を防ぎます。モデル切替を実行直前の1回だけに
-しているのは、切替先モデル（特に長時間実行向けの Fable 5）をプロンプト整形という軽作業のためだけに
+しているのは、切替先モデル（特に長時間実行向けの Fable 5.1）をプロンプト整形という軽作業のためだけに
 使わないため。プロンプト最適化は常に、今起動している（切替前の）モデルが行います。
 
 ## 仕組み（料理人とレシピ本）
@@ -251,7 +253,7 @@ Claude Code で開発していると、指示のたびに「どのモデルを�
 | `00_index.md` | 全体の使い方・読み込みルール |
 | `01_sources_evidence.md` | 根拠台帳（公式主張を source_id で管理） |
 | `02_model_selection_matrix.md` | タスク別のモデル/effort 判断表（SKILL.md が毎回読む中核） |
-| `03_fable5_prompting.md` | Fable 5 向けプロンプト最適化ガイド |
+| `03_fable51_prompting.md` | Fable 5.1 向けプロンプト最適化ガイド |
 | `04_opus5_prompting.md` | Opus 5 向けプロンプト最適化ガイド |
 | `05_sonnet5_prompting.md` | Sonnet 5 向けプロンプト最適化ガイド |
 
@@ -306,9 +308,27 @@ Confidence 付き）です。使う人は `[Heuristic]` を自分の使い方に
 
 選択UIが出たら、モデルはまだ切り替えずに候補を選びます（通常推奨／成果優先／効率優先／中止。
 根拠のある候補だけが出るので、行によっては通常推奨と中止の2つだけです）。すると今の
-モデルのまま最適化されたプロンプトが表示されて停止するので、`/model claude-fable-5` と
-`/effort high` のようにモデルと effort を確定どおりに設定し（同じ設定なら不要）、中身を確認して
+モデルのまま最適化されたプロンプトが表示されて停止するので、`/model` で確定モデル（例：Fable 5.1）を選び、
+`/effort high` のように effort も確定どおりに設定し（同じ設定なら不要）、中身を確認して
 **`g` を送れば**実行されます。
+
+> **`/model fable` と打つ近道は、環境によっては別のモデルを選びます。** Claude apps gateway 経由の
+> セッションでは `fable` / `best` エイリアスが当面 **Fable 5**（5.1 ではない）に解決します（公式
+> changelog 2.1.257）。**`/model` の一覧から Fable 5.1 を選び、実行前に実際の使用モデルを確認して
+> ください。** なお Fable 5.1 自体が Claude Code v2.1.255 以降を必要とします。
+>
+> **一覧に Fable 5.1 が無い場合があります。** 公式 changelog は同じ箇所で「**Fable 5.1 に未対応の
+> gateway はこれを拒否する**」と述べています。また、Claude Max サブスクリプション（gateway 経由）・
+> Claude Code 2.1.263 の環境で、`/model` の一覧に Fable 5.1 が現れないことを実測しました
+> （2026-09-08）。**バージョン要件を満たしていても一覧に出ないことがあります**（この 1 回の観測から
+> 原因を特定はしていません）。そのときは次のどちらかにしてください。
+>
+> - **Fable 5 を使う**（`/model claude-fable-5`）。5.1 は 5 を拡張したもので入出力価格も同じなので、
+>   同じ行での最も近い代替です。ただし**能力差は高い effort ほど大きい**とされています。
+> - **Anthropic API 直結の経路に切り替える**（gateway を経由しない）。
+>
+> **gateway 側の対応状況は時期で変わります。** 上の実測は 2026-09-08 の 1 経路の観測なので、
+> 選べない状態が続くとは限りません。`/model` の一覧を都度見てください。
 
 長い依頼（貼り付けたログや仕様書など）を渡した場合だけ、選択後に画面が止まったように見えます。
 選択UIにその旨と「`p` を送ってください」という案内が出るので、そのとおりに `p` を送ればプロンプトが
@@ -451,8 +471,8 @@ Confidence 付き）です。使う人は `[Heuristic]` を自分の使い方に
 
 上記の通り本運用では CLAUDE.md への登録は推奨しませんが、skill を使わず常時参照させたい
 場合は以下を CLAUDE.md に貼ってください。各行は `02_model_selection_matrix.md` の
-記述の要約です（根拠：S6, S9, S10, S16, S25, S29, S65, S67, S68, S71, S81, S86, S91, S98, S104。
-うち「速い対話・高頻度は Sonnet 5 / Fable 5 不使用」と「ZDR 前提の代替モデル選択」は公式事実から
+記述の要約です（根拠：S6, S25, S65, S67, S68, S71, S81, S86, S91, S98, S104, S123, S125, S127, S131。
+うち「速い対話・高頻度は Sonnet 5 / Fable 5.1 不使用」と「ZDR 前提の代替モデル選択」は公式事実から
 導く運用判断（`[Heuristic]`）。タグ・source_id はランタイムのノイズになるため省略。裏付けは
 `01_sources_evidence.md` を参照）。
 
@@ -464,7 +484,7 @@ model, consult these guides. Read only the file relevant to the current task —
 do not load all of them.
 
 - Deciding which model for a task → docs/ai-model-guides/02_model_selection_matrix.md
-- Prompting Fable 5 (claude-fable-5) → docs/ai-model-guides/03_fable5_prompting.md
+- Prompting Fable 5.1 (claude-fable-5-1) → docs/ai-model-guides/03_fable51_prompting.md
 - Prompting Opus 5 (claude-opus-5) → docs/ai-model-guides/04_opus5_prompting.md
 - Prompting Sonnet 5 (claude-sonnet-5) → docs/ai-model-guides/05_sonnet5_prompting.md
 
@@ -477,14 +497,15 @@ Quick defaults:
   "use a subagent to verify", "double-check your answer") — it self-verifies, and these cause
   over-verification. Acceptance criteria, which tests must pass, and "check against the code
   rather than assuming" are all fine.
-- Fast, high-frequency, or simple → Sonnet 5 (effort=low for simple lookups). Do not use Fable 5 for these.
-- Long, ambiguous, hours-to-weeks, end-to-end → Fable 5 (start at effort=high). Set up timeouts,
-  progress, and refusal fallback first (Claude Code falls back automatically).
+- Fast, high-frequency, or simple → Sonnet 5 (effort=low for simple lookups). Do not use Fable 5.1 for these.
+- Demanding reasoning, long-horizon agentic work, or evals still falling short on Opus 5 at higher
+  effort → Fable 5.1 (start at effort=high). Set up timeouts, progress, and refusal fallback first
+  (Claude Code falls back automatically; requires Claude Code v2.1.255+).
 - If something goes wrong, check context first (prompt clarity, CLAUDE.md, task scope) before
   touching model/effort — the fix is often upstream, not a knob.
 - Still not working? Diagnose: skipped a file / didn't run tests / didn't double-check → raise
   effort. Had all the context and clearly tried, still wrong → switch to a larger model.
-- Sensitive data under ZDR → avoid Fable 5 (Covered Model, ZDR-ineligible). Opus 4.8 and Sonnet 5
+- Sensitive data under ZDR → avoid Fable 5.1 and Fable 5 (Covered Models, ZDR-ineligible). Opus 4.8 and Sonnet 5
   are ZDR-eligible, but ZDR eligibility also depends on your org arrangement, the API features you
   use, and the surface (consumer plans and some features are out of scope).
 

@@ -5,6 +5,181 @@
 
 3.8.0 以前の変更は `git log` を参照してください。
 
+## [8.0.0] - 2026-09-09
+
+選定対象モデルを **Fable 5 → Fable 5.1** へ置き換えました（Fable 5.1 リリース〈公式表記の
+release date は 2026-09-01、JST では 09-02〉を受けた対応）。5.0.0（Opus 4.8 → Opus 5）と同じく、選定対象モデルとガイドのファイル名が変わるため
+メジャーバージョンです。判断表の構造（16行×3プロファイル・分岐・条件）・選択UI・合図の文法は
+変更していません。
+
+Opus 5 対応のときと違い、公式は「既存の Fable 5 プロンプトは変更なしで 5.1 でも良好に動く」
+（P23）と明言しており、**検証指示のような方向逆転（Opus 5 の S91 型）は確認されていません**。
+そのためこの版の中心は「推奨の書き換え」ではなく「**根拠の付け替え**」です：effort 開始点は
+high のまま（S128）、**16行×3プロファイルでモデル×effort が変わったセルはゼロ**で、変わったのは
+「Fable」が指す先（5 → 5.1）と、各セルの根拠 S-id の紐づけです。
+
+### Breaking
+
+- 判断表と skill の選定対象が Fable 5 から **Fable 5.1** に変わった。Fable 5 を使い続ける場合は
+  `/model claude-fable-5` の明示指定が必要（Claude Code v2.1.255 以降は保存済みの
+  `claude-fable-5` 設定も `fable` エイリアスへ自動書き換えされ、以後 5.1 に解決する — S138）。**ただし Claude apps gateway セッションでは `fable` / `best` が当面 Fable 5 に解決するため、Fable 5.1 は `/model` で明示選択する（S142）**
+- `03_fable5_prompting.md` を **`03_fable51_prompting.md`** にリネームし全面改訂（8節構成・
+  テンプレートの骨格は維持。Fable 5.1 は Claude Code v2.1.255 以降が必要）
+
+### Added
+
+- 根拠台帳に **P22〜P25 の4ページ**（What's new in Claude Fable 5.1 / Prompting Claude Fable 5.1 /
+  5.1 移行ガイド / 公式発表）と **S122〜S139 の18件**を新設。すべて 2026-09-02 の WebFetch
+  直接取得の逐語を根拠にした。主な新規事実：
+  - ポジショニング：5.1 は「Anthropic の最も高能力な widely released モデル」で Fable 5 の後継。
+    Fable 5 は P1 の "Legacy models (still available)" へ（S122・S123）
+  - 「迷ったら Opus 5」は不変。ただし P1 の逐語が "for most workloads" に変わり、5.1 への
+    昇格条件（demanding reasoning / long-horizon agentic work / Opus 5 の高 effort でも evals が
+    届かない）が追記された（S81 修正・S123）
+  - effort：5.1 も high 開始で不変。昇格先に **max が明示**された（"xhigh **or max** for the most
+    capability-sensitive" — S128）。effort sweep は 5 から引き継がずやり直す（S129）
+  - 価格：入出力 $10/$50 は同額、**キャッシュ読みが $0.25/MTok（base の 0.025 倍。従来の 1/4）**
+    （S126）
+  - **橋の主張**：「既存の Fable 5 プロンプトは変更なしで 5.1 でも良好に動く」（S133）と、
+    橋の例外＝**挙動差7点**（並列ツール呼び出しの不安定化・進捗テキストの減少・low での検索
+    省略・散文の濃さ・書式の減少・引用符なしの再現・全ファイル書き直し — S134）
+  - 5.1 固有：途中停止対策の公式2ブロック（S135）／xhigh・max での長い成果物の注意（S136）／
+    lead agent を待たせないサブエージェント設計（S137）／Claude Code の最小バージョン
+    v2.1.255・`fable` エイリアス解決・自動書き換え（S138）／API 変更（forced tool use 廃止・
+    thinking ブロックの一方向性と append-only 要件・turn-scoped system messages 等 — S139）
+  - 誤検知は 5 のローンチ時より減少し「ソースコードの脆弱性発見は許可」が明文化。Claude Code の
+    cyber 介入は約60%減（公式発表）。許可フォールバック先は Opus 4.8 と Opus 5（S131・S132）
+  - Covered Models は **5.1 / Mythos 5.1 / 5 / Mythos 5 の4モデル**に拡大（30日保持・ZDR 不可 —
+    S127）。プラン記事は「Claude Fable models on your plan」に改題され両モデル同一扱い
+    （週次上限 50% は Fable 系合算 — S105 拡張）
+
+### Changed
+
+- 台帳の既存 Fable 5 主張の処置（Retired の規約 01:18-21 に従う）：
+  - **Retired 2件**：最高能力ポジショニングの2件（後継 S122/S123）。台帳の Retired は計5件に
+  - **「選定対象外・参照用」化 15件**：値・経路・帰属が 5.1 で変わった主張（スペック・レイテンシ・
+    ZDR・フォールバック・effort 開始点・対 4.8 比較群）
+  - **橋適用 11件**：プロンプティング原則の対象欄を「Fable 5, Fable 5.1（S133 の橋で適用）」に
+  - **直接拡張 5件**：公式が 5.1 への適用を明示するもの（adaptive 常時 on・display 仕様・
+    分類器の3モデル列挙・プラン記事・トークナイザ）
+  - **現行化修正**：effort レベル対応表（5.1/Mythos 5.1/Mythos Preview 追加）、fast mode
+    （5.1 も非対応 — P19 で直接確認）、Covered Models の4モデル化、知識カットオフ最新（5.1 の
+    2026-06）、per-message effort の例外、Claude Code のカテゴリ別フォールバック（5.1 追加）ほか
+- 判断表（02）：Fable 系セルの根拠を 5.1 版 S-id へ引き直し。**#5（大規模リファクタ・移行）と
+  #7（大規模レビュー）は S124 ①が行名をほぼ逐語で挙げるため根拠が強くなった**。#4/#8/#11 の
+  成果優先は Fable 5 期の橋（S111/S114/S113）を S122/S124 で 5.1 に接続（#11 の Confidence は
+  「対 Opus 5 の直接比較が無い」という決定的不確実性が残るため Low を維持）
+- `tools/check-ledger-consistency.py`：検査4のモデル名照合を境界付き正規表現にした
+  （"Fable 5" が "Fable 5.1" に部分一致して検査が無音で盲目化する罠の恒久対策）
+- `tools/CODEX_VERIFICATION_PROMPT.md`：S/P 範囲を S1〜S143 / P1〜P27 に更新し、落とし穴に
+  「Fable 5 と 5.1 の混同」（橋を誤りと判定しない・5.1 固有事実の一覧）、「Legacy と Deprecated の
+  混同」、「必要 Claude Code バージョンの公式内不一致」を追加
+
+### Fixed
+
+- `tools/CODEX_VERIFICATION_PROMPT.md` の S-id 範囲が「S1〜S106」のまま S107〜S121 を
+  含んでいなかった直し漏れ（2026-08-11 監査時の追随漏れ）を今回まとめて解消
+- **Sonnet 5 の価格が古かったのを訂正**（タグ前の逐語再確認で検出。2026-09-08）。台帳 S15 は
+  「入力 $3 / 出力 $15、2026-08-31 まで導入価格 $2/$10」としていたが、公式の Pricing ページ
+  （**P28 を新設**）に「導入価格 $2/$10 が**標準価格になった**／$3/$15 への値上げは**行われない**」
+  という注記が入っていた。**S15 を $2/$10 に訂正**し、`02` の単価順序の記述（Sonnet 5 ＜ Opus 5 ＜
+  Fable 5.1）と `05` の価格・Basis・Last verified 注記を追随させた。**判断表への影響はゼロ**
+  （単価の順序は変わらないため、効率優先の下限が Sonnet 5 / low である結論は不変）
+
+- **`/model` の一覧に確定モデルが無いときの行き止まりを埋めた**（8e が明らかにした案内の不備）。
+  フェーズ2 の案内は「一覧から選び、実行前に現在のモデルを確認してください」までしか書いておらず、
+  **一覧にそのモデルが無い場合の行き先が無かった**。`SKILL.md` に1文だけ追加し
+  （`一覧に目的のモデルがない場合は、README の注記を参照し、利用可能な代替モデルを選んでください。`）、
+  接続経路の説明と代替候補は README の注記へ集約した（説明を二重に持たない）。**原因の断定はしない**：
+  一覧に出ない理由は 1 回の観測からは特定していない
+
+### タグ前の逐語再確認（2026-09-08）
+
+リリース当日の観測を含むため、5.0.0 の教訓（公式ページは数時間単位で変わりうる）に従って重要な
+推奨の逐語を再取得した。**4点のうち3点は完全一致、1点で上記の価格ズレを検出した。**
+
+| 再確認した逐語 | 出典 | 結果 |
+| --- | --- | --- |
+| effort 開始点（S128）"Claude Fable 5.1 supports all five effort levels. Start with `high`, the default. Step up to `xhigh` or `max` for the most capability-sensitive agentic and coding work…" | P13 | 一致 |
+| 選定ガイダンス（S123）"Use Claude Fable 5.1 for demanding reasoning and long-horizon agentic work, or when your evals on Claude Opus 5 at higher effort still fall short" ／ "If your evals at `xhigh` or `max` effort still fall short…, move to Claude Fable 5.1" ／ 選定マトリクス "The highest available capability → Claude Fable 5.1" | P1, P2 | 一致 |
+| フォールバック先（S131）"The permitted fallback targets for Claude Fable 5.1 are Claude Opus 4.8 and Claude Opus 5" | P22 | 一致 |
+| Sonnet 5 の価格（S15） | P1, P28 | **不一致 → 訂正**（上記 Fixed 参照） |
+
+あわせて S122（"Legacy models (still available)" に Fable 5）・S125（比較レイテンシ Slower、
+$10/$50 対 $5/$25）・S126（1M ウィンドウ全体が標準単価、cache read $0.25）・S103（fast mode は
+Opus 5 / Opus 4.8 のみ）も現行本文で一致を確認した。
+
+### 独立2系統の Deep Research による事後照合（2026-09-02）
+
+台帳を固定したあと、Claude と ChatGPT の Deep Research に同一プロンプトを投げ、**独立した2報告**を
+突き合わせた（2026-08-11 の全台帳監査で Fable 5 と Codex を独立に走らせたのと同型）。
+
+- **公開当日の書き換えは起きていない。** 改訂チェック5点（effort 開始点・選定ガイダンス・
+  フォールバック先・Covered Models・Claude Code のバージョンとエイリアス）は、両報告とも
+  台帳の記録と一致した。5.0.0 のときのような当日改訂は今回は発生していない
+- **両報告が一致した指摘のうち、メンテナが公式ページを直接再取得して確認できたものだけを採用した**：
+  - **S97 を更新**：`default hold` は **Fable 5.1 にも無い**（P11 逐語 "Opus 5 and Fable 5.1 have no
+    such hold"）。**8.0.0 で「確認できていない」として空白のまま残していた項目が埋まった**
+  - **S140 を新設**：Fable 5 / Fable 5.1 のライフサイクルはいずれも **Active**（P18 の status 表。
+    Deprecated 欄 N/A、Fable 5 の暫定退役日は「早くても 2027-06-09」）。P1 の比較UIが Fable 5 を
+    「Legacy models」見出し下に置くのは分類表示であって deprecated ではない（S101 の Opus 4.8 と同型）
+  - **S141 を新設**：Fable 5.1 の必要 Claude Code バージョンは**公式内で表記が割れている**
+    （Model configuration は v2.1.255 以降、changelog は v2.1.257 で追加）。**両方を併記**し、
+    要件としては前者を採る
+  - **S126 に追記**：1M ウィンドウ全体が標準単価で、**200k 超の割増は無い**
+  - `Last verified` の表記を「**公式 release date 2026-09-01** ／ JST 観測 09-02」に分けた
+- **保留だったもの、その後の直接確認**：3件のうち2件を同日中にメンテナが直接取得して採用した —
+  **公式ベンチマーク数値**（P25 の表。S143 を新設。判断表の選定根拠には使わない）と
+  **Covered Model の designation date**（P27 を新設。5.1 系は 2026-08-31 で公開日より前）。
+  **System Card の中身は未確認のまま**（PDF が 10MB 超で取得できず。一方の報告は取得成功、他方は失敗で
+  割れていた）
+- **不採用**：「曖昧な作業での判断改善・自信ある誤答の減少」は AWS 掲載のリリース文には存在するが
+  **Anthropic 自社ページで確認できない**ため `[Official]` にしない
+- **当初は保留し、その後採用したもの**：**EFS による ZDR 例外**の指摘は、
+  当初 P20 現行本文に該当語が無いことを確認して保留したが、**その後 support.claude.com の Covered Models
+  記事（P27）に逐語で存在することを直接確認し、S127 に追記した**。報告2の指摘は正しく、根拠ページが
+  P20 ではなく P27 だった（P20 は "unless expressly authorized by Anthropic" とだけ書く粒度差）
+- **判断表への影響はゼロ。** 追加で分かった事実はいずれも能力の補強か運用上の注意で、
+  16行×3プロファイルのモデル×effort を動かすものは無かった
+
+### 実装レビューでの追加修正
+
+台帳反映後の実装レビューで2件の指摘を受け、**いずれも一次ソースで確認したうえで**反映した。
+
+- **[リリースブロッカー] `fable` エイリアスの Claude apps gateway 例外（S142 を新設）**：公式
+  changelog 2.1.257 に「Claude apps gateway セッションでは `fable` / `best` は当面 **Fable 5** に
+  解決し、Fable 5.1 は `/model` で選ぶ」とある。**README は `/model fable` と設定するよう案内して
+  おり、この経路では Fable 5 が起動してしまう**ため、案内を「`/model` の一覧から Fable 5.1 を選ぶ」に
+  改め、注意書きを添えた。**`SKILL.md` のフェーズ2の案内文も同時に直した** — 従来の
+  `` `/model <確定モデル>` `` というプレースホルダは、実際の出力では `/model fable` と展開されており
+  （7.0.0 のデモ画像がその実例）、**skill 自身が危険な近道を案内していた**。現在は「`/model` で
+  <確定モデル> を選ぶ」とし、エイリアスで代用しない理由を1行添えている。P11 はこの例外に触れず一般則のみを書いているので、S141（必要バージョン）に
+  続く **2件目の P11/P26 表記差**として台帳に記録した。受入条件に **8e**（案内どおり設定したあと、
+  **実際の使用モデル**が Fable 5.1 であることを確認）を追加した
+- **監査プロンプトの追随漏れ**：`tools/CODEX_VERIFICATION_PROMPT.md` の effort 持ち越しの記述が
+  「Fable 5.1 は未確認」のままで、S97 と判断表の更新に追随していなかった。**次の監査で正しい記述を
+  誤りとして報告させる矛盾**になるため修正し、あわせて gateway 例外を落とし穴に追加した
+  - この種の追随漏れは `check-ledger-consistency.py` の検査対象外である（`tools/` を見ていない）。
+    **モデル世代を更新するときは、台帳とガイドだけでなく監査プロンプトも手で追う**必要がある
+
+### 根拠台帳（01_sources_evidence.md）
+
+7.0.0 と同じく台帳を先に固定した（`commit 55cfd25`）。台帳は **143 番まで採番・139 件定義
+（Active 134 / Retired 5）**（S140・S141 は下記の事後照合、S142 は実装レビュー、S143 は保留の直接確認で追加）。リリース当日の観測のため、5.0.0 の教訓（公式ページは数時間単位で
+変わりうる）に従い、重要な推奨（effort 開始点・選定ガイダンス・フォールバック先）は逐語を
+台帳に残し、タグ打ち前に再確認する。
+
+### 変更していないもの
+
+- 判断表の構造（16行×3プロファイル・分岐 A〜C・条件 1〜4・表示文の設計）と、Fable 系以外の
+  セル（Opus 5 / Sonnet 5 の候補・effort・根拠）
+- 選択UI・合図の文法（`p` / `g`、headless の `p quality` 等）。headless の受理トークン `fable` も
+  据え置き（Claude Code 側の解決先が 5.1 に変わるだけ）
+- 32セルの全再監査は行っていない（7.0.0 で実施済み。今回は Fable 系のセル・分岐・条件だけを
+  再裁定した）
+- 7.0.1 積み残し4件（縮退経路の合図揺れ等 — `tests/regression/README.md` の未決記録）は
+  今回のスコープに含めていない
+
 ## [7.0.0] - 2026-08-13
 
 **判断表の「第二候補」列を廃止し、候補を目的別の3プロファイル（通常推奨・成果優先・効率優先）へ
