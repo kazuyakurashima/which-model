@@ -13,7 +13,7 @@ argument-hint: "[実行したいタスク]"
 metadata:
   version: "8.0.0"
   author: "Kazuya Kurashima"
-  last-updated: "2026-09-02"
+  last-updated: "2026-09-09"
 ---
 
 # which-model : pick
