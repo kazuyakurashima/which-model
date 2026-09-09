@@ -11,7 +11,7 @@ allowed-tools: Read
 disable-model-invocation: true
 argument-hint: "[実行したいタスク]"
 metadata:
-  version: "8.0.0"
+  version: "8.0.1"
   author: "Kazuya Kurashima"
   last-updated: "2026-09-09"
 ---
@@ -260,8 +260,8 @@ metadata:
         すでに同じ設定なら不要です（effort はセッションをまたいで残ります）。
         **エイリアス（`/model fable` 等）で代用しない**：接続経路によっては別世代のモデルに
         解決することがあるため、一覧から選び、実行前に現在のモデルを確認してください。
-        一覧に目的のモデルがない場合は、README の注記を参照し、利用可能な代替モデルを
-        選んでください。
+        一覧に目的のモデルがない場合は、利用可能な別のモデルを選んでください
+        （どれを選ぶかは https://github.com/kazuyakurashima/which-model#使い方とコツ の注記を参照）。
         設定を忘れて g を送ると、現在のモデル・effort のまま実行されます。
       ▶ p：この表示をもう一度出す（実行しません）
       ▶ g：現在のモデル・effort で実行（一度だけ有効）
