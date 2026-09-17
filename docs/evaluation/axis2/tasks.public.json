@@ -1,0 +1,95 @@
+{
+  "_note": "軸2 v3 の実課題の公開版。**依頼文は載せない**（私有リポジトリの構造・設計判断が漏れるため。設計時は t06 だけ全文を載せる予定だったが、2026-09-17 の作者の決定で載せないことにした）。同一性は text_sha256 で確認できる。",
+  "tasks": [
+    {
+      "id": "t01_teacher_account_setup",
+      "kind": "手順・運用の説明",
+      "model_id": "claude-sonnet-5",
+      "target_effort": "medium",
+      "context_required": true,
+      "text_chars": 112,
+      "text_sha256": "e5dcfcf824ab50a9144e530bdf7765533696edcb4172379fe0fbb43e5f3a62d6"
+    },
+    {
+      "id": "t02_teacher_line_message",
+      "kind": "連絡文の作成＋運用judgement",
+      "model_id": "claude-sonnet-5",
+      "target_effort": "medium",
+      "context_required": true,
+      "text_chars": 237,
+      "text_sha256": "292a7df6bbc435bbc2880a6031a2fffef5e1b7bf069a38ec556b9aa76719dc6c"
+    },
+    {
+      "id": "t03_admin_displayname_testaccounts",
+      "kind": "現状の妥当性判断（短い調査）",
+      "model_id": "claude-sonnet-5",
+      "target_effort": "medium",
+      "context_required": true,
+      "text_chars": 112,
+      "text_sha256": "de5443e1fe4a80db47ce7a2f5687590e95261ca4c7bbfc19de44fac243de8976"
+    },
+    {
+      "id": "t04_docs_findability",
+      "kind": "ドキュメント導線の設計相談",
+      "model_id": "claude-opus-5",
+      "target_effort": "high",
+      "context_required": true,
+      "text_chars": 116,
+      "text_sha256": "c7e9f2c75985559e7ece944cbfebd2447e6c49ab98ba39fb8140a4e58e6fb4fb"
+    },
+    {
+      "id": "t05_docs_grouping",
+      "kind": "ドキュメント構成の設計相談",
+      "model_id": "claude-opus-5",
+      "target_effort": "high",
+      "context_required": true,
+      "text_chars": 124,
+      "text_sha256": "0bcd4693189f2040ec41bd864232f74c1432506c32a676bb696a3690b96c63ec"
+    },
+    {
+      "id": "t06_post_strategy_review",
+      "kind": "貼り付けた提案の分析評価（自己完結）",
+      "model_id": "claude-opus-5",
+      "target_effort": "high",
+      "context_required": false,
+      "text_chars": 2293,
+      "text_sha256": "c607b73906c288e80187fb4b513dafd20a3ab9d7db92deb070aa6106fcb0fcdd"
+    },
+    {
+      "id": "t07_anon_key_role",
+      "kind": "認証設計の概念質問",
+      "model_id": "claude-fable-5-1",
+      "target_effort": "high",
+      "context_required": true,
+      "text_chars": 261,
+      "text_sha256": "4ff3a9547ce26f07a8dd6fad63e8aa1d970076ab330a6d035e6250479b509124"
+    },
+    {
+      "id": "t08_jwt_role_design",
+      "kind": "権限モデルの設計判断",
+      "model_id": "claude-fable-5-1",
+      "target_effort": "high",
+      "context_required": true,
+      "text_chars": 382,
+      "text_sha256": "85137f65c77c30a8edb0e3826da17984d22f8d49bb38d4af00f1c9093c21ba2a"
+    },
+    {
+      "id": "t09_grant_defaults",
+      "kind": "権限モデルの概念質問",
+      "model_id": "claude-fable-5-1",
+      "target_effort": "high",
+      "context_required": true,
+      "text_chars": 84,
+      "text_sha256": "d0118811eefb59d47ef867b8874bb68cbe0614f99804b2d0dbd2732758a47b13"
+    },
+    {
+      "id": "t10_doc_jargon_balance",
+      "kind": "ドキュメント表現の相談",
+      "model_id": "claude-sonnet-5",
+      "target_effort": "medium",
+      "context_required": true,
+      "text_chars": 101,
+      "text_sha256": "b496b001b7ad7094309d55b3b32d7a161ff866c7d689e3ac1ba5424d535326c5"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["verdict", "reason", "evidence"],
+  "properties": {
+    "verdict": {
+      "type": "string",
+      "enum": ["left_better", "right_better", "tie",
+               "critical_error_left", "critical_error_right"]
+    },
+    "reason": {"type": "string"},
+    "evidence": {"type": "string"}
+  }
+}
