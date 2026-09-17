@@ -1,0 +1,153 @@
+{
+  "at": "2026-09-10T09:39:56+09:00",
+  "success": true,
+  "problems": [],
+  "parts": {
+    "fable": {
+      "success": true,
+      "at": "2026-09-10T08:51:20+09:00",
+      "rc": 0,
+      "log": "logs/probe_fable51_20260910-085120.log",
+      "actual_model": "claude-fable-5-1",
+      "status": "ok",
+      "cost_usd": 2.8059299999999996,
+      "cache_creation_input_tokens": 140288,
+      "output_tokens": 3,
+      "scope": "モデル疎通の記録（claude-fable-5-1 に到達できた）。**MCP 無効化（--strict-mcp-config）後の動作は未確認。**この記録は疎通の確認であって、MCP 無効条件での動作確認ではない。",
+      "mcp_disabled": false
+    },
+    "codex": {
+      "success": true,
+      "at": "2026-09-10T09:39:56+09:00",
+      "rc": 0,
+      "log": "logs/probe_codex_002_20260910-093944.jsonl",
+      "last": "logs/probe_codex_002_20260910-093944.last.txt",
+      "events": 7,
+      "completion_ok": true,
+      "completion_detail": "完了イベント: ['turn.completed|']",
+      "tool_calls_counted": 1,
+      "event_types": [
+        "item.completed|",
+        "item.started|",
+        "thread.started|",
+        "turn.completed|",
+        "turn.started|"
+      ],
+      "usage": {
+        "input_tokens": 29811,
+        "cached_input_tokens": 14592,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 131,
+        "reasoning_output_tokens": 0
+      },
+      "cost_usd": null,
+      "cost_available": false,
+      "schema_ok": true,
+      "problems": [],
+      "error_messages": []
+    }
+  },
+  "history": [
+    {
+      "part": "codex",
+      "success": false,
+      "at": "2026-09-10T08:51:20+09:00",
+      "rc": 1,
+      "log": "logs/probe_codex_20260910-085120.jsonl",
+      "last": null,
+      "events": 5,
+      "completion_ok": false,
+      "completion_detail": "エラーイベントがある: ['error|', 'item.completed|error', 'turn.failed|']",
+      "tool_calls_counted": 0,
+      "event_types": [
+        "error|",
+        "item.completed|",
+        "thread.started|",
+        "turn.failed|",
+        "turn.started|"
+      ],
+      "usage": null,
+      "cost_usd": null,
+      "cost_available": false,
+      "schema_ok": false,
+      "problems": [
+        "codex exec の終了コードが 1",
+        "正常完了していない — エラーイベントがある: ['error|', 'item.completed|error', 'turn.failed|']"
+      ],
+      "error_messages": [
+        "{\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid_request_error\",\"message\":\"The 'gpt-6-astra' model requires a newer version of Codex. Please upgrade to the latest app or CLI and try again.\"}}",
+        "{\"type\":\"error\",\"status\":400,\"error\":{\"type\":\"invalid_request_error\",\"message\":\"The 'gpt-6-astra' model requires a newer version of Codex. Please upgrade to the latest app or CLI and try again.\"}}"
+      ],
+      "_restored": "移行時に history から漏れていた試行を、残っているログから復元した（2026-09-10）"
+    },
+    {
+      "part": "codex",
+      "success": true,
+      "at": "2026-09-10T09:39:56+09:00",
+      "rc": 0,
+      "log": "logs/probe_codex_002_20260910-093944.jsonl",
+      "last": "logs/probe_codex_002_20260910-093944.last.txt",
+      "events": 7,
+      "completion_ok": true,
+      "completion_detail": "完了イベント: ['turn.completed|']",
+      "tool_calls_counted": 1,
+      "event_types": [
+        "item.completed|",
+        "item.started|",
+        "thread.started|",
+        "turn.completed|",
+        "turn.started|"
+      ],
+      "usage": {
+        "input_tokens": 29811,
+        "cached_input_tokens": 14592,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 131,
+        "reasoning_output_tokens": 0
+      },
+      "cost_usd": null,
+      "cost_available": false,
+      "schema_ok": true,
+      "problems": [],
+      "error_messages": []
+    }
+  ],
+  "lost_attempts": [
+    {
+      "what": "Claude プローブ 1 試行（2026-09-10 08:50 頃）",
+      "estimated_usd": 2.8059299999999996,
+      "basis": "同条件の2回目が $2.806。ログを上書きしたため実測は失われた"
+    },
+    {
+      "what": "Codex プローブ 1 試行（2026-09-10 08:50 頃）",
+      "estimated_usd": null,
+      "basis": "400 で拒否。USD は取得できず、ログも上書きされた"
+    },
+    {
+      "what": "B 生成 t04_docs_findability_r1 の中断した試行（2026-09-14 06:30 頃・フェーズ1のみ）",
+      "estimated_usd": 0.5894225,
+      "basis": "中断直後に元ログ gen_t04_docs_findability_r1_a0_phase1.log を実測して $0.5894225 を得た（このときフェーズ2は status=empty・$0）。その後の再開で prepare.sh が同じ試行番号 a0 を使い、同名ログを上書きしたため **元ログは現存しない**。上の金額は上書き前の実測値であって、推定ではない。ただし裏づけとなるログが残っていないため、確認できる記録とは分けてここに置く。",
+      "recorded_at": "2026-09-14"
+    }
+  ],
+  "_note": "2026-09-10 に部分ごとの success・履歴・失われた試行の推定を持つ形へ移行した。移行前は全体の success しか持たず、ログを上書きしていた。 2026-09-10：評価用の Claude 呼び出しへ --strict-mcp-config を追加した。この fable の成功記録は追加前のものなので、MCP 無効条件での動作は未確認。",
+  "pilot_2026_09_14": {
+    "purpose": "MCP 無効化・正常終了・費用の条件確認（**本実験のデータには使わない**）",
+    "where": "/tmp/axis2-pilot-t09（使い捨て。本実験は素の状態から始める）",
+    "task": "t09_grant_defaults",
+    "calls": {
+      "claude": 4,
+      "codex": 0
+    },
+    "mcp_servers_observed": 0,
+    "models_ok": true,
+    "cost_usd_confirmed": 1.207,
+    "cache_creation_tokens": {
+      "gen_phase1": 45989,
+      "gen_phase2": 6346,
+      "answer_A": 6607,
+      "answer_B": 7172
+    },
+    "note": "MCP 有効時のプローブは出力3トークンで cache_creation 140,288・$2.806 だった。無効化後は 1 呼び出しあたり 6千〜4.6万トークン。ただしこれは 1 タスク 4 呼び出しの観測であり、本実行の総額の見積もりではない。"
+  }
+}

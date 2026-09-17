@@ -1,0 +1,21 @@
+{
+  "_note": "軸2 v3 の設定。workdir はここに置かない（タスク単位で持つ。DESIGN.md §2）。",
+  "_seed_note": "実行順・pairwise の提示順・盲検割当をこの seed から決める。prepare 時に plan.json へ凍結。",
+  "_reps_note": "2 = B のプロンプト生成と回答の再現性まで見える（反転を検出できる）。2026-09-09 に 2 を選択。",
+  "seed": 20260909,
+  "reps": 2,
+  "gen_model": "opus",
+  "judge_model": "opus",
+  "judge_effort": "high",
+  "retry_max": 2,
+  "human_sample_rate": 0.0,
+  "_output_format_note": "stream-json はツール呼び出し回数（tool_use ブロック数）を数えるために使う。実形が想定と違ったら bin/probe-format.sh で確認し、駄目なら 'json' に落とす（その場合ツール回数は num_turns 代理になる）。",
+  "output_format": "stream-json",
+  "judge2_cmd": "codex",
+  "judge2_model": "gpt-6-astra",
+  "judge2_effort": "high",
+  "_judge2_note": "第2 judge は Codex（別系統）。人間確認を『両 judge が割れた比較』だけに縮めるため（DESIGN.md §3・§4）。",
+  "_human_sample_note": "v3 では無作為抽出を廃止。人間確認は judge 間の不一致だけ（DESIGN.md §4）。",
+  "sandbox_dir": "<local-path>",
+  "_sandbox_note": "2026-09-14：空の sandbox を which-model リポジトリの外へ移した。内側にあると、親をさかのぼって which-model の開発規約 CLAUDE.md が読まれ、自動メモリも which-model のもの（実験について記載）が読まれていた。B 生成・context_required=false の回答と判定がここを使う。"
+}
